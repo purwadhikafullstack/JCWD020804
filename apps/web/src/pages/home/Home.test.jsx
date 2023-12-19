@@ -1,8 +1,8 @@
-import Home from './Home';
+import Sample from './Sample';
 
-describe('<Home />', () => {
+describe('<Sample />', () => {
   it('mounts', () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<Home />);
+    cy.mount(<Sample />);
   });
 });
