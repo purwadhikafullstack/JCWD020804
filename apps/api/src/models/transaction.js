@@ -27,6 +27,7 @@ export const init = (sequelize) => {
           'transaksi dibatalkan',
         ), allowNull: false
       },
+      payment_method: { type: DataTypes.ENUM("transfer manual", "otomatis"), allowNull: false},
       bukti_pembayaran: { type: DataTypes.STRING, allowNull: true },
     },
     {
