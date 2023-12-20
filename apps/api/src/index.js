@@ -5,6 +5,7 @@ import { NODE_ENV, PORT } from './config';
 import router from './router';
 import { DB } from './db';
 
+require('dotenv').config();
 /**
  * Serve "web" project build result (for production only)
  * @param {Express} app
