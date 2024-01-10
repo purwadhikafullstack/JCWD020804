@@ -23,12 +23,14 @@ export const init = (sequelize) => {
       status: {
         type: DataTypes.ENUM(
           'menunggu pembayaran',
+          'menunggu konfirmasi',
           'pembayaran berhasil',
           'transaksi dibatalkan',
-        ), allowNull: false
+        ), allowNull: true
       },
-      payment_method: { type: DataTypes.ENUM("transfer manual", "otomatis"), allowNull: false},
+      payment_method: { type: DataTypes.ENUM("bank transfer", "otomatis"), allowNull: true},
       bukti_pembayaran: { type: DataTypes.STRING, allowNull: true },
+      
     },
     {
       sequelize,

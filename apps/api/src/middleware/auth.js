@@ -1,14 +1,16 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 export const verifyToken = (req, res, next) => {
   try {
-    var token = req.headers.authorization.split(" ")[1];
+    let token = req.headers.authorization;
     if (!token) {
       return res.status(401).send({
-        message: "token empty",
+        message: 'token empty',
       });
     }
-    let verifiedUser = jwt.verify(token, "LogIn");
+    token = token.split(' ')[1];
+
+    let verifiedUser = jwt.verify(token, 'LogIn');
 
     req.user = verifiedUser;
     console.log(req.user);
@@ -17,5 +19,11 @@ export const verifyToken = (req, res, next) => {
     console.log(error);
     res.status(400).send(error);
   }
-  }
+};
 
+export const checkRole = (req, res, next) => {
+  if(req.user.isTenant) {
+    return next()
+  }
+  return res.status(400).send({ message: "Unauthorized (tenant only)"})
+}
