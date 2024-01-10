@@ -1,5 +1,4 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Home from './pages/home/Home';
 import { TransactionForm } from './pages/transactions/transactionPages';
 import PaymentPage from './pages/transactions/paymentPage';
@@ -19,7 +18,7 @@ import { UserProfile } from './components/profile/userprofile';
 import Verify from './pages/authorizationandAuthentication/verify';
 import { DashboardTenant } from './pages/properties/DashboardTenant';
 import { ListPropertyTenant } from './pages/properties/RightBar/ListProperty';
-import { AddPropertiesTenant } from './pages/properties/AddProperties';
+import AddHotelPage from './pages/properties/AddPropertyPage';
 
 const router = createBrowserRouter([
   {
@@ -38,8 +37,8 @@ const router = createBrowserRouter([
   { path: '/user-profile', element: <UserProfile /> },
   { path: '/verify/:id', element: <Verify /> },
   { path: '/list-your-property', element: <DashboardTenant /> },
-  { path: '/list-property', element: <ListPropertyTenant />},
-  { path: '/add-properties', element: <AddPropertiesTenant />}
+  { path: '/list-property', element: <ListPropertyTenant /> },
+  { path: '/add-properties', element: <AddHotelPage /> },
 ]);
 
 function App() {
