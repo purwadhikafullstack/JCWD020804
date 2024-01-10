@@ -3,7 +3,6 @@ import Room from '../models/room';
 import Property_category from '../models/property_category';
 import Location from '../models/location';
 
-
 export const getAllProperty = async (req, res) => {
   try {
     const result = await Property.findAll();
@@ -63,7 +62,9 @@ export const addCategory = async (req, res) => {
     const { name } = req.body;
 
     // Cek apakah kategori sudah ada
-    const existingCategory = await Property_category.findOne({ where: { name } });
+    const existingCategory = await Property_category.findOne({
+      where: { name },
+    });
     if (existingCategory) {
       return res.status(400).json({ message: 'Category already exists' });
     }
@@ -80,7 +81,8 @@ export const addCategory = async (req, res) => {
 // Fungsi untuk menambah properti
 export const addProperty = async (req, res) => {
   try {
-    const { name, description, price, categoryName, locationName, userId } = req.body;
+    const { name, description, price, categoryName, locationName, userId } =
+      req.body;
 
     // Pastikan user sudah ada di database
     const user = await User.findByPk(userId);
@@ -114,5 +116,56 @@ export const addProperty = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const getProperty = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      pageSize = 10,
+      sortBy = 'name',
+      sortOrder = 'asc',
+      propertyName,
+      category,
+    } = req.query;
+
+    const filterOptions = {
+      where: {
+        isRented: false,
+      },
+    };
+
+    if (propertyName) {
+      filterOptions.where.name = {
+        [Op.iLike]: `%${propertyName}%`,
+      };
+    }
+
+    if (category) {
+      filterOptions.where.category = {
+        [Op.iLike]: `%${category}%`,
+      };
+    }
+
+    const orderOptions = [[sortBy, sortOrder.toUpperCase()]];
+
+    const result = await Property.findAndCountAll({
+      ...filterOptions,
+      order: orderOptions,
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+    });
+
+    const totalPages = Math.ceil(result.count / pageSize);
+
+    res.status(200).send({
+      result: result.rows,
+      totalPages,
+      currentPage: page,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ error: 'gagal mendapatkan data' });
   }
 };

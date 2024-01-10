@@ -14,6 +14,7 @@ export default function Home() {
         <div className="w-[90%] h-[500px] mx-auto py-[20px]">
           <CarouselCustomArrows />
         </div>
+
         <div className="w-[90%] mx-auto py-[20px]">
           {/* <BookingCard /> */}
           <HotelCard />

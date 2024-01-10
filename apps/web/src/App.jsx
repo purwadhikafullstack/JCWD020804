@@ -10,9 +10,15 @@ import { RatingWithComment } from './components/ratingComponent';
 import Login from './pages/authorizationandAuthentication/login';
 import { Register } from './pages/authorizationandAuthentication/register';
 import { ToastContainer } from 'react-toastify';
-
 import { setData } from './redux/userSlice';
-import Tenant from './components/tenant';
+import Tenant from './pages/authorizationandAuthentication/tenant';
+import ResetPasswordForm from './pages/authorizationandAuthentication/ResetPaswordForm';
+import { ModalUserResetPassword } from './pages/authorizationandAuthentication/ModalUserResetPassword';
+import { UserProfile } from './components/profile/userprofile';
+import Verify from './pages/authorizationandAuthentication/verify';
+import { DashboardTenant } from './pages/properties/DashboardTenant';
+import { ListPropertyTenant } from './pages/properties/RightBar/ListProperty';
+import { AddPropertiesTenant } from './pages/properties/AddProperties';
 import { PaymentPage } from './pages/bookingPages/paymentPage';
 import { TenantDashboard } from './pages/tenant/dashboardTenant';
 import { UserDashboard } from './pages/user/dashboardUser';
@@ -36,12 +42,19 @@ const router = createBrowserRouter([
     element: <TenantOnly />,
     children: [{ path: '/tenant/dashboard', element: <TenantDashboard /> }],
   },
+  { path: '/reset-password/:email', element: <ModalUserResetPassword /> },
+  { path: '/resetpasswordform/:email', element: <ResetPasswordForm /> },
+  { path: '/user-profile', element: <UserProfile /> },
+  { path: '/verify/:id', element: <Verify /> },
+  { path: '/list-your-property', element: <DashboardTenant /> },
+  { path: '/list-property', element: <ListPropertyTenant /> },
+  { path: '/add-properties', element: <AddPropertiesTenant /> },
 ]);
 
 function App() {
   const token = localStorage.getItem('token');
   const dispatch = useDispatch();
-  // console.log(token);
+  console.log(token);
 
   const KeepLogin = async () => {
     const config = {
@@ -51,12 +64,12 @@ function App() {
     };
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/user/Keep-login`,
+        `http://localhost:8000/api/user/keep-login`,
         config,
       );
       // console.log(response.data);
       dispatch(setData(response.data));
-      localStorage.setItem('isTenant',response.data.isTenant)
+      localStorage.setItem('isTenant', response.data.isTenant);
     } catch (err) {
       console.log(err);
     }

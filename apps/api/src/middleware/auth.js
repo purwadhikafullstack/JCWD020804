@@ -2,13 +2,15 @@ import jwt from 'jsonwebtoken';
 
 export const verifyToken = (req, res, next) => {
   try {
-    let token = req.headers.authorization;
+    
+    var token = req.headers.authorization?req.headers.authorization.split(" ")[1]:null;
+  
     if (!token) {
       return res.status(401).send({
         message: 'token empty',
       });
     }
-    token = token.split(' ')[1];
+    // token = token.split(' ')[1];
 
     let verifiedUser = jwt.verify(token, 'LogIn');
 
@@ -21,9 +23,4 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
-export const checkRole = (req, res, next) => {
-  if(req.user.isTenant) {
-    return next()
-  }
-  return res.status(400).send({ message: "Unauthorized (tenant only)"})
-}
+
