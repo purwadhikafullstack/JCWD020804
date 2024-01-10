@@ -35,8 +35,6 @@ userRouter.patch('/update-password', updateUserPassword);
 
 userRouter.patch('/reset-password', resetPassword);
 
-
-
 userRouter.get('/keep-login', verifyToken, keepLogin);
 
 userRouter.patch(

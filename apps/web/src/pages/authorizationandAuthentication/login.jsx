@@ -62,6 +62,7 @@ const Login = () => {
 
       setUser(response.data.result);
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('isTenant', response.data.isTenant)
       console.log(response.data);
       console.log(user);
       if (!response.data.result.isVerified) {

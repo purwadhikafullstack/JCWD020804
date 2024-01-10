@@ -19,7 +19,7 @@ export const createUser = async (req, res) => {
     });
 
     if (isEmailExist) {
-      return res.status(400).send ('Email has been used');
+      return res.status(400).send('Email has been used');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -51,7 +51,7 @@ export const createUser = async (req, res) => {
       html: tempResult,
     });
 
-    return res.status(200).send(newUser)
+    return res.status(200).send(newUser);
   } catch (error) {
     console.log(error);
     return { message: error };
@@ -69,7 +69,6 @@ export const login = async (req) => {
         email,
       },
     });
-    
 
     if (!isUserExist) {
       return { error: 'Email not found', status: 'er', code: 400 };
@@ -116,7 +115,7 @@ export const verify = async (req, res) => {
     const { isVerified } = req.body;
     const result = await User.update(
       { isVerified },
-      { where: { id: req.params.id } }
+      { where: { id: req.params.id } },
     );
 
     res.status(200).send(result);
@@ -124,13 +123,13 @@ export const verify = async (req, res) => {
     console.log(error);
     res.status(400).send({ message: error });
   }
-}
+};
 
 export const becomeTenant = async (req, res) => {
   try {
     const { no_ktp } = req.body;
-    const userId = req.user.id; 
-   
+    const userId = req.user.id;
+
     await User.update(
       {
         isTenant: true,
@@ -291,8 +290,7 @@ export const updateUserPassword = async (req, res) => {
 
 export const editProfile = async (req, res) => {
   try {
-    
-    const { name, username, email, picture} = req.body;
+    const { name, username, email, picture } = req.body;
     await User.update(
       {
         name,
@@ -300,8 +298,6 @@ export const editProfile = async (req, res) => {
         email,
         picture: req.file?.path,
         isVerified: false,
-        
-        
       },
 
       {
@@ -313,10 +309,9 @@ export const editProfile = async (req, res) => {
     const data = fs.readFileSync('./web/verifiedakun.html', 'utf-8');
     const tempCompile = handlebars.compile(data);
     const tempResult = tempCompile({
-      
       name: name,
       username: username,
-      link: `http://localhost:5173/verify/${ req.user.id}`,
+      link: `http://localhost:5173/verify/${req.user.id}`,
     });
     await transporter.sendMail({
       from: 'amanhidayat39@gmail.com',
@@ -325,7 +320,7 @@ export const editProfile = async (req, res) => {
       html: tempResult,
     });
     res.status(200).send('Profile');
-  } catch (error) {
+  } catch (err) {
     console.log(err);
     res.status(400).send({ err: err.message });
   }

@@ -15,14 +15,14 @@ import axios from 'axios';
 
 export const HotelCard = () => {
   const checklogin = localStorage.getItem('token');
-  console.log('checklogin', typeof checklogin);
+  // console.log('checklogin', typeof checklogin);
   const navigate = useNavigate();
   const [property, setProperty] = useState([]);
 
   const getData = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/property');
-      console.log(response.data.result);
+      // console.log(response.data.result);
       setProperty(response?.data.result);
     } catch (error) {
       console.log(error);

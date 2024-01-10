@@ -18,6 +18,8 @@ export function ProfileMenu() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('isTenant');
+
     navigate('/');
     window.location.reload();
   };
