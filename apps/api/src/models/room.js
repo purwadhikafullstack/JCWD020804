@@ -21,7 +21,7 @@ export default class Room extends Model {
 export const init = (sequelize) => {
   Room.init(
     {
-      room_name: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -32,6 +32,7 @@ export const init = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      picture: {type: DataTypes.STRING, allowNull: true}
     },
     {
       sequelize,
