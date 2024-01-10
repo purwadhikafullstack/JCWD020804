@@ -2,20 +2,14 @@ import { Router } from 'express';
 import {
     createTransaction,
   getAllData,
-} from '../controllers/sample.controller';
+} from '../controllers/transactionController';
 
 const transactionRouter = Router();
 
 // GET
-transactionRouter.get('/', async (req, res) => {
-  const result = await getAllData();
-  res.json(result);
-});
+transactionRouter.get('/', getAllData);
 
 // POST
-transactionRouter.post('/', async (req, res) => {
-  await createTransaction();
-  res.send('Create Data');
-});
+transactionRouter.post('/', createTransaction);
 
 export { transactionRouter };

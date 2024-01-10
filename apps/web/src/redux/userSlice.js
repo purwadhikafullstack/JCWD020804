@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 
-const userSlice = createSlice({
+export const userSlice = createSlice({
     name: 'user',
+    
     initialState: {
         value: {}
         // profile_picture: null,
