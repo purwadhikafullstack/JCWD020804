@@ -22,21 +22,26 @@ function PaymentDetails() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
+    // Inisialisasi startTime dengan waktu sekarang ditambah 1 jam
+    const now = new Date();
+    const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+    setStartTime(oneHourLater);
+
     // Simpan startTime di sessionStorage saat komponen pertama kali dimuat atau ketika ID berubah
-    sessionStorage.setItem(storedStartTimeKey, startTime.toString());
-  }, [id, startTime, storedStartTimeKey]);
+    sessionStorage.setItem(storedStartTimeKey, oneHourLater.toString());
+  }, [id, storedStartTimeKey]);
 
   useEffect(() => {
     // Update waktuLeft setiap detik
     const timer = setInterval(() => {
       const currentTime = new Date();
-      const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
-      setTimeLeft(60 * 60 - elapsedSeconds);
+      const timeDiff = Math.floor((startTime - currentTime) / 1000);
+      setTimeLeft(Math.max(0, timeDiff)); // pastikan timeLeft tidak kurang dari 0
     }, 1000);
 
     return () => clearInterval(timer);
   }, [startTime]);
-
+  
   const formatTimeLeft = () => {
     const hours = Math.floor(timeLeft / 3600);
     const minutes = Math.floor((timeLeft % 3600) / 60);
