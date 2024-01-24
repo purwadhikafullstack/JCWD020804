@@ -6,10 +6,10 @@ import Home from './pages/home/Home';
 import { DetailPage } from './pages/bookingPages/detailPage';
 import { BookingPage } from './pages/bookingPages/bookingPage';
 import PaymentDetails from './pages/bookingPages/paymentDetailPage';
-import { RatingWithComment } from './components/ratingComponent';
 import Login from './pages/authorizationandAuthentication/login';
 import { Register } from './pages/authorizationandAuthentication/register';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { setData } from './redux/userSlice';
 import Tenant from './pages/authorizationandAuthentication/tenant';
 import ResetPasswordForm from './pages/authorizationandAuthentication/ResetPaswordForm';
@@ -21,15 +21,16 @@ import { ListPropertyTenant } from './pages/properties/RightBar/ListProperty';
 import { AddPropertiesTenant } from './pages/properties/AddProperties';
 import { PaymentPage } from './pages/bookingPages/paymentPage';
 import { TenantDashboard } from './pages/tenant/dashboardTenant';
-import { UserDashboard } from './pages/user/dashboardUser';
+
 import TenantOnly from './components/requiredTenant';
+import { UserDashboard } from './pages/user/dashboardUser';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
   },
-  { path: '/rating', element: <RatingWithComment /> },
+  // { path: '/rating', element: <RatingWithComment /> },
   { path: '/detail/:id', element: <DetailPage /> },
   { path: '/booking', element: <BookingPage /> },
   { path: '/booking/:id', element: <PaymentPage /> },
@@ -54,7 +55,7 @@ const router = createBrowserRouter([
 function App() {
   const token = localStorage.getItem('token');
   const dispatch = useDispatch();
-  console.log(token);
+  // console.log(token);
 
   const KeepLogin = async () => {
     const config = {

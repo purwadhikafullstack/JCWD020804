@@ -24,9 +24,9 @@ export const BookingPage = () => {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
+      // hour: 'numeric',
+      // minute: 'numeric',
+      // second: 'numeric',
     };
 
     // Ganti objek Date dengan waktu Indonesia

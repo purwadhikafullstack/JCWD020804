@@ -5,7 +5,6 @@ import { NODE_ENV, PORT } from './config';
 import router from './router';
 import { DB } from './db';
 
-
 require('dotenv').config();
 /**
  * Serve "web" project build result (for production only)
@@ -23,9 +22,7 @@ const serveWebProjectBuildResult = (app) => {
   }
 };
 
-const firebase = () => {
-  
-}
+const firebase = () => {};
 
 /**
  * Global error handler
@@ -63,7 +60,7 @@ const main = async () => {
     app.use(cors());
     app.use(json());
     app.use('/api', router);
-    app.use('/public', express.static('./public'))
+    app.use('/public', express.static('./public'));
 
     globalAPIErrorHandler(app);
     serveWebProjectBuildResult(app);
