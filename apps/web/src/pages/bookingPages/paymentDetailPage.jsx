@@ -42,7 +42,7 @@ function PaymentDetails() {
 
     return () => clearInterval(timer);
   }, [startTime]);
-
+  
   const formatTimeLeft = () => {
     const hours = Math.floor(timeLeft / 3600);
     const minutes = Math.floor((timeLeft % 3600) / 60);
