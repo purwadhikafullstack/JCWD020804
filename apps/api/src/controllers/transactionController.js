@@ -4,7 +4,11 @@ import Transaction from '../models/transaction';
 import User from '../models/user';
 import Review from '../models/review';
 import { Op } from 'sequelize';
-
+import fs from 'fs';
+import transporter from '../middleware/transporter';
+import handlebars from 'handlebars';
+import { createPDF } from '../document/detailOrder';
+// const createPDF = require('../document/detailOrder')
 // Update your backend controller:
 
 export const getTransactionByTenant = async (req, res) => {
@@ -140,6 +144,46 @@ export const approveTransactionById = async (req, res) => {
       { status: 'pembayaran berhasil' },
       { where: { id } },
     );
+    const transaction = await Transaction.findOne({
+      where: { id },
+      include: [
+        {
+          model: Room,
+          include: [{
+            model: Property
+          }]
+        },
+        {
+          model: User,
+        },
+      ],
+    });
+    // Membuat PDF
+    const pdfFilename = 'BookingConfirmation.pdf';
+    createPDF(pdfFilename, transaction);
+
+    // Ubah path file verifiedakun.html sesuai dengan struktur proyek Anda
+    const data = fs.readFileSync('./web/bookingDetail.html', 'utf-8');
+    const tempCompile = handlebars.compile(data);
+    const tempResult = tempCompile({
+      name: transaction.User.name,
+      Hotel:transaction.Room.Property.name
+    });
+
+    // Konfigurasi email yang akan dikirim
+    await transporter.sendMail({
+      from: 'masn40208@gmail.com',
+      to: transaction.User.email,
+      subject: 'Booking Information',
+      html: tempResult,
+      attachments: [
+        {
+            filename: pdfFilename,
+            path: `./${pdfFilename}`,
+            contentType: 'application/pdf'
+        }
+    ]
+    });
     res.status(200).send({ message: 'pembayaran diterima' });
   } catch (error) {
     console.log(error);
@@ -160,6 +204,8 @@ export const rejectTransactionById = async (req, res) => {
     res.status(400).send({ message: error.message });
   }
 };
+
+//cancel sisi tenant
 export const cancelTransactionById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -185,7 +231,29 @@ export const ratingUser = async (req, res) => {
       TransactionId,
       PropertyId,
     });
-    res.status(200).send( result );
+    res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: error.message });
+  }
+};
+
+export const ratingReplayTenant = async (req, res) => {
+  const { replay } = req.body;
+  try {
+    const review = await Review.findOne({
+      include: [
+        {
+          model: Property,
+          where: { UserId: req.user.id },
+        },
+      ],
+    });
+
+    await review.update({
+      tenant_replay: replay,
+    });
+    res.status(200).send(result);
   } catch (error) {
     console.log(error);
     res.status(400).send({ message: error.message });

@@ -1,18 +1,7 @@
 // TransactionCard.js
-
 import React from 'react';
 import { Card, CardHeader, CardBody, Typography } from '@material-tailwind/react';
-
-const formatDate = (date) => {
-  const dateFormat = new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-
-  return dateFormat.format(date);
-};
+import { formatDate } from '../../helper/formatFunction';
 
 export const BookingCard = ({ bookingDetails }) => {
   return (

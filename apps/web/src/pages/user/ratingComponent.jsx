@@ -55,7 +55,7 @@ export function RatingWithCommentDialog({
   const token = localStorage.getItem('token');
 
   const handleGiveRating = async (values) => {
-    // Implement your logic for giving a rating
+   
     try {
       values.TransactionId = TransactionId;
       values.PropertyId = PropertyId;
@@ -69,21 +69,16 @@ export function RatingWithCommentDialog({
           },
         },
       );
-      console.log('Rating submitted successfully:', response.data);
-
       setSelectedTransactionId(null);
       setSelectedPropertyId(null);
-      setRatingGivenDialog(true); // Menandai bahwa rating sudah diberikan
+      setRatingGivenDialog(true);
+      onSubmitRating();
 
-      onSubmitRating(); // Panggil prop onSubmitRating untuk menangani perubahan state di komponen UserDashboard
-
-      console.log('test');
     } catch (error) {
       console.error('Error submitting rating:', error);
     }
   };
 
-  console.log(Open);
   return (
     <Dialog
       size="md"

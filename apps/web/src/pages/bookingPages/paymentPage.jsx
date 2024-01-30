@@ -11,6 +11,7 @@ import { Navbarpage } from '../../components/navbar';
 import axios from 'axios';
 import { useBookingDetails } from '../../components/booking/bookingHook';
 import { BookingCard } from '../../components/booking/bookingCard';
+import { formatMataUang } from '../../helper/formatFunction';
 
 export const PaymentPage = () => {
   const { id } = useParams();
@@ -62,7 +63,7 @@ export const PaymentPage = () => {
           },
         );
 
-        console.log('Payment successful:', paymentResponse.data);
+        console.log('choose payment methode success', paymentResponse.data);
       }
 
       console.log('Booking updated successfully:', response.data);
@@ -142,7 +143,7 @@ export const PaymentPage = () => {
             <p className="font-semibold mb-4">Price Details:</p>
             <div className="flex justify-between">
               <p className="mb-4">{bookingDetails?.Room.Property.name} </p>
-              <p className="mb-4">{bookingDetails?.total_price}</p>
+              <p className="mb-4">{formatMataUang(bookingDetails?.total_price, 'IDR')}</p>
             </div>
           </div>
           <button

@@ -39,7 +39,7 @@ export const createUser = async (req, res) => {
     const tempResult = tempCompile({
       createdAt: newUser.createdAt,
       name: newUser.name,
-      username: username,
+      username: newUser.username,
       link: `http://localhost:5173/verify/${newUser.id}`,
     });
 

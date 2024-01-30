@@ -8,7 +8,6 @@ import React, { useEffect, useState } from 'react';
 
 export function Navbarpage() {
   const user = useSelector((state) => state.user.value);
-  console.log(user);
   const id = user.id;
   const profilPicture = user.picture;
 

@@ -6,6 +6,7 @@ import {
   getAllData,
   getBookingById,
   CancelBooking,
+  getTomorrowBookings,
 } from '../controllers/bookingController';
 import { verifyToken } from '../middleware/auth';
 import { multerUpload } from '../middleware/multer';
@@ -13,6 +14,7 @@ import { multerUpload } from '../middleware/multer';
 const bookingRouter = Router();
 
 // GET
+bookingRouter.get('/tomorrow-checkin', getTomorrowBookings)
 bookingRouter.get('/', getAllData);
 bookingRouter.get('/:id', verifyToken, getBookingById)
 

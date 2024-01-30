@@ -45,7 +45,7 @@ export const TenantDashboard = () => {
           },
         },
       );
-      // console.log(response.data.result);
+      
       const data = response?.data.result;
 
       if (!data || data.length === 0) {
