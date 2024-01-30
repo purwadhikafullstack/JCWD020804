@@ -51,10 +51,10 @@ export const init = (sequelize) => {
       },
       firebaseUID: {
         type: DataTypes.STRING,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     },
-    
+
     {
       sequelize,
       modelName: 'User',

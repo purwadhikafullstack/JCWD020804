@@ -27,11 +27,15 @@ export const init = (sequelize) => {
           'menunggu konfirmasi',
           'pembayaran berhasil',
           'transaksi dibatalkan',
-        ), allowNull: true
+        ),
+        allowNull: true,
       },
-      payment_method: { type: DataTypes.ENUM("bank transfer", "otomatis"), allowNull: true},
+      payment_method: {
+        type: DataTypes.ENUM('bank transfer', 'otomatis'),
+        allowNull: true,
+      },
       bukti_pembayaran: { type: DataTypes.STRING, allowNull: true },
-      
+      isReminder: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     {
       sequelize,

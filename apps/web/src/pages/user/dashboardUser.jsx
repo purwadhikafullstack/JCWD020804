@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, Typography, Button } from '@material-tailwind/react';
 import { RatingWithCommentDialog } from './ratingComponent';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Navbarpage } from '../../components/navbar';
 
 export const UserDashboard = () => {
   const [transactions, setTransactions] = useState([]);
@@ -13,13 +15,18 @@ export const UserDashboard = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);
   const token = localStorage.getItem('token');
   const [ratingGivenUserDashboard, setRatingGivenUserDashboard] = useState(false);
-
+  const navigate = useNavigate();
 
   const handleToggleDialog = (transactionId, propertyId) => {
     setSelectedTransactionId(transactionId);
     setSelectedPropertyId(propertyId);
     setDialogOpen((cur) => !cur); // Toggle the dialog state
   };
+
+  const handleContinue = (transactionId) => {
+    setSelectedTransactionId(transactionId)
+    navigate(`/booking-detail/${transactionId}`);
+  }
 
   const formatDate = (date) => {
     const dateFormat = new Intl.DateTimeFormat('en-US', {
@@ -28,7 +35,6 @@ export const UserDashboard = () => {
       month: 'long',
       day: 'numeric',
     });
-
     return dateFormat.format(date);
   };
 
@@ -47,8 +53,6 @@ export const UserDashboard = () => {
           },
         },
       );
-
-      console.log(response.data.result);
       setTransactions(response?.data.result);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -80,24 +84,10 @@ export const UserDashboard = () => {
   }, [statusFilter, searchInput, searchDate, ratingGivenUserDashboard]);
 
   return (
+    <div className='p-5'>
+    <Navbarpage/>
     <div className="container mx-auto my-8">
-      <div className="flex items-center gap-4">
-        <img
-          src="../src/assets/masnstay.jpg"
-          alt="Logo"
-          className="h-16 w-16 mr-2"
-        />
-        <Typography
-          as="a"
-          href="/"
-          variant="h6"
-          className="cursor-pointer py-1.5 text-black"
-        >
-          MasnStay
-        </Typography>
-      </div>
-      <h1 className="text-3xl font-semibold mb-6">User Dashboard</h1>
-
+      <h1 className="text-3xl font-semibold mb-6">Your Trips</h1>
       <div className="flex gap-4 mb-4">
         <Button
           color={statusFilter === 'all' ? 'blue' : 'gray'}
@@ -134,7 +124,6 @@ export const UserDashboard = () => {
           Search
         </Button>
       </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {transactions.map((transaction) => (
           <Card key={transaction.id}>
@@ -148,6 +137,18 @@ export const UserDashboard = () => {
               <Typography className="mb-2">
                 Hosted by: {transaction.Room.Property.User.name}
               </Typography>
+              <Typography className="mb-2">
+                {transaction.status}
+              </Typography>
+              {transaction.status === 'menunggu pembayaran' && (
+                  <Button
+                    onClick={() =>
+                      handleContinue(transaction.id)
+                    }
+                  >
+                   Continue
+                  </Button>
+                )}
               {transaction.status === 'pembayaran berhasil' &&
                 new Date(transaction.checkIn) < new Date() &&
                 !transaction.Review?.rating && (
@@ -169,7 +170,6 @@ export const UserDashboard = () => {
           </Card>
         ))}
       </div>
-      {/* Place RatingWithCommentDialog outside the mapping */}
       <RatingWithCommentDialog
         Open={dialogOpen}
         onClose={handleToggleDialog}
@@ -180,6 +180,7 @@ export const UserDashboard = () => {
         onSubmitRating={() => setRatingGivenUserDashboard(true)}
         setRatingGivenCallback={() => setRatingGivenUserDashboard(true)}
       />
+    </div>
     </div>
   );
 };

@@ -21,16 +21,13 @@ import { ListPropertyTenant } from './pages/properties/RightBar/ListProperty';
 import { AddPropertiesTenant } from './pages/properties/AddProperties';
 import { PaymentPage } from './pages/bookingPages/paymentPage';
 import { TenantDashboard } from './pages/tenant/dashboardTenant';
-
 import TenantOnly from './components/requiredTenant';
 import { UserDashboard } from './pages/user/dashboardUser';
+import UserOnly from './components/requiredUser';
+import { TenantReviews } from './pages/tenant/listReviewTenant';
 
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home />,
-  },
-  // { path: '/rating', element: <RatingWithComment /> },
+  { path: '/', element: <Home /> },
   { path: '/detail/:id', element: <DetailPage /> },
   { path: '/booking', element: <BookingPage /> },
   { path: '/booking/:id', element: <PaymentPage /> },
@@ -38,10 +35,17 @@ const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
   { path: '/register', element: <Register /> },
   { path: '/tenant', element: <Tenant /> },
-  { path: '/user/dashboard', element: <UserDashboard /> },
+
+  {
+    element: <UserOnly />,
+    children: [{ path: '/user/dashboard', element: <UserDashboard /> }],
+  },
   {
     element: <TenantOnly />,
-    children: [{ path: '/tenant/dashboard', element: <TenantDashboard /> }],
+    children: [
+      { path: '/tenant/dashboard', element: <TenantDashboard /> },
+      { path: '/tenant/ratings', element: <TenantReviews /> },
+    ],
   },
   { path: '/reset-password/:email', element: <ModalUserResetPassword /> },
   { path: '/resetpasswordform/:email', element: <ResetPasswordForm /> },
@@ -55,7 +59,6 @@ const router = createBrowserRouter([
 function App() {
   const token = localStorage.getItem('token');
   const dispatch = useDispatch();
-  // console.log(token);
 
   const KeepLogin = async () => {
     const config = {
