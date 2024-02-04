@@ -1,7 +1,9 @@
-import { BookingCard } from '../../components/card';
+
 import { Navbarpage } from '../../components/navbar';
 import { CarouselCustomArrows } from '../../components/carousel';
 import { SimpleFooter } from '../../components/footer';
+
+import { PropertyCard } from '../../components/card';
 
 export default function Home() {
   return (
@@ -15,7 +17,8 @@ export default function Home() {
         </div>
 
         <div className="w-[90%] mx-auto py-[20px]">
-          <BookingCard />
+          <PropertyCard />
+          {/* <HotelCard /> */}
         </div>
         <div className="w-[90%] mx-auto py-[20px]">
           <SimpleFooter />

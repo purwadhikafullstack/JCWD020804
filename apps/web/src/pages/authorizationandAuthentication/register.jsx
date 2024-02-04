@@ -16,12 +16,9 @@ import { registerWithGoogle } from '../../../../api/src/firebase';
 import { useDispatch } from 'react-redux';
 import { setData } from '../../redux/userSlice';
 
-
 export const Register = () => {
-  
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
 
   const notify = () =>
     toast.success('Register Success!', {
@@ -43,7 +40,7 @@ export const Register = () => {
       notify();
     } catch (err) {
       console.log(err);
-      toast.error(err.response.data)
+      toast.error(err.response.data);
     }
   };
 
@@ -76,47 +73,48 @@ export const Register = () => {
 
   const handleGoogleRegister = async () => {
     try {
-        const userData = await registerWithGoogle();
-        console.log(userData);
-  
-        const response = await axios.post('http://localhost:8000/api/user/register-google', { googleUserData: userData })
-        console.log(response.data);
-        localStorage.setItem('token', response.data.token);
-        
-        dispatch(setData(response.data.result));
-       
-          toast.success(response.data.message, {
-            position: 'top-right',
-            autoClose: 9000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-          });
-        
-        navigate('/')
+      const userData = await registerWithGoogle();
+      console.log(userData);
+
+      const response = await axios.post(
+        'http://localhost:8000/api/user/register-google',
+        { googleUserData: userData },
+      );
+      console.log(response.data);
+      localStorage.setItem('token', response.data.token);
+
+      dispatch(setData(response.data.result));
+
+      toast.success(response.data.message, {
+        position: 'top-right',
+        autoClose: 9000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+
+      navigate('/');
     } catch (error) {
-        console.log("Error from handle Google Register Front-end", error);
-        
-          toast.error(error.response.data.message, {
-            position: 'top-right',
-            autoClose: 9000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-          });
-        
+      console.log('Error from handle Google Register Front-end', error);
+
+      toast.error(error.response.data.message, {
+        position: 'top-right',
+        autoClose: 9000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
     }
-  }
+  };
 
   return (
     <div className="flex justify-center items-center h-screen">
-      
       <Card
         color="transparent"
         shadow={false}
@@ -240,18 +238,26 @@ export const Register = () => {
             className="mt-6 bg-yellow-500 text-black"
             fullWidth
             variant="outlined"
-            loading={true}
+            disabled={formik.isSubmitting}
           >
-            Register
+            {formik.isSubmitting ? (
+              <div className="flex justify-center items-center"></div>
+            ) : (
+              'Register'
+            )}
           </Button>
           <Button
             onClick={handleGoogleRegister}
             className="mt-6 bg-yellow-500 text-black"
             fullWidth
             variant="outlined"
-            loading={true}
+            disabled={formik.isSubmitting}
           >
-            Register with Google
+            {formik.isSubmitting ? (
+              <div className="flex justify-center items-center"></div>
+            ) : (
+              'Register with Google'
+            )}
           </Button>
 
           <ToastContainer />

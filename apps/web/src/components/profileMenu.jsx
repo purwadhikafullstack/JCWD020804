@@ -18,6 +18,8 @@ export function ProfileMenu() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('isTenant');
+
     navigate('/');
     window.location.reload();
   };
@@ -65,7 +67,10 @@ export function ProfileMenu() {
         )}
         <MenuItem className="flex items-center gap-2">
           <Typography variant="small" className="font-medium">
-            Help
+            <Link to="/edit-email">
+
+            Change Your Email
+            </Link>
           </Typography>
         </MenuItem>
         <hr className="my-2 border-blue-gray-50" />

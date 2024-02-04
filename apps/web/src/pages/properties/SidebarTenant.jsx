@@ -30,19 +30,13 @@ export const SidebarTenant = () => {
           <ListItemPrefix>
             <PresentationChartBarIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Link to="/Date">
-
-          Dashboard
-          </Link>
+          <Link to="/Date">Dashboard</Link>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
             <PresentationChartBarIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Link to="/list-property">
-
-          Properties
-          </Link>
+          <Link to="/list-property">Properties</Link>
         </ListItem>
         <ListItem>
           <ListItemPrefix>

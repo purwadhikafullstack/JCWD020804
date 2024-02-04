@@ -9,6 +9,7 @@ import {
   updateUserPassword,
   editProfile,
   verify,
+  editEmail,
 } from '../controllers/user.controller';
 import { verifyToken } from '../middleware/auth';
 const { multerUpload } = require('../middleware/multer');
@@ -35,15 +36,19 @@ userRouter.patch('/update-password', updateUserPassword);
 
 userRouter.patch('/reset-password', resetPassword);
 
-
-
 userRouter.get('/keep-login', verifyToken, keepLogin);
 
 userRouter.patch(
-  '/edit-profile/:id',
+  '/edit-profile',
   verifyToken,
   multerUpload().single('picture'),
   editProfile,
+);
+
+userRouter.patch(
+  '/edit-email',
+  verifyToken,
+  editEmail,
 );
 
 userRouter.patch(

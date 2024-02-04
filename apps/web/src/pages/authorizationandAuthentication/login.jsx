@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import loginImage from '../../assets/masnstay.jpg';
 import { Link, useNavigate } from 'react-router-dom';
@@ -62,6 +62,7 @@ const Login = () => {
 
       setUser(response.data.result);
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('isTenant', response.data.isTenant);
       console.log(response.data);
       console.log(user);
       if (!response.data.result.isVerified) {
@@ -260,14 +261,26 @@ const Login = () => {
             </Button>
             <div className="mb-4"></div>
             <Button
-              className="block w-full select-none rounded-lg bg-gradient-to-tr from-yellow-500 to-yellow-300 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-black shadow-md shadow-yellow-500/10 transition-all hover:shadow-lg hover:shadow-yellow-500/20 active:opacity-85 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className={`block w-full select-none rounded-lg bg-gradient-to-tr from-yellow-500 to-yellow-300 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-black shadow-md shadow-yellow-500/10 transition-all hover:shadow-lg hover:shadow-yellow-500/20 active:opacity-85 ${
+                formik.isSubmitting
+                  ? 'disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
+                  : ''
+              }`}
               onClick={handleGoogleRegister}
               variant="outlined"
-              loading={true}
+              disabled={formik.isSubmitting}
             >
-              Log In with Google
+              <span className="button-text">
+                {formik.isSubmitting ? (
+                  <div className="flex justify-center items-center">
+                    <SyncLoader color="#c0cac2" size={9} />
+                  </div>
+                ) : (
+                  'Log In with Google'
+                )}
+              </span>
             </Button>
-            <ToastContainer />
+            
             <p className="flex justify-center mt-6 font-sans text-sm antialiased font-light leading-normal text-inherit">
               Don't have an account?
               <Link
