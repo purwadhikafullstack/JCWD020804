@@ -4,9 +4,17 @@ import Property_category from '../models/property_category';
 import Location from '../models/location';
 
 export const getAllProperty = async (req, res) => {
-  console.log(req.user.id, 'ini user');
   try {
-    const result = await Property.findAll({ where: { UserId: req.user.id } });
+    const result = await Property.findAll({
+      include: [
+        {
+          model: Location,
+        },
+        {
+          model: Property_category,
+        },
+      ],
+    });
 
     res.status(200).send(result);
   } catch (error) {
@@ -186,7 +194,7 @@ export const getProperty = async (req, res) => {
 export const editProperty = async (req, res) => {
   try {
     const { name, description, city, province, Categories, picture } = req.body;
-    
+
     const newLocation = await Location.create({ city, province });
 
     let category = await Property_category.findOne({ where: { Categories } });
@@ -201,7 +209,6 @@ export const editProperty = async (req, res) => {
         picture: req.file?.path,
         PropertyCategoryId: category.id,
         LocationId: newLocation.id,
-        UserId: req.user.id,
       },
 
       {
@@ -220,27 +227,17 @@ export const editProperty = async (req, res) => {
 
 export const deleteProperty = async (req, res) => {
   try {
-    const userId = req.user.id; // Replace this with your actual authentication method
-    // Find the user in the database
-    const user = await User.findOne({
-      where: {
-        id: userId,
-      },
+    const propertyId = req.params.id;
+
+    console.log(`Menghapus properti dengan ID: ${propertyId}`);
+
+    await Property.destroy({
+      where: { id: propertyId },
     });
 
-    if (!user) {
-      return res.status(404).send({
-        message: "User not found",
-      });
-    }
-
-    // If the user is found, delete the user's account
-    await user.destroy();
-
-    res.status(200).send({
-      message: "Account successfully deleted",
-    });
+    res.status(200).send('Properti dan kamar yang terkait berhasil dihapus');
   } catch (err) {
-    res.status(400).send;
+    console.error(err);
+    res.status(400).send({ err: err.message });
   }
-}
+};

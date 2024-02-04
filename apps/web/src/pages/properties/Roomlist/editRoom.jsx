@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const AddRoomForm = () => {
+const EditRoomForm = () => {
   const { id } = useParams()
   const token = localStorage.getItem('token');
   const formik = useFormik({
@@ -19,7 +19,14 @@ const AddRoomForm = () => {
       NameRoom: Yup.string().required('The Name Room must be filled in'),
       Description: Yup.string().required('Description cannot be empty'),
       Price: Yup.string().required('Price cannot be empty'),
-      picture: '',
+      picture: Yup.mixed().test(
+        'fileSize',
+        'Photo size is too large (max 1 MB)',
+        (value) => {
+          if (!value) return true; // Allow empty file (user might not want to change the photo)
+          return value.size <= 1 * 1024 * 1024; // 1 MB
+        },
+      ),
     }),
     onSubmit: async (values, { resetForm }) => {
       const data = new FormData();
@@ -30,8 +37,8 @@ const AddRoomForm = () => {
         data.append('price', values.Price);
         data.append('picture', values.picture);
 
-        const response = await axios.post(
-          `http://localhost:8000/api/room/add-room/${id}`,
+        const response = await axios.patch(
+          `http://localhost:8000/api/room/edit-room/${id}`,
           data,
           {
             headers: {
@@ -164,4 +171,4 @@ const AddRoomForm = () => {
   );
 };
 
-export default AddRoomForm;
+export default EditRoomForm;

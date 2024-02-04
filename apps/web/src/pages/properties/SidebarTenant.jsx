@@ -42,7 +42,7 @@ export const SidebarTenant = () => {
           <ListItemPrefix>
             <ShoppingBagIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Room List
+          <Link to="/list-room">Rooms</Link>
         </ListItem>
         <ListItem>
           <ListItemPrefix>

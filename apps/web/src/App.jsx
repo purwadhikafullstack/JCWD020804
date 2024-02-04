@@ -27,6 +27,7 @@ import { EditEmail } from './components/email/editemail';
 import AddRoomForm from './components/propertyManagement/addPropertyRoomForm';
 import {ListRoomTenant } from './pages/properties/Roomlist/ListRoom';
 import { EditProperty } from './pages/properties/RightBar/EditProperty';
+import EditRoomForm from './pages/properties/Roomlist/EditRoom';
 
 const router = createBrowserRouter([
   {
@@ -54,9 +55,11 @@ const router = createBrowserRouter([
   { path: '/list-property', element: <ListPropertyTenant /> },
   { path: '/add-properties', element: <AddHotelPage /> },
   { path: '/edit-email', element: <EditEmail /> },
-  { path: '/add-room', element: <AddRoomForm />},
+  { path: '/add-room/:id', element: <AddRoomForm />},
   { path: '/list-room', element: <ListRoomTenant/>},
   { path: '/edit-properties/:id', element: <EditProperty/>},
+  { path: '/edit-rooms/:id', element: <EditRoomForm/>},
+
 
 ]);
 

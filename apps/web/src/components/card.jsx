@@ -27,16 +27,8 @@ export function PropertyCard() {
     }
   };
   const fetch_data = async () => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${checklogin}`,
-      },
-    };
     try {
-      const response = await axios.get(
-        `http://localhost:8000/api/property/tenant`,
-        config,
-      );
+      const response = await axios.get(`http://localhost:8000/api/property/`);
       console.log(response.data, 'inidata');
       setProperties(response.data);
     } catch (err) {

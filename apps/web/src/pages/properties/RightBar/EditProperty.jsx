@@ -19,8 +19,6 @@ const EditPropertySchema = Yup.object().shape({
       return value.size <= 1 * 1024 * 1024; // 1 MB
     },
   ),
-  // PropertyCategoryId: addCategory.id,
-  // LocationId: newLocation.id,
 });
 
 export const EditProperty = () => {

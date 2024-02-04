@@ -11,7 +11,10 @@ export default class Room extends Model {
     Room.hasMany(models.Transaction);
 
     // Definisi relasi Room ke Property
-    Room.belongsTo(models.Property);
+    Room.belongsTo(models.Property, {
+      foreignKey: 'PropertyId', // This is the foreign key in the Product table
+      onDelete: 'CASCADE',
+    });
     // Definisi relasi Room ke Room_disable
     Room.hasOne(models.Room_disable);
     Room.hasOne(models.Price_increase);
@@ -21,7 +24,6 @@ export default class Room extends Model {
 export const init = (sequelize) => {
   Room.init(
     {
-     
       name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -35,8 +37,8 @@ export const init = (sequelize) => {
       },
       picture: {
         type: DataTypes.STRING,
-        allowNull: true
-      }
+        allowNull: true,
+      },
     },
     {
       sequelize,

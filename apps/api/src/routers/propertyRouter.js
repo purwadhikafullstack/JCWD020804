@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   addLocation,
   addProperty,
+  deleteProperty,
   editProperty,
   getAllProperty,
   getAllPropertyTenant,
@@ -13,7 +14,7 @@ const propertyRouter = Router();
 const { multerUpload } = require('../middleware/multer');
 
 // GET
-propertyRouter.get('/', verifyToken, getAllProperty);
+propertyRouter.get('/', getAllProperty);
 propertyRouter.get('/tenant', verifyToken, getAllPropertyTenant);
 propertyRouter.get('/:id', getPropertyById);
 //POST
@@ -24,12 +25,14 @@ propertyRouter.post(
   addProperty,
 );
 propertyRouter.post('/add-location', verifyToken, addLocation);
-//PATCH
+
+propertyRouter.delete('/delete-property/:id', verifyToken, deleteProperty)
 propertyRouter.patch(
   '/edit-properties/:id',
   verifyToken,
   multerUpload().single('picture'),
   editProperty,
 );
+
 
 export { propertyRouter };
