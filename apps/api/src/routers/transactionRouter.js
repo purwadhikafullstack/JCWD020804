@@ -6,6 +6,7 @@ import {
   cancelTransactionById,
   getTransactionByTenant,
   getTransactionByUser,
+  ratingReplyTenant,
   ratingUser,
   rejectTransactionById,
 } from '../controllers/transactionController';
@@ -32,6 +33,7 @@ transactionRouter.patch(
   verifyToken,
   cancelTransactionById,
 );
+transactionRouter.patch('/ratings', verifyToken, ratingReplyTenant)
 // POST
 transactionRouter.post('/ratings', verifyToken, ratingUser);
 

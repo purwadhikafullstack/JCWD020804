@@ -3,7 +3,7 @@ import Room from '../models/room';
 import Transaction from '../models/transaction';
 import User from '../models/user';
 import Review from '../models/review';
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 import fs from 'fs';
 import transporter from '../middleware/transporter';
 import handlebars from 'handlebars';
@@ -149,9 +149,11 @@ export const approveTransactionById = async (req, res) => {
       include: [
         {
           model: Room,
-          include: [{
-            model: Property
-          }]
+          include: [
+            {
+              model: Property,
+            },
+          ],
         },
         {
           model: User,
@@ -167,7 +169,7 @@ export const approveTransactionById = async (req, res) => {
     const tempCompile = handlebars.compile(data);
     const tempResult = tempCompile({
       name: transaction.User.name,
-      Hotel:transaction.Room.Property.name
+      Hotel: transaction.Room.Property.name,
     });
 
     // Konfigurasi email yang akan dikirim
@@ -178,11 +180,11 @@ export const approveTransactionById = async (req, res) => {
       html: tempResult,
       attachments: [
         {
-            filename: pdfFilename,
-            path: `./${pdfFilename}`,
-            contentType: 'application/pdf'
-        }
-    ]
+          filename: pdfFilename,
+          path: `./${pdfFilename}`,
+          contentType: 'application/pdf',
+        },
+      ],
     });
     res.status(200).send({ message: 'pembayaran diterima' });
   } catch (error) {
@@ -238,24 +240,39 @@ export const ratingUser = async (req, res) => {
   }
 };
 
-export const ratingReplayTenant = async (req, res) => {
-  const { replay } = req.body;
-  try {
-    const review = await Review.findOne({
-      include: [
-        {
-          model: Property,
-          where: { UserId: req.user.id },
-        },
-      ],
-    });
+export const ratingReplyTenant = async (req, res) => {
+  const { replyContent, reviewId } = req.body;
 
-    await review.update({
-      tenant_replay: replay,
-    });
-    res.status(200).send(result);
+  // Pastikan input yang diperlukan ada
+  if (!replyContent || !reviewId) {
+    return res.status(400).send({ message: "Missing reply content or review ID." });
+  }
+
+  try {
+    // Cari review yang akan di-update menggunakan findOne
+    const review = await Review.findOne({ where: { id: reviewId } });
+
+    // Pastikan review ditemukan sebelum mencoba update
+    if (!review) {
+      return res.status(404).send({ message: "Review not found." });
+    }
+
+    // Update review dengan balasan tenant
+    await Review.update(
+      { tenant_reply: replyContent },
+      { where: { id: reviewId } }
+    );
+
+    // Setelah update, ambil review yang terupdate untuk dikirim sebagai respons
+    const updatedReview = await Review.findOne({ where: { id: reviewId } });
+
+    // Kirim respons dengan review yang telah diupdate
+    res.status(200).send(updatedReview);
   } catch (error) {
-    console.log(error);
-    res.status(400).send({ message: error.message });
+    console.error(error);
+    res.status(500).send({ message: "An error occurred while updating the review reply." });
   }
 };
+
+
+

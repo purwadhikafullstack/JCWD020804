@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize';
 import Property from '../models/property';
 import Review from '../models/review';
 import Room from '../models/room';
@@ -17,11 +18,17 @@ export const getPropertyById = async (req, res) => {
   try {
     const result = await Property.findOne({
       where: { id: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
+      // attributes: [
+      //   // [Sequelize.fn('AVG', Sequelize.col('Reviews.rating')), 'avgRating'],
+      // ],
       include: [
         {
           model: Room,
           where: { PropertyId: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
         },
+        {
+          model: Review, 
+        }
       ],
     });
 
@@ -46,7 +53,8 @@ export const getReviewProperty = async (req, res) => {
         userId: req.user.id,
         ...whereCondition,
       },
-      include: [{ model: Review, include: [{ model: User }] }],
+      include: [{ model: Review, 
+        include: [{ model: User }] }],
     });
     res.status(200).send({ result });
   } catch (error) {
