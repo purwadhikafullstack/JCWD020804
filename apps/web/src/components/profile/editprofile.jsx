@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { Formik, Field, Form, ErrorMessage, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const EditProfileSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required'),
-  username: Yup.string().required('Username is required'),
+const EditProfileSchema = Yup.object().shape({ 
+  name: Yup.string(),
+  username: Yup.string(),
   picture: Yup.mixed().test(
     'fileSize',
-    'Photo size is too large (max 2 MB)',
+    'Photo size is too large (max 1 MB)',
     (value) => {
-      console.log('value: ', value);
       if (!value) return true; // Allow empty file (user might not want to change the photo)
-      return value.size <= 2 * 1024 * 1024; // 2 MB
+      return value.size <= 1 * 1024 * 1024; // 1 MB
     },
   ),
 });
@@ -31,9 +30,8 @@ export const EditProfile = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      username: '',
-      email: '',
+      name: user.name || '', // Set default value for name
+      username: user.username || '', // Set default value for username
       picture: null,
     },
     EditProfileSchema,
@@ -42,13 +40,20 @@ export const EditProfile = () => {
         const token = localStorage.getItem('token');
         const authToken = token;
         console.log('values:', values);
+
+        if (!values.name && !values.username && !values.picture) {
+          // Tidak ada perubahan, bisa tampilkan pesan atau berikan notifikasi
+          console.log('No changes submitted');
+          return;
+        }
+
         const formData = new FormData();
         formData.append('name', values.name);
         formData.append('username', values.username);
-        formData.append('email', values.email);
+
         formData.append('picture', values.picture);
 
-        const url = 'http://localhost:8000/api/user/edit-profile/:id';
+        const url = 'http://localhost:8000/api/user/edit-profile';
 
         try {
           const response = await axios.patch(url, formData, {
@@ -58,7 +63,7 @@ export const EditProfile = () => {
           });
 
           const notif = () => {
-            toast.success('Your profile has been successfully updated. Please check your email for verification', {
+            toast.success('Your profile has been successfully updated.', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -68,8 +73,10 @@ export const EditProfile = () => {
               progress: undefined,
               theme: 'light',
               onClose: () => {
-                // navigate('/');
-                setTimeout(() => {}, 5000);
+                // Mencoba untuk mereload setelah notifikasi tertutup
+                setTimeout(() => {
+                  window.location.reload();
+                }, 5000);
               },
             });
           };
@@ -146,7 +153,7 @@ export const EditProfile = () => {
                         type="text"
                         id="name"
                         name="name"
-                        value={formik.values.nik}
+                        value={formik.values.name}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         className={`mt-1 p-2 w-full border rounded-md ${
@@ -154,7 +161,6 @@ export const EditProfile = () => {
                             ? 'border-red-500'
                             : 'border-gray-300'
                         }`}
-                        required
                       />
                       {formik.touched.name && formik.errors.name && (
                         <p className="text-red-500 text-sm">
@@ -181,7 +187,6 @@ export const EditProfile = () => {
                             ? 'border-red-500'
                             : 'border-gray-300'
                         }`}
-                        required
                       />
                       {formik.touched.username && formik.errors.username && (
                         <p className="text-red-500 text-sm">
@@ -189,33 +194,7 @@ export const EditProfile = () => {
                         </p>
                       )}
                     </div>
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Email
-                      </label>
-                      <input
-                        type="text"
-                        id="email"
-                        name="email"
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        className={`mt-1 p-2 w-full border rounded-md ${
-                          formik.touched.email && formik.errors.email
-                            ? 'border-red-500'
-                            : 'border-gray-300'
-                        }`}
-                        required
-                      />
-                      {formik.touched.email && formik.errors.email && (
-                        <p className="text-red-500 text-sm">
-                          {formik.errors.email}
-                        </p>
-                      )}
-                    </div>
+
                     <div>
                       <label
                         htmlFor="picture"
@@ -240,7 +219,6 @@ export const EditProfile = () => {
                             ? 'border-red-500'
                             : 'border-gray-300'
                         }`}
-                        required
                       />
                       {formik.touched.picture && formik.errors.picture && (
                         <p className="text-red-500 text-sm">

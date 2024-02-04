@@ -4,7 +4,7 @@ export const verifyToken = (req, res, next) => {
   try {
     
     var token = req.headers.authorization?req.headers.authorization.split(" ")[1]:null;
-  
+   
     if (!token) {
       return res.status(401).send({
         message: 'token empty',

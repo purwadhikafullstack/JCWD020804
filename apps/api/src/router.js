@@ -4,6 +4,7 @@ import { userRouter } from './routers/user.router';
 import { propertyRouter } from './routers/propertyRouter';
 import { bookingRouter } from './routers/bookingRouter';
 import { transactionRouter } from './routers/transactionRouter';
+import { roomRouter } from './routers/roomRouter';
 
 const router = Router();
 
@@ -14,6 +15,8 @@ router.get('/', (req, res) => {
 router.use('/sample', sampleRouter);
 router.use('/user', userRouter);
 router.use('/property', propertyRouter)
+router.use('/room', roomRouter)
+
 router.use('/booking', bookingRouter)
 router.use('/transaction', transactionRouter)
 

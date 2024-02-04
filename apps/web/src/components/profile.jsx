@@ -67,9 +67,8 @@ export function ProfileMenu() {
             />
           </svg>
 
-          <Typography variant="small" className="font-medium">
-            Edit Profile
-          </Typography>
+        
+          
         </MenuItem>
         <MenuItem className="flex items-center gap-2">
         <Link to={'/tenant'}>

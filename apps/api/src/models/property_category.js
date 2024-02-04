@@ -14,7 +14,7 @@ export default class Property_category extends Model {
 
 export const init = (sequelize) => {
   Property_category.init({
-    categories: {type: DataTypes.STRING, allowNull: false}
+    Categories: {type: DataTypes.STRING, allowNull: false}
   }, {
     sequelize,
     modelName: 'Property_category',
