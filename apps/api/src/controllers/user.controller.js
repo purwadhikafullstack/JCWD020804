@@ -5,7 +5,6 @@ import User from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import { log } from 'console';
 import transporter from '../middleware/transporter';
 const path = require('path');
 

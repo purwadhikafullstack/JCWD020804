@@ -280,7 +280,7 @@ const Login = () => {
                 )}
               </span>
             </Button>
-            
+
             <p className="flex justify-center mt-6 font-sans text-sm antialiased font-light leading-normal text-inherit">
               Don't have an account?
               <Link

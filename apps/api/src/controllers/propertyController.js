@@ -1,7 +1,52 @@
 import Property from '../models/property';
+import Review from '../models/review';
 import Room from '../models/room';
+import User from '../models/user';
 import Property_category from '../models/property_category';
 import Location from '../models/location';
+
+export const getPropertyById = async (req, res) => {
+  try {
+    const result = await Property.findOne({
+      where: { id: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
+      include: [
+        {
+          model: Room,
+          where: { PropertyId: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
+        },
+      ],
+    });
+
+    res.status(200).send({ result });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({ message: error.message });
+  }
+};
+
+export const getReviewProperty = async (req, res) => {
+  try {
+    const { propertyName } = req.query;
+
+    const whereCondition = {};
+    if (propertyName) {
+      whereCondition.name = propertyName;
+    }
+
+    const result = await Property.findAll({
+      where: {
+        userId: req.user.id,
+        ...whereCondition,
+      },
+      include: [{ model: Review, include: [{ model: User }] }],
+    });
+    res.status(200).send({ result });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({ message: error.message });
+  }
+};
+
 
 export const getAllProperty = async (req, res) => {
   try {
@@ -44,28 +89,7 @@ export const getAllPropertyTenant = async (req, res) => {
   }
 };
 
-export const getPropertyById = async (req, res) => {
-  try {
-    const result = await Property.findOne({
-      where: { id: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
-      include: [
-        {
-          model: Room,
-          where: { PropertyId: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
-        },
-      ],
-    });
 
-    res.status(200).send({ result });
-  } catch (error) {
-    console.error(error);
-    res.status(400).send({ message: error.message });
-  }
-};
-
-export const createSampleData = async () => {
-  console.log('Successfully create new sample data');
-};
 
 //menambah location
 export const addLocation = async (req, res) => {

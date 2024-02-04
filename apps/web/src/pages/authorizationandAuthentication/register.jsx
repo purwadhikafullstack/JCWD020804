@@ -115,6 +115,7 @@ export const Register = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
+      
       <Card
         color="transparent"
         shadow={false}
@@ -258,6 +259,15 @@ export const Register = () => {
             ) : (
               'Register with Google'
             )}
+          </Button>
+          <Button
+            onClick={handleGoogleRegister}
+            className="mt-6 bg-yellow-500 text-black"
+            fullWidth
+            variant="outlined"
+            loading={true}
+          >
+            Register with Google
           </Button>
 
           <ToastContainer />

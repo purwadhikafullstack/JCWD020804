@@ -46,7 +46,7 @@ export function ProfileMenu() {
         {user.isTenant && (
           <MenuItem className="flex items-center gap-2">
             <Typography variant="small" className="font-medium">
-              <Link to={'/list-your-property'}>List Your Property</Link>
+              <Link to={'/tenant-dashboard'}>List Your Property</Link>
             </Typography>
           </MenuItem>
         )}
@@ -67,10 +67,7 @@ export function ProfileMenu() {
         )}
         <MenuItem className="flex items-center gap-2">
           <Typography variant="small" className="font-medium">
-            <Link to="/edit-email">
-
-            Change Your Email
-            </Link>
+            <Link to="/edit-email">Change Your Email</Link>
           </Typography>
         </MenuItem>
         <hr className="my-2 border-blue-gray-50" />

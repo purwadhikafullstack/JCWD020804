@@ -7,6 +7,7 @@ import { BookingCard } from '../../components/booking/bookingCard';
 import { useBookingDetails } from '../../components/booking/bookingHook';
 import { Navbarpage } from '../../components/navbar';
 import axios from 'axios';
+import { formatMataUang } from '../../helper/formatFunction';
 
 function PaymentDetails() {
   const { id } = useParams();
@@ -22,21 +23,26 @@ function PaymentDetails() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
+    // Inisialisasi startTime dengan waktu sekarang ditambah 1 jam
+    const now = new Date();
+    const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+    setStartTime(oneHourLater);
+
     // Simpan startTime di sessionStorage saat komponen pertama kali dimuat atau ketika ID berubah
-    sessionStorage.setItem(storedStartTimeKey, startTime.toString());
-  }, [id, startTime, storedStartTimeKey]);
+    sessionStorage.setItem(storedStartTimeKey, oneHourLater.toString());
+  }, [id, storedStartTimeKey]);
 
   useEffect(() => {
     // Update waktuLeft setiap detik
     const timer = setInterval(() => {
       const currentTime = new Date();
-      const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
-      setTimeLeft(60 * 60 - elapsedSeconds);
+      const timeDiff = Math.floor((startTime - currentTime) / 1000);
+      setTimeLeft(Math.max(0, timeDiff)); // pastikan timeLeft tidak kurang dari 0
     }, 1000);
 
     return () => clearInterval(timer);
   }, [startTime]);
-
+  
   const formatTimeLeft = () => {
     const hours = Math.floor(timeLeft / 3600);
     const minutes = Math.floor((timeLeft % 3600) / 60);
@@ -136,7 +142,7 @@ function PaymentDetails() {
             Account Holder Name: PT. Masn Stay
           </Typography>
           <Typography className="text-lg mt-2 text-gray-700">
-            Transfer amount: {bookingDetails?.total_price}
+            Transfer amount: {formatMataUang(bookingDetails?.total_price, 'IDR')}
           </Typography>
           <Typography className="text-xl mt-4 text-gray-700">
             Complete Your Payment
@@ -156,9 +162,10 @@ function PaymentDetails() {
             }}
             className="mt-2"
           />
-          {formik.touched.file && formik.errors.file ? (
-            <div>{formik.errors.file}</div>
+          {formik.touched.bukti_pembayaran && formik.errors.bukti_pembayaran ? (
+            <div>{formik.errors.bukti_pembayaran}</div>
           ) : null}
+
           <Button
             className="bg-blue-500 text-white mt-4"
             type="button"

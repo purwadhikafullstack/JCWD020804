@@ -2,6 +2,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { formatDate, formatMataUang } from '../../helper/formatFunction';
 
 export const BookingPage = () => {
   const location = useLocation();
@@ -15,28 +16,7 @@ export const BookingPage = () => {
     return diffDays;
   };
 
-  // Fungsi untuk memformat tanggal
-  const formatDate = (date) => {
-    // Tentukan zona waktu Indonesia (Waktu Indonesia Barat)
-    const options = {
-      timeZone: 'Asia/Jakarta',
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    };
-
-    // Ganti objek Date dengan waktu Indonesia
-    const localizedDate = date
-      ? new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }))
-      : new Date();
-
-    // Kembalikan tanggal yang diformat
-    return localizedDate.toLocaleDateString('en-US', options);
-  };
+  
 
   // Menghitung total malam
   const totalNights = calculateTotalNights(checkInDate, checkOutDate);
@@ -83,7 +63,7 @@ export const BookingPage = () => {
           />
           <p className="text-lg font-semibold mb-2">{selectedRoom.room_name}</p>
           <p className="text-gray-500">
-            Price: Rp {roomPrice.toLocaleString()} per night
+            Price: {formatMataUang(roomPrice, 'IDR')} per night
           </p>
         </div>
         {/* Informasi Tanggal dan Harga */}
@@ -103,8 +83,8 @@ export const BookingPage = () => {
               <span className="font-semibold">Total Nights:</span> {totalNights}
             </p>
             <p>
-              <span className="font-semibold">Total Price:</span> Rp{' '}
-              {totalPrice.toLocaleString()}
+              <span className="font-semibold">Total Price: </span> 
+              {formatMataUang(totalPrice, 'IDR')}
             </p>
           </div>
           {/* Tombol Booking */}

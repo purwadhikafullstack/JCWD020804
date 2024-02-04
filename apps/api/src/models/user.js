@@ -34,6 +34,7 @@ export const init = (sequelize) => {
       password: {
         type: DataTypes.STRING,
         allowNull: true,
+        allowNull: true,
       },
       isVerified: { type: DataTypes.BOOLEAN, defaultValue: false },
       isTenant: { type: DataTypes.BOOLEAN, defaultValue: false },

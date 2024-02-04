@@ -1,22 +1,25 @@
 import { Router } from 'express';
 import {
+  getAllProperty,
+  getPropertyById,
+  getReviewProperty,
   addLocation,
   addProperty,
   deleteProperty,
   editProperty,
-  getAllProperty,
   getAllPropertyTenant,
-  getPropertyById,
 } from '../controllers/propertyController';
 import { verifyToken } from '../middleware/auth';
+const { multerUpload } = require('../middleware/multer');
 
 const propertyRouter = Router();
-const { multerUpload } = require('../middleware/multer');
 
 // GET
 propertyRouter.get('/', getAllProperty);
+propertyRouter.get('/ratings', verifyToken, getReviewProperty);
 propertyRouter.get('/tenant', verifyToken, getAllPropertyTenant);
 propertyRouter.get('/:id', getPropertyById);
+
 //POST
 propertyRouter.post(
   '/add-properties',
