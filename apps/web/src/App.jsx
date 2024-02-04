@@ -25,6 +25,11 @@ import TenantOnly from './components/requiredTenant';
 import { UserDashboard } from './pages/user/dashboardUser';
 import UserOnly from './components/requiredUser';
 import { TenantReviews } from './pages/tenant/listReviewTenant';
+import AddRoomForm from './components/propertyManagement/addPropertyRoomForm';
+import AddHotelPage from './pages/properties/AddPropertyPage';
+import { EditProperty } from './pages/properties/RightBar/EditProperty';
+import { ListRoomTenant } from './pages/properties/Roomlist/ListRoom';
+import EditRoomForm from './pages/properties/Roomlist/EditRoom';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -51,9 +56,13 @@ const router = createBrowserRouter([
   { path: '/resetpasswordform/:email', element: <ResetPasswordForm /> },
   { path: '/user-profile', element: <UserProfile /> },
   { path: '/verify/:id', element: <Verify /> },
-  { path: '/list-your-property', element: <DashboardTenant /> },
+  { path: '/tenant-dashboard', element: <DashboardTenant /> },
   { path: '/list-property', element: <ListPropertyTenant /> },
-  { path: '/add-properties', element: <AddPropertiesTenant /> },
+  { path: '/add-properties', element: <AddHotelPage /> },
+  { path: '/edit-properties/:id', element: <EditProperty /> },
+  { path: '/list-room', element: <ListRoomTenant /> },
+  { path: '/add-room/:id', element: <AddRoomForm /> },
+  { path: '/edit-rooms/:id', element: <EditRoomForm /> },
 ]);
 
 function App() {
@@ -70,9 +79,13 @@ function App() {
       const response = await axios.get(
         `http://localhost:8000/api/user/keep-login`,
         config,
+        `http://localhost:8000/api/user/keep-login`,
+        config,
       );
       // console.log(response.data);
+      // console.log(response.data);
       dispatch(setData(response.data));
+      localStorage.setItem('isTenant', response.data.isTenant);
       localStorage.setItem('isTenant', response.data.isTenant);
     } catch (err) {
       console.log(err);

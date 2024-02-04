@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 
 export function ProfileMenu() {
   const user = useSelector((state) => state.user.value);
- 
+  console.log(user);
   const profilePicture = user.picture;
   const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ export function ProfileMenu() {
       <MenuHandler>
         <Avatar
           variant="circular"
-          alt="profil"
+          alt=""
           className="cursor-pointer"
           src={`http://localhost:8000/${profilePicture}`}
         />
@@ -46,7 +46,7 @@ export function ProfileMenu() {
         {user.isTenant && (
           <MenuItem className="flex items-center gap-2">
             <Typography variant="small" className="font-medium">
-              <Link to={'/list-your-property'}>List Your Property</Link>
+              <Link to={'/tenant-dashboard'}>List Your Property</Link>
             </Typography>
           </MenuItem>
         )}
@@ -60,16 +60,14 @@ export function ProfileMenu() {
         )}
         {!user.isTenant && (
           <MenuItem className="flex items-center gap-2">
-            <Link to='/user/dashboard'>
             <Typography variant="small" className="font-medium">
               List Your Order
             </Typography>
-            </Link>
           </MenuItem>
         )}
         <MenuItem className="flex items-center gap-2">
           <Typography variant="small" className="font-medium">
-            Help
+            <Link to="/edit-email">Change Your Email</Link>
           </Typography>
         </MenuItem>
         <hr className="my-2 border-blue-gray-50" />

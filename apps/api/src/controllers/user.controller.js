@@ -5,7 +5,6 @@ import User from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import { log } from 'console';
 import transporter from '../middleware/transporter';
 const path = require('path');
 
@@ -33,17 +32,15 @@ export const createUser = async (req, res) => {
       isVerified: false,
     });
 
-    // Ubah path file verifiedakun.html sesuai dengan struktur proyek Anda
     const data = fs.readFileSync('./web/verifiedakun.html', 'utf-8');
     const tempCompile = handlebars.compile(data);
     const tempResult = tempCompile({
       createdAt: newUser.createdAt,
       name: newUser.name,
-      username: newUser.username,
+      username: username,
       link: `http://localhost:5173/verify/${newUser.id}`,
     });
 
-    // Konfigurasi email yang akan dikirim
     await transporter.sendMail({
       from: 'amanhidayat39@gmail.com',
       to: email,
@@ -80,7 +77,6 @@ export const login = async (req) => {
       return { error: 'Wrong Password', status: 'er', code: 400 };
     }
 
-    // Buat token JWT
     const payload = { id: isUserExist.id };
     const token = jwt.sign(payload, 'LogIn');
 
@@ -143,14 +139,11 @@ export const becomeTenant = async (req, res) => {
       },
     );
 
-    // You can send the updated user data as a response
-    // res.json({ success: true, user: updatedUser });
-
     console.log(userId);
     res.status(200).send({ message: 'success' });
   } catch (error) {
     console.error('Error updating user data:', error);
-    // res.status(500).json({ success: false, error: 'Internal Server Error' });
+
     res.status(500).send('NO!');
   }
 };
@@ -167,23 +160,6 @@ export const userRegisterWithGoogle = async (req, res) => {
     });
 
     if (findUser == null) {
-      // Generate Referral code
-      // const generateReferralCode = (name) => {
-      //     const words = name.split(' ')
-      //     const userChars = words
-      //         .map((word) => word.charAt(0).toUpperCase())
-      //         .join('');
-
-      //     const randomChars = Math.random().toString(36).substring(2, 6).toUpperCase();
-
-      //     const generatedCode = `${userChars}${randomChars}`;
-
-      //     return generatedCode;
-      // }
-
-      // const referral = generateReferralCode(googleUserData.displayName)
-
-      // Customer create
       const result = await User.create({
         name: googleUserData.displayName.split(' ')[0] || '',
         username: googleUserData.displayName.split(' ')[1] || '',
@@ -191,28 +167,14 @@ export const userRegisterWithGoogle = async (req, res) => {
         picture: googleUserData.photoURL,
 
         firebaseUID: googleUserData.uid,
-        // referral_code: referral,
 
         isVerified: true,
       });
 
-      // jwt
       let payload = { id: result.id };
-      // const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
+
       const token = jwt.sign(payload, 'LogIn', { expiresIn: `1h` });
 
-      //
-      // const filePath = path.join(__dirname, '../../src/template_verify.html');
-      // const data = fs.readFileSync(filePath, 'utf-8');
-      // const tempCompile = await handlebars.compile(data)
-      // const tempResult = tempCompile({ firstname: googleUserData.displayName, link: `http://localhost:5173/verify/${token}` })
-
-      // await transporter.sendMail({
-      //     from: '.com',
-      //     to: googleUserData.email,
-      //     subject: 'Fresh Finds - Email Verification',
-      //     html: tempResult
-      // })
       return res.status(200).send({
         message: 'Successfully registering new user with Google Account',
         result: result,
@@ -283,21 +245,22 @@ export const updateUserPassword = async (req, res) => {
       },
     );
     res.status(200).send('Profile22');
-  } catch (error) {
+  } catch (err) {
     res.status(400).send({ err: err.message });
   }
 };
 
 export const editProfile = async (req, res) => {
   try {
-    const { name, username, email, picture } = req.body;
+    const { name, username, picture } = req.body;
+    const isVerified = req.body.email ? false : true;
     await User.update(
       {
         name,
         username,
-        email,
+
         picture: req.file?.path,
-        isVerified: false,
+        isVerified: isVerified,
       },
 
       {
@@ -306,22 +269,62 @@ export const editProfile = async (req, res) => {
         },
       },
     );
-    const data = fs.readFileSync('./web/verifiedakun.html', 'utf-8');
-    const tempCompile = handlebars.compile(data);
-    const tempResult = tempCompile({
-      name: name,
-      username: username,
-      link: `http://localhost:5173/verify/${req.user.id}`,
-    });
-    await transporter.sendMail({
-      from: 'amanhidayat39@gmail.com',
-      to: email,
-      subject: 'Email Confirmation',
-      html: tempResult,
-    });
+
     res.status(200).send('Profile');
   } catch (err) {
     console.log(err);
     res.status(400).send({ err: err.message });
   }
 };
+
+export const editEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    console.log(req.body);
+    const user = await User.findOne({
+      where: {
+        id: req.user.id,
+      },
+    });
+    console.log('test');
+    console.log(email);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const isVerified = email ? false : true;
+
+    await User.update({
+      email,
+      isVerified: isVerified,
+    },
+    
+    {
+      where: {
+        id: req.user.id,
+      },
+    },
+    );
+
+    const data = fs.readFileSync('./web/verifiedakun.html', 'utf-8');
+    const tempCompile = handlebars.compile(data);
+    const tempResult = tempCompile({
+      name: user.name,
+      username: user.username,
+      link: `http://localhost:5173/verify/${user.id}`,
+    });
+
+    await transporter.sendMail({
+      from: 'amanhidayat39@gmail.com',
+      to: email,
+      subject: 'Email Confirmation',
+      html: tempResult,
+    });
+
+    res.status(200).send('Email updated successfully');
+  } catch (err) {
+    console.error(err);
+    res.status(400).send({ error: err.message });
+  }
+};
+

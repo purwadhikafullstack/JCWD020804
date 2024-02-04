@@ -16,6 +16,7 @@ export const init = (sequelize) => {
   Location.init(
     {
       city: { type: DataTypes.STRING, allowNull: false },
+      province: { type: DataTypes.STRING, allowNull: false },
     },
     {
       sequelize,

@@ -2,7 +2,7 @@ import { ListPropertyTenant } from './RightBar/ListProperty';
 
 export const RightBarTenant = ({ stateRightBar }) => {
   const DASHBOARD = 0;
-  const LIST_PROPERTY = 1;
+  const LIST_PROPERTY = 0;
   const renderRightBar = (stateRightBar) => {
     switch (stateRightBar) {
       case DASHBOARD: {
