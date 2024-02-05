@@ -12,7 +12,7 @@ import {
   ShoppingBagIcon,
   UserCircleIcon,
   Cog6ToothIcon,
-  InboxIcon,
+  HomeIcon,
   PowerIcon,
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
@@ -34,34 +34,20 @@ export const SidebarTenant = () => {
         </ListItem>
         <ListItem>
           <ListItemPrefix>
-            <PresentationChartBarIcon className="h-5 w-5" />
+          <HomeIcon className="h-5 w-5" />
           </ListItemPrefix>
           <Link to="/list-property">Properties</Link>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
-            <ShoppingBagIcon className="h-5 w-5" />
+          <HomeIcon className="h-5 w-5" />
           </ListItemPrefix>
           <Link to="/list-room">Rooms</Link>
         </ListItem>
+        
         <ListItem>
           <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Inbox
-          <ListItemSuffix>
-            <Chip
-              value="14"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            />
-          </ListItemSuffix>
-        </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <UserCircleIcon className="h-5 w-5" />
+          <PresentationChartBarIcon className="h-5 w-5" />
           </ListItemPrefix>
           Transactions
         </ListItem>
@@ -71,12 +57,7 @@ export const SidebarTenant = () => {
           </ListItemPrefix>
           Report
         </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <PowerIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Setting
-        </ListItem>
+        
       </List>
     </Card>
   );

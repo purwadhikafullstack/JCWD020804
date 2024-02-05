@@ -27,6 +27,8 @@ propertyRouter.post(
   multerUpload().single('picture'),
   addProperty,
 );
+
+//
 propertyRouter.post('/add-location', verifyToken, addLocation);
 
 propertyRouter.delete('/delete-property/:id', verifyToken, deleteProperty)

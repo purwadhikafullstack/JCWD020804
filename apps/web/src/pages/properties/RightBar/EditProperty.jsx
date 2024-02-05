@@ -23,8 +23,6 @@ const EditPropertySchema = Yup.object().shape({
 
 export const EditProperty = () => {
   const token = localStorage.getItem('token');
- 
-  
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();

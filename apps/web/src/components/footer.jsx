@@ -43,7 +43,7 @@ export function SimpleFooter() {
           >
             About Us
           </Typography>
-          <Typography>MasnStay adalah aplikasi pemesanan hotel.</Typography>
+          <Typography>MasnStay is a hotel booking application.</Typography>
         </li>
 
         <li>
@@ -65,12 +65,7 @@ export function SimpleFooter() {
       </ul>
 
       <div className="flex gap-4">
-        <button
-          onClick={() => handleFooterHeightChange('10px')}
-          className="px-4 py-2 text-sm font-medium text-black bg-yellow-500 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring focus:border-yellow-300"
-        >
-          Chat Admin
-        </button>
+        
         <button
           onClick={() => handleFooterHeightChange('0px')}
           className="px-4 py-2 text-sm font-medium text-black bg-yellow-500 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring focus:border-yellow-300"

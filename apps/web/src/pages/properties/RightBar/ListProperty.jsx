@@ -6,6 +6,9 @@ import axios from 'axios';
 import { Card, Typography, IconButton, Avatar } from '@material-tailwind/react';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export const ListPropertyTenant = () => {
   const { id } = useParams();
@@ -27,7 +30,26 @@ export const ListPropertyTenant = () => {
           },
         },
       );
+      const notif = () => {
+        toast.success('Your property has been deleted.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          onClose: () => {
+            // Mencoba untuk mereload setelah notifikasi tertutup
+            setTimeout(() => {
+              window.location.reload();
+            }, 5000);
+          },
+        });
+      };
       console.log('property has delete');
+      notif();
     } catch (error) {
       console.log(error);
     }

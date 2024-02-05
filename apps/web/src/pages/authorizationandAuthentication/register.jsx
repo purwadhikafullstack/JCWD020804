@@ -260,7 +260,7 @@ export const Register = () => {
               'Register with Google'
             )}
           </Button>
-          <Button
+          {/* <Button
             onClick={handleGoogleRegister}
             className="mt-6 bg-yellow-500 text-black"
             fullWidth
@@ -268,7 +268,7 @@ export const Register = () => {
             loading={true}
           >
             Register with Google
-          </Button>
+          </Button> */}
 
           <ToastContainer />
           <Typography color="gray" className="mt-4 text-center font-normal">

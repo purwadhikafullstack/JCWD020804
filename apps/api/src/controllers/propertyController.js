@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize';
 import Property from '../models/property';
 import Review from '../models/review';
 import Room from '../models/room';
@@ -8,11 +9,15 @@ import Location from '../models/location';
 export const getPropertyById = async (req, res) => {
   try {
     const result = await Property.findOne({
-      where: { id: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
+      where: { id: req.params.id }, 
+     
       include: [
         {
           model: Room,
-          where: { PropertyId: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
+          where: { PropertyId: req.params.id }, 
+        },
+        {
+          model: Review,
         },
       ],
     });
@@ -47,19 +52,42 @@ export const getReviewProperty = async (req, res) => {
   }
 };
 
-
 export const getAllProperty = async (req, res) => {
   try {
-    const result = await Property.findAll({
+   
+    const { category, query } = req.query;
+
+    
+    const queryOptions = {
       include: [
+        {
+          model: Room,
+        },
         {
           model: Location,
         },
         {
           model: Property_category,
+          
+          ...(category && {
+            where: {
+              categories: category, 
+            },
+          }),
         },
       ],
-    });
+      ...(query && {
+        where: {
+          
+          [Sequelize.Op.or]: [
+            Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', `%${query.toLowerCase()}%`),
+            
+          ],
+        },
+      }),
+    };
+
+    const result = await Property.findAll(queryOptions);
 
     res.status(200).send(result);
   } catch (error) {
@@ -67,6 +95,7 @@ export const getAllProperty = async (req, res) => {
     res.status(400).send({ error: 'gagal mendapatkan data' });
   }
 };
+
 
 export const getAllPropertyTenant = async (req, res) => {
   console.log(req.user.id, 'ini user');
@@ -90,19 +119,11 @@ export const getAllPropertyTenant = async (req, res) => {
 };
 
 
-
-//menambah location
 export const addLocation = async (req, res) => {
   try {
     const { city, province } = req.body;
 
-    // Cek apakah lokasi sudah ada
-    // const existingLocation = await Location.findOne({ where: { city} });
-    // if (existingLocation) {
-    //   return res.status(400).json({ message: 'Location already exists' });
-    // }
-
-    // Tambah lokasi baru
+    
     const newLocation = await Location.create({ city, province });
 
     return res.status(201).json(newLocation);

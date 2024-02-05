@@ -294,16 +294,17 @@ export const editEmail = async (req, res) => {
 
     const isVerified = email ? false : true;
 
-    await User.update({
-      email,
-      isVerified: isVerified,
-    },
-    
-    {
-      where: {
-        id: req.user.id,
+    await User.update(
+      {
+        email,
+        isVerified: isVerified,
       },
-    },
+
+      {
+        where: {
+          id: req.user.id,
+        },
+      },
     );
 
     const data = fs.readFileSync('./web/verifiedakun.html', 'utf-8');
@@ -327,4 +328,3 @@ export const editEmail = async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 };
-

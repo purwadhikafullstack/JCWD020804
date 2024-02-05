@@ -7,6 +7,9 @@ import { Card, Typography, IconButton, Avatar } from '@material-tailwind/react';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Select, Option } from '@material-tailwind/react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export const ListRoomTenant = () => {
   const token = localStorage.getItem('token');
@@ -42,7 +45,26 @@ export const ListRoomTenant = () => {
           },
         },
       );
+      const notif = () => {
+        toast.success('Your rooms has been deleted.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          onClose: () => {
+            // Mencoba untuk mereload setelah notifikasi tertutup
+            setTimeout(() => {
+              window.location.reload();
+            }, 5000);
+          },
+        });
+      };
       console.log('room has delete');
+      notif();
     } catch (error) {
       console.log(error);
     }

@@ -4,6 +4,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddRoomForm = () => {
   const { id } = useParams()
@@ -40,7 +42,28 @@ const AddRoomForm = () => {
             },
           },
         );
+
+        const notif = () => {
+          toast.success('Your rooms listing has been successfully added.', {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            onClose: () => {
+              // Mencoba untuk mereload setelah notifikasi tertutup
+              setTimeout(() => {
+                window.location.reload();
+              }, 5000);
+            },
+          });
+        };
+
         console.log(response.data);
+        notif();
       } catch (error) {
         console.error('Error:', error);
       }
