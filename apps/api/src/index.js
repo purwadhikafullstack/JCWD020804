@@ -4,7 +4,10 @@ import { join } from 'path';
 import { NODE_ENV, PORT } from './config';
 import router from './router';
 import { DB } from './db';
-import { scheduleSameDayReminder, setupReminderScheduler } from './node-schedule/reminderSchedule';
+import {
+  scheduleSameDayReminder,
+  setupReminderScheduler,
+} from './node-schedule/reminderSchedule';
 
 require('dotenv').config();
 /**
@@ -67,9 +70,8 @@ const main = async () => {
     serveWebProjectBuildResult(app);
     // Menyiapkan scheduler untuk pengingat booking
     setupReminderScheduler();
-    scheduleSameDayReminder()
+    scheduleSameDayReminder();
 
-    
     // await DB.sequelize.sync({ alter: true });
 
     app.listen(PORT, (err) => {

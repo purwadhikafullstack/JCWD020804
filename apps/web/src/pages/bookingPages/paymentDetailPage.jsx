@@ -8,6 +8,8 @@ import { useBookingDetails } from '../../components/booking/bookingHook';
 import { Navbarpage } from '../../components/navbar';
 import axios from 'axios';
 import { formatMataUang } from '../../helper/formatFunction';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function PaymentDetails() {
   const { id } = useParams();
@@ -42,7 +44,7 @@ function PaymentDetails() {
 
     return () => clearInterval(timer);
   }, [startTime]);
-  
+
   const formatTimeLeft = () => {
     const hours = Math.floor(timeLeft / 3600);
     const minutes = Math.floor((timeLeft % 3600) / 60);
@@ -82,14 +84,29 @@ function PaymentDetails() {
             },
           },
         );
+        toast.success('Payment successful!', {
+          position: 'top-center',
+          autoClose: 5000, // Toast akan hilang setelah 5000ms atau 5 detik
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
 
-        console.log('Payment upload response:', response.data);
-
-        // Navigate to a success page or handle the response accordingly
-        navigate('/user/dashboard');
+        setTimeout(() => {
+          navigate('/user/dashboard');
+        }, 5000);
       } catch {
-        console.error('Error uploading payment:', error);
-        // Handle the error, show a message, etc.
+        toast.error('Error during payment: ' + error.message, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     },
   });
@@ -142,7 +159,8 @@ function PaymentDetails() {
             Account Holder Name: PT. Masn Stay
           </Typography>
           <Typography className="text-lg mt-2 text-gray-700">
-            Transfer amount: {formatMataUang(bookingDetails?.total_price, 'IDR')}
+            Transfer amount:{' '}
+            {formatMataUang(bookingDetails?.total_price, 'IDR')}
           </Typography>
           <Typography className="text-xl mt-4 text-gray-700">
             Complete Your Payment

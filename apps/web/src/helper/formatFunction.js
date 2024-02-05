@@ -29,7 +29,7 @@ function formatMataUang(amount, currency, locale = 'id-ID') {
 
 // // Contoh Penggunaan
 // const hariIni = new Date();
-// console.log('Tanggal Sekarang:', formatTanggal(hariIni, 'dd-mm-yyyy'));
+// console.log('Tanggal Sekarang:', formatDate(hariIni, 'dd-mm-yyyy'));
 
 // const jumlahUang = 1234567.89;
 // console.log('Format Mata Uang:', formatMataUang(jumlahUang, 'IDR'));

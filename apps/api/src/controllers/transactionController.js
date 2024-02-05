@@ -8,12 +8,11 @@ import fs from 'fs';
 import transporter from '../middleware/transporter';
 import handlebars from 'handlebars';
 import { createPDF } from '../document/detailOrder';
-// const createPDF = require('../document/detailOrder')
-// Update your backend controller:
+import { Sequelize } from 'sequelize';
 
 export const getTransactionByTenant = async (req, res) => {
   try {
-    const { statusFilter } = req.query;
+    const { statusFilter, page = 1, limit = 10 } = req.query; // Menambahkan page dan limit dengan nilai default
     let whereClause = {};
 
     if (statusFilter) {
@@ -37,7 +36,9 @@ export const getTransactionByTenant = async (req, res) => {
       }
     }
 
-    const result = await Transaction.findAll({
+    const offset = (page - 1) * limit; // Menghitung offset
+
+    const { count, rows } = await Transaction.findAndCountAll({
       include: [
         { model: User },
         {
@@ -51,9 +52,17 @@ export const getTransactionByTenant = async (req, res) => {
         },
       ],
       where: whereClause,
+      limit: parseInt(limit), // Menambahkan limit
+      offset: offset, // Menambahkan offset
+      order: [['createdAt', 'DESC']], // Opsi untuk mengurutkan data
     });
 
-    res.status(200).send({ result });
+    res.status(200).send({
+      totalPages: Math.ceil(count / limit),
+      currentPage: parseInt(page),
+      totalItems: count,
+      items: rows,
+    });
   } catch (error) {
     console.log(error);
     res.status(400).send({ error: 'gagal mendapatkan data' });
@@ -149,9 +158,11 @@ export const approveTransactionById = async (req, res) => {
       include: [
         {
           model: Room,
-          include: [{
-            model: Property
-          }]
+          include: [
+            {
+              model: Property,
+            },
+          ],
         },
         {
           model: User,
@@ -167,7 +178,7 @@ export const approveTransactionById = async (req, res) => {
     const tempCompile = handlebars.compile(data);
     const tempResult = tempCompile({
       name: transaction.User.name,
-      Hotel:transaction.Room.Property.name
+      Hotel: transaction.Room.Property.name,
     });
 
     // Konfigurasi email yang akan dikirim
@@ -178,11 +189,11 @@ export const approveTransactionById = async (req, res) => {
       html: tempResult,
       attachments: [
         {
-            filename: pdfFilename,
-            path: `./${pdfFilename}`,
-            contentType: 'application/pdf'
-        }
-    ]
+          filename: pdfFilename,
+          path: `./${pdfFilename}`,
+          contentType: 'application/pdf',
+        },
+      ],
     });
     res.status(200).send({ message: 'pembayaran diterima' });
   } catch (error) {
@@ -238,24 +249,161 @@ export const ratingUser = async (req, res) => {
   }
 };
 
-export const ratingReplayTenant = async (req, res) => {
-  const { replay } = req.body;
+export const ratingReplyTenant = async (req, res) => {
+  const { replyContent, reviewId } = req.body;
+
+  // Pastikan input yang diperlukan ada
+  if (!replyContent || !reviewId) {
+    return res
+      .status(400)
+      .send({ message: 'Missing reply content or review ID.' });
+  }
+
   try {
-    const review = await Review.findOne({
+    // Cari review yang akan di-update menggunakan findOne
+    const review = await Review.findOne({ where: { id: reviewId } });
+
+    // Pastikan review ditemukan sebelum mencoba update
+    if (!review) {
+      return res.status(404).send({ message: 'Review not found.' });
+    }
+
+    // Update review dengan balasan tenant
+    await Review.update(
+      { tenant_reply: replyContent },
+      { where: { id: reviewId } },
+    );
+
+    // Setelah update, ambil review yang terupdate untuk dikirim sebagai respons
+    const updatedReview = await Review.findOne({ where: { id: reviewId } });
+
+    // Kirim respons dengan review yang telah diupdate
+    res.status(200).send(updatedReview);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .send({ message: 'An error occurred while updating the review reply.' });
+  }
+};
+
+//sales report
+export const getSalesReport = async (req, res) => {
+  try {
+    const { startDate, endDate, page = 1 } = req.query; // Menambahkan page dengan default value = 1 jika tidak disediakan
+
+    const limit = 7; // Jumlah maksimal data per halaman
+    const offset = (page - 1) * limit; // Menghitung offset
+
+    // Mengonversi query params menjadi kondisi WHERE yang sesuai untuk Sequelize
+    const whereCondition = {};
+    if (startDate && endDate) {
+      whereCondition.checkIn = {
+        [Op.between]: [new Date(startDate), new Date(endDate)],
+      };
+    }
+
+    // Mencari transaksi dengan kondisi yang ditentukan dan pagination
+    const { count, rows } = await Transaction.findAndCountAll({
+      include: [
+        {
+          model: User,
+          attributes: ['name'],
+        },
+        {
+          model: Room,
+          include: [
+            {
+              model: Property,
+              where: { userId: req.user.id },
+              attributes: ['name'],
+              include: [{ model: User, attributes: ['name'] }],
+            },
+          ],
+          attributes: ['name', 'price'],
+        },
+      ],
+      where: whereCondition,
+      limit,
+      offset,
+      distinct: true, // Penting untuk menghitung jumlah baris dengan benar ketika menggunakan 'include'
+    });
+
+    // Menghitung total pendapatan (tidak terpengaruh oleh pagination)
+    const totalRevenue = await Transaction.sum('total_price', {
+      where: whereCondition,
+      include: [{
+        model: Room,
+        include: [{
+          model: Property,
+          where: { userId: req.user.id },
+          attributes: [],
+        }],
+        attributes: [],
+      }]
+    });
+
+    // Mengirim respons dengan data transaksi, total pendapatan, dan info pagination
+    res.status(200).json({
+      transactions: rows,
+      totalRevenue,
+      totalPages: Math.ceil(count / limit), // Menghitung total halaman
+      currentPage: parseInt(page), // Mengirimkan kembali halaman saat ini sebagai integer
+    });
+  } catch (error) {
+    console.error('Error fetching sales report:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+export const getRoomReport = async (req, res) => {
+  try {
+    const userId = req.user.id; // Asumsi ID user diambil dari sesi/authentikasi
+    const rooms = await Room.findAll({
       include: [
         {
           model: Property,
-          where: { UserId: req.user.id },
+          where: { UserId: userId },
+          include: [
+            {
+              model: User,
+              attributes: [],
+            },
+          ],
+          attributes: [],
+        },
+      ],
+      attributes: [
+        'id',
+        'name',
+        [
+          Sequelize.fn('COUNT', Sequelize.col('Transactions.id')),
+          'total_stays',
+        ],
+        [
+          Sequelize.fn('SUM', Sequelize.col('Transactions.total_price')),
+          'total_revenue',
+        ],
+      ],
+      group: ['Room.id'],
+      includeIgnoreAttributes: false,
+      subQuery: false,
+      include: [
+        {
+          model: Transaction,
+          attributes: [],
+          where: {
+            status: 'pembayaran berhasil', // Hanya menghitung transaksi yang berhasil
+          },
         },
       ],
     });
 
-    await review.update({
-      tenant_replay: replay,
-    });
-    res.status(200).send(result);
+    res.status(200).json(rooms);
   } catch (error) {
-    console.log(error);
-    res.status(400).send({ message: error.message });
+    console.error('Error fetching room report:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };

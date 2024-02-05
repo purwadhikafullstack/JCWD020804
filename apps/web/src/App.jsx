@@ -30,6 +30,8 @@ import AddHotelPage from './pages/properties/AddPropertyPage';
 import { EditProperty } from './pages/properties/RightBar/EditProperty';
 import { ListRoomTenant } from './pages/properties/Roomlist/ListRoom';
 import EditRoomForm from './pages/properties/Roomlist/EditRoom';
+import { Report } from './pages/tenant/salesReport';
+import { RoomReport } from './pages/tenant/roomReport';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -50,6 +52,8 @@ const router = createBrowserRouter([
     children: [
       { path: '/tenant/dashboard', element: <TenantDashboard /> },
       { path: '/tenant/ratings', element: <TenantReviews /> },
+      { path: '/tenant/sales-report', element: <Report /> },
+      { path: '/tenant/room-report', element: <RoomReport /> },
     ],
   },
   { path: '/reset-password/:email', element: <ModalUserResetPassword /> },
@@ -62,7 +66,6 @@ const router = createBrowserRouter([
   { path: '/edit-properties/:id', element: <EditProperty /> },
   { path: '/list-room', element: <ListRoomTenant /> },
   { path: '/add-room/:id', element: <AddRoomForm /> },
-  { path: '/edit-rooms/:id', element: <EditRoomForm /> },
 ]);
 
 function App() {

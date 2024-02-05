@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Typography,
-} from '@material-tailwind/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Navbarpage } from '../../components/navbar';
@@ -12,7 +6,8 @@ import axios from 'axios';
 import { useBookingDetails } from '../../components/booking/bookingHook';
 import { BookingCard } from '../../components/booking/bookingCard';
 import { formatMataUang } from '../../helper/formatFunction';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
 export const PaymentPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,7 +19,6 @@ export const PaymentPage = () => {
       selectedBank: '',
     },
     onSubmit: (values) => {
-      // Handle form submission here
       console.log('Form Values:', values);
     },
   });
@@ -32,13 +26,11 @@ export const PaymentPage = () => {
   const handlePayment = async () => {
     const token = localStorage.getItem('token');
     try {
-      // Jika tidak ada detail transaksi, mungkin tampilkan pesan kesalahan atau lakukan tindakan lainnya
+     
       if (!bookingDetails) {
         console.error('Booking details not available.');
         return;
       }
-
-      // Kirim permintaan pembayaran ke server menggunakan axios.patch
       const response = await axios.patch(
         `http://localhost:8000/api/booking/${id}`,
         { payment_method: formik.values.paymentMethod },
@@ -48,10 +40,20 @@ export const PaymentPage = () => {
           },
         },
       );
+      toast.success('complete the payment immediately!', {
+        position: "top-center",
+        autoClose: 5000, 
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
-      // Jika metode pembayaran adalah 'bank transfer', pindah ke halaman TransferPage
       if (formik.values.paymentMethod === 'bank transfer') {
+        setTimeout(() => {
         navigate(`/booking-detail/${id}`);
+      }, 5000);
       } else {
         const paymentResponse = await axios.patch(
           `http://localhost:8000/api/booking/${id}`,
@@ -63,12 +65,18 @@ export const PaymentPage = () => {
           },
         );
 
-        console.log('choose payment methode success', paymentResponse.data);
       }
 
-      console.log('Booking updated successfully:', response.data);
     } catch (error) {
-      console.error('Error during payment:', error);
+      toast.error('Error during payment: ' + error.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
