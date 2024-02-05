@@ -63,20 +63,15 @@ export const SidebarTenant = () => {
           <ListItemPrefix>
             <UserCircleIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Transactions
+          <Link to="/tenant/dashboard">Transactions </Link>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
             <Cog6ToothIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Report
+          <Link to='/tenant/sales-report'>Report</Link>
         </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <PowerIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Setting
-        </ListItem>
+        
       </List>
     </Card>
   );

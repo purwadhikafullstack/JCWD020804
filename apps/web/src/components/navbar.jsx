@@ -11,12 +11,11 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 
-export function Navbarpage() {
+export function Navbarpage({ searchQuery, setSearchQuery }) {
   const user = useSelector((state) => state.user.value);
-  console.log(user);
+  
   const id = user.id;
   const profilPicture = user.picture;
-
   const [userStatus, setUserStatus] = useState('User');
 
   const checkUser = () => {
@@ -30,6 +29,10 @@ export function Navbarpage() {
   useEffect(() => {
     checkUser();
   }, [user.isTenant]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <Navbar variant="gradient" color="white" className="max-w-full">
@@ -50,23 +53,19 @@ export function Navbarpage() {
           </Typography>
         </div>
 
-        <div className="relative flex items-center">
+        <div className="search-container">
           <Input
             type="search"
             color="yellow"
-            label="Type here..."
             className="pr-10"
             containerProps={{
               className: 'min-w-[750px]',
             }}
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search properties..."
           />
-          <Button
-            size="sm"
-            color="yellow"
-            className="absolute right-0 top-0 mt-1 rounded"
-          >
-            Search
-          </Button>
+          <Button color="yellow">Search</Button>
         </div>
 
         <div className="flex gap-4 items-center">

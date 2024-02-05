@@ -1,26 +1,50 @@
-import { Sequelize } from 'sequelize';
+
 import Property from '../models/property';
 import Review from '../models/review';
 import Room from '../models/room';
 import User from '../models/user';
 import Property_category from '../models/property_category';
 import Location from '../models/location';
+import Transaction from '../models/transaction';
+import { Op } from 'sequelize';
+import { Sequelize } from 'sequelize';
 
 export const getPropertyById = async (req, res) => {
   try {
+    console.log(req.query);
+    const { checkIn, checkOut } = req.query; // Menerima tanggal dari query parameter
+    const propertyId = req.params.id;
+
     const result = await Property.findOne({
-      where: { id: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
-      // attributes: [
-      //   // [Sequelize.fn('AVG', Sequelize.col('Reviews.rating')), 'avgRating'],
-      // ],
+      where: { id: propertyId },
       include: [
         {
           model: Room,
-          where: { PropertyId: req.params.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
+          include: [
+            {
+              model: Transaction,
+              // Memfilter transaksi berdasarkan tanggal
+              where: {
+                [Op.or]: [
+                  {
+                    checkIn: {
+                      [Op.between]: [new Date(checkIn), new Date(checkOut)],
+                    },
+                  },
+                  {
+                    checkOut: {
+                      [Op.between]: [new Date(checkIn), new Date(checkOut)],
+                    },
+                  },
+                ],
+              },
+              required: false, // Penting! Agar kamar tetap ditampilkan meskipun tidak ada transaksi yang cocok
+            },
+          ],
         },
         {
-          model: Review, 
-        }
+          model: Review,
+        },
       ],
     });
 
@@ -30,6 +54,7 @@ export const getPropertyById = async (req, res) => {
     res.status(400).send({ message: error.message });
   }
 };
+
 
 export const getReviewProperty = async (req, res) => {
   try {
@@ -45,8 +70,7 @@ export const getReviewProperty = async (req, res) => {
         userId: req.user.id,
         ...whereCondition,
       },
-      include: [{ model: Review, 
-        include: [{ model: User }] }],
+      include: [{ model: Review, include: [{ model: User }] }],
     });
     res.status(200).send({ result });
   } catch (error) {
@@ -55,19 +79,46 @@ export const getReviewProperty = async (req, res) => {
   }
 };
 
-
 export const getAllProperty = async (req, res) => {
   try {
-    const result = await Property.findAll({
+    // Menerima query parameter untuk filter by category dan query
+    const { category, query } = req.query;
+
+    // Menyiapkan opsi untuk query, termasuk filtering berdasarkan category jika ada
+    const queryOptions = {
       include: [
         {
           model: Location,
         },
         {
+          model: Review,
+        },
+        {
           model: Property_category,
+          // Hanya tambahkan kondisi where jika ada query parameter category
+          ...(category && {
+            where: {
+              categories: category, // Pastikan 'categories' adalah nama kolom yang benar pada model Property_category
+            },
+          }),
         },
       ],
-    });
+      ...(query && {
+        where: {
+          // Menggunakan fungsi LOWER() untuk case-insensitive search pada MySQL
+          [Sequelize.Op.or]: [
+            Sequelize.where(
+              Sequelize.fn('LOWER', Sequelize.col('name')),
+              'LIKE',
+              `%${query.toLowerCase()}%`,
+            ),
+            // Tambahkan lebih banyak field dengan cara yang sama jika perlu
+          ],
+        },
+      }),
+    };
+
+    const result = await Property.findAll(queryOptions);
 
     res.status(200).send(result);
   } catch (error) {
@@ -97,20 +148,11 @@ export const getAllPropertyTenant = async (req, res) => {
   }
 };
 
-
-
 //menambah location
 export const addLocation = async (req, res) => {
   try {
     const { city, province } = req.body;
 
-    // Cek apakah lokasi sudah ada
-    // const existingLocation = await Location.findOne({ where: { city} });
-    // if (existingLocation) {
-    //   return res.status(400).json({ message: 'Location already exists' });
-    // }
-
-    // Tambah lokasi baru
     const newLocation = await Location.create({ city, province });
 
     return res.status(201).json(newLocation);

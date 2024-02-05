@@ -1,6 +1,6 @@
 // src/components/TransactionForm.js
 import React, { useEffect, useState } from 'react';
-import { Button, Rating } from '@material-tailwind/react';
+import { Button, Typography } from '@material-tailwind/react';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -8,11 +8,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Navbarpage } from '../../components/navbar';
 import { averageRating } from '../../helper/getRating';
+import { formatDate, formatMataUang } from '../../helper/formatFunction';
 
 export const DetailPage = () => {
   const { id } = useParams();
   const [propertyDetails, setPropertyDetails] = useState();
-  const [rating, setRating] = useState();
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState([
     {
@@ -37,6 +37,7 @@ export const DetailPage = () => {
           checkOutDate,
           selectedRoom,
           roomPrice: selectedRoom.price,
+          roomName: selectedRoom.name
         },
       });
     } else {
@@ -45,18 +46,22 @@ export const DetailPage = () => {
     }
   };
 
+  // Updated handleRoomSelect to prevent selection of booked rooms
   const handleRoomSelect = (room) => {
-    setSelectedRoom(room);
+    // Check if the room has any transactions/bookings
+    if (!room.Transactions || room.Transactions.length === 0) {
+      setSelectedRoom(room);
+    } 
   };
-
+console.log(selectedRoom);
   const fetchApi = async () => {
     try {
+      
       const response = await axios.get(
-        `http://localhost:8000/api/property/${id}`,
+        `http://localhost:8000/api/property/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}`,
       );
       console.log(response.data);
       setPropertyDetails(response?.data.result);
-      setRating(averageRating(response.data.result.Reviews));
     } catch (error) {
       console.log(error);
     }
@@ -64,39 +69,43 @@ export const DetailPage = () => {
 
   useEffect(() => {
     fetchApi();
-  }, [id]);
-
-  // const totalRating  = review?.reduce((acc, review) => acc + review.rating, 0);
-  // const averageRating = totalRating / review?.length;
-
-  console.log(rating);
-
+  }, [id, checkInDate, checkOutDate]);
 
   return (
     <>
       <Navbarpage />
       <div className="container mx-auto my-8 flex items-center justify-between">
-        {/* Room Information - Left Side */}
+      
         <div className="w-1/2 pr-4">
-          {/* Display Room Image */}
+          
           <img
             src={roomImage}
             alt="Hotel Room"
             className="mb-4 w-full h-auto"
           />
-
-          {/* Display Price Room Per Night
-        <div className="mb-4">
-          <p className="text-xl font-bold">{}</p>
-        </div> */}
-
-          {/* Display Property Description */}
           <div className="mb-4">
             <p>{propertyDetails?.description}</p>
-            <Rating value={4} readOnly />
+            {averageRating(propertyDetails?.Reviews) != null && (
+              <div className="flex items-center gap-1.5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="-mt-0.5 h-5 w-5 text-yellow-700"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <Typography color="blue-gray" className="font-normal">
+                  {averageRating(propertyDetails?.Reviews)}
+                </Typography>
+              </div>
+            )}
           </div>
 
-          {/* Display Room List */}
           {propertyDetails?.Rooms && propertyDetails?.Rooms.length > 0 && (
             <div>
               <h2 className="text-xl font-bold mb-2">Available Rooms:</h2>
@@ -109,10 +118,19 @@ export const DetailPage = () => {
                       selectedRoom && selectedRoom.id === room.id
                         ? 'text-blue-500 font-bold'
                         : ''
+                    } ${
+                      room.Transactions && room.Transactions.length > 0
+                        ? 'opacity-50 cursor-not-allowed'
+                        : 'hover:text-blue-700'
                     }`}
                   >
                     <p>{room.name}</p>
-                    <p>Price: {room.price}</p>
+                    <p>Price: {formatMataUang(room.price, 'IDR')}</p>
+                    {room.Transactions && room.Transactions.length > 0 ? (
+                      <p className="text-red-500">Kamar Telah Dibooking</p>
+                    ) : (
+                      <p className="text-green-500">Kamar Tersedia</p>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -120,12 +138,12 @@ export const DetailPage = () => {
           )}
         </div>
 
-        {/* Date Range Calendar - Right Side */}
         <div className="w-1/2 pl-4 flex flex-col items-center justify-center">
           <div className="mb-4">
             <DateRange
               editableDateInputs={true}
               onChange={(item) => {
+                console.log(item);
                 setDateRange([item.selection]);
                 setCheckInDate(item.selection.startDate);
                 setCheckOutDate(item.selection.endDate);
@@ -135,7 +153,6 @@ export const DetailPage = () => {
             />
           </div>
 
-          {/* Booking Button */}
           <div>
             <Button
               color="lightBlue"

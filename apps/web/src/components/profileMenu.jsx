@@ -7,12 +7,10 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import { Link, useNavigate } from 'react-router-dom';
-
 import { useSelector } from 'react-redux';
 
 export function ProfileMenu() {
   const user = useSelector((state) => state.user.value);
-  console.log(user);
   const profilePicture = user.picture;
   const navigate = useNavigate();
 

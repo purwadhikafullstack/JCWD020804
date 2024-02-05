@@ -44,8 +44,6 @@ export const TenantReviews = () => {
         'with content:',
         values.replyContent,
       );
-      // Implement your logic to send reply to the backend here
-      // Simulate async operation
       handleReplyRating(values, currentReview?.id);
       setTimeout(() => {
         setSubmitting(false);
@@ -58,11 +56,11 @@ export const TenantReviews = () => {
   const handleReplyRating = async (values, reviewId) => {
     try {
       const payload = {
-        ...values, // Ini memastikan semua nilai formik dikirim, termasuk replyContent
-        reviewId: reviewId, // Tambahkan review ID ke payload
+        ...values, 
+        reviewId: reviewId, 
       };
       const response = await axios.patch(
-        'http://localhost:8000/api/transaction/ratings', // Replace with your actual API endpoint for submitting ratings
+        'http://localhost:8000/api/transaction/ratings', 
         payload,
         {
           headers: {
@@ -70,10 +68,10 @@ export const TenantReviews = () => {
           },
         },
       );
-      console.log('replay has been sent', response.data);
+      
       const updatedReview = response.data;
 
-      // Perbarui state properties dengan review yang sudah di-update
+      
       setProperties((prevProperties) => {
         return prevProperties.map((property) => {
           if (property.id === selectedProperty.id) {
@@ -81,7 +79,6 @@ export const TenantReviews = () => {
               ...property,
               Reviews: property.Reviews.map((review) => {
                 if (review.id === reviewId) {
-                  // Asumsi server mengembalikan review dengan balasan ter-update
                   return updatedReview;
                 }
                 return review;
@@ -106,7 +103,6 @@ export const TenantReviews = () => {
           },
         },
       );
-      console.log(response.data.result);
       setProperties(response.data.result);
     } catch (error) {
       console.log(error);
@@ -116,7 +112,6 @@ export const TenantReviews = () => {
   const handleSelectChange = (value) => {
     setSelectedProperty(value);
   };
-  console.log(selectedProperty);
 
   const handleReplyClick = (review) => {
     setCurrentReview(review);
