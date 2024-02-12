@@ -4,7 +4,12 @@ import { join } from 'path';
 import { NODE_ENV, PORT } from './config';
 import router from './router';
 import { DB } from './db';
+import {
+  scheduleSameDayReminder,
+  setupReminderScheduler,
+} from './node-schedule/reminderSchedule';
 
+require('dotenv').config();
 /**
  * Serve "web" project build result (for production only)
  * @param {Express} app
@@ -20,6 +25,8 @@ const serveWebProjectBuildResult = (app) => {
     });
   }
 };
+
+const firebase = () => {};
 
 /**
  * Global error handler
@@ -49,24 +56,34 @@ const globalAPIErrorHandler = (app) => {
 /**
  * Main function of API project
  */
-const main = () => {
-  DB.initialize();
+const main = async () => {
+  try {
+    await DB.initialize();
 
-  const app = express();
-  app.use(cors());
-  app.use(json());
-  app.use('/api', router);
+    const app = express();
+    app.use(cors());
+    app.use(json());
+    app.use('/api', router);
+    app.use('/public', express.static('./public'));
 
-  globalAPIErrorHandler(app);
-  serveWebProjectBuildResult(app);
+    globalAPIErrorHandler(app);
+    serveWebProjectBuildResult(app);
 
-  app.listen(PORT, (err) => {
-    if (err) {
-      console.log(`ERROR: ${err}`);
-    } else {
-      console.log(`  ➜  [API] Local:   http://localhost:${PORT}/`);
-    }
-  });
+    setupReminderScheduler();
+    scheduleSameDayReminder();
+
+    // await DB.sequelize.sync({ alter: true });
+
+    app.listen(PORT, (err) => {
+      if (err) {
+        console.log(`ERROR: ${err}`);
+      } else {
+        console.log(`  ➜  [API] Local:   http://localhost:${PORT}/`);
+      }
+    });
+  } catch (error) {
+    console.error('Error during initialization:', error);
+  }
 };
 
 main();
