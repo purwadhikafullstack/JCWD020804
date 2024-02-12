@@ -17,7 +17,6 @@ const sendReminderEmail = async (booking, subject, templatePath) => {
     checkInDate: booking.checkIn,
     hotel: booking.Room.Property.name,
     room: booking.Room.name,
-    // Tambahkan detail lain jika diperlukan
   });
 
   await transporter.sendMail({
@@ -28,7 +27,6 @@ const sendReminderEmail = async (booking, subject, templatePath) => {
   });
 };
 
-// Fungsi untuk mengirim pengingat H-1 hari
 export const sendDailyReminder = async () => {
   try {
     const tomorrow = new Date();

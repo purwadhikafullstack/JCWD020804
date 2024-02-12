@@ -1,9 +1,10 @@
 import React from 'react';
-import { ErrorMessage, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { api } from '../../helper/api';
 
 const Tenant = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Tenant = () => {
       'File size is too large (max 2 MB)',
       (value) => {
         if (!value) return true;
-        return value.size <= 2 * 1024 * 1024; // 2 MB
+        return value.size <= 2 * 1024 * 1024; 
       },
     ),
   });
@@ -28,20 +29,16 @@ const Tenant = () => {
     onSubmit: async (values, { resetForm }) => {
       try {
         const token = localStorage.getItem('token');
-        const authToken = token;
-
         const formData = new FormData();
         formData.append('no_ktp', values.nik);
         formData.append('foto_ktp', values.ktpImage);
 
-        const response = await fetch(
-          'http://localhost:8000/api/user/become-tenant/:id',
+        const response = await api.patch (
+          'user/become-tenant/',formData,
           {
-            method: 'PATCH',
             headers: {
-              Authorization: `Bearer ${authToken}`,
+              Authorization: `Bearer ${token}`,
             },
-            body: formData,
           },
         );
 
@@ -67,7 +64,6 @@ const Tenant = () => {
           );
         };
 
-        console.log(response);
         notif();
         resetForm();
       } catch (error) {

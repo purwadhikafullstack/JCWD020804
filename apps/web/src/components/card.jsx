@@ -13,11 +13,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { formatMataUang } from '../helper/formatFunction';
 import { averageRating } from '../helper/getRating';
+import { api } from '../helper/api';
 
 export function PropertyCard({ selectedCategory, searchQuery }) {
   const checklogin = localStorage.getItem('token');
   const [properties, setProperties] = useState([]);
+
   const navigate = useNavigate();
 
   const handleReserve = (id) => {
@@ -30,15 +33,13 @@ export function PropertyCard({ selectedCategory, searchQuery }) {
   };
   const fetch_data = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/property/`, {
+      const response = await api.get(`/property`, {
         params: {
           category: selectedCategory,
-          query: searchQuery, 
+          query: searchQuery,
         },
       });
-     
       setProperties(response.data);
-    
     } catch (err) {
       console.log(err);
     }
@@ -48,13 +49,31 @@ export function PropertyCard({ selectedCategory, searchQuery }) {
     fetch_data();
   }, [selectedCategory, searchQuery]);
 
+  const getLowestRoomPrice = (property) => {
+    const lowestPrice = property.Rooms?.reduce(
+      (min, room) => (room.price < min ? room.price : min),
+      Infinity,
+    );
+    return lowestPrice !== Infinity ? lowestPrice : '0';
+  };
+
+  function truncateDescription(description, maxLength) {
+    if (description && description.split(' ').length > maxLength) {
+      return `${description.split(' ').slice(0, maxLength).join(' ')}...`;
+    }
+    return description;
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {properties.map((property) => (
-        <Card key={property.id} className="w-full max-w-[26rem] shadow-lg">
+        <Card
+          key={property.id}
+          className="w-full max-w-[26rem] shadow-lg flex flex-col"
+        >
           <CardHeader floated={false} color="blue-gray">
             <img
-              src={`http://localhost:8000/${property.picture}`}
+              src={`${import.meta.env.VITE_IMG_URL}${property.picture}`}
               alt="ui/ux review check"
               className="object-cover w-full h-48 rounded-t-lg"
             />
@@ -75,7 +94,7 @@ export function PropertyCard({ selectedCategory, searchQuery }) {
               </svg>
             </IconButton>
           </CardHeader>
-          <CardBody>
+          <CardBody className="flex-grow flex flex-col">
             <div className="mb-3">
               <Typography
                 variant="h5"
@@ -87,33 +106,36 @@ export function PropertyCard({ selectedCategory, searchQuery }) {
               <Typography color="gray">
                 {property.Location?.city} {property.Location?.province}
               </Typography>
-              {
-               
-                property?.Reviews && property.Reviews.length > 0 && (
-                  <div className="flex items-center gap-1.5">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="-mt-0.5 h-5 w-5 text-yellow-700"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <Typography color="blue-gray" className="font-normal">
-                      {averageRating(property?.Reviews)}
-                    </Typography>
-                  </div>
-                )
-              }
+              {property?.Reviews && property.Reviews.length > 0 && (
+                <div className="flex items-center gap-1.5">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="-mt-0.5 h-5 w-5 text-yellow-700"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <Typography color="blue-gray" className="font-normal">
+                    {averageRating(property?.Reviews)}
+                  </Typography>
+                </div>
+              )}
             </div>
-            <Typography color="gray">
-              {property.description}
-            </Typography>
+            <div className="flex-grow flex flex-col items-start gap-3">
+              <Typography color="gray" className="flex-grow">
+                {truncateDescription(property.description, 20)}
+              </Typography>
+              <Typography color="gray">
+                {formatMataUang(getLowestRoomPrice(property), 'IDR')}
+              </Typography>
+            </div>
           </CardBody>
+
           <CardFooter className="pt-3">
             <Button
               size="lg"

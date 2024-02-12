@@ -7,6 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from 'react-router-dom';
+import { api } from '../../../helper/api';
 
 const EditPropertySchema = Yup.object().shape({
   name: Yup.string(),
@@ -15,7 +16,7 @@ const EditPropertySchema = Yup.object().shape({
     'fileSize',
     'Photo size is too large (max 1 MB)',
     (value) => {
-      if (!value) return true; // Allow empty file (user might not want to change the photo)
+      if (!value) return true; 
       return value.size <= 1 * 1024 * 1024; // 1 MB
     },
   ),
@@ -776,7 +777,6 @@ export const EditProperty = () => {
     const selectedProvinceValue = event.target.value;
     setSelectedProvince(selectedProvinceValue);
 
-    // Reset the selected city when the province changes
     setSelectedCity('');
   };
 
@@ -795,8 +795,8 @@ export const EditProperty = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: '', // Set default value for name
-      description: '', // Set default value for username
+      name: '', 
+      description: '', 
       picture: null,
       city: '',
       province: '',
@@ -807,7 +807,7 @@ export const EditProperty = () => {
       try {
         const token = localStorage.getItem('token');
         const authToken = token;
-        console.log('values:', values);
+       
 
         if (
           !values.name &&
@@ -816,7 +816,6 @@ export const EditProperty = () => {
           !values.category &&
           !values.newLocation 
         ) {
-          // Tidak ada perubahan, bisa tampilkan pesan atau berikan notifikasi
           console.log('No changes submitted');
           return;
         }
@@ -828,12 +827,12 @@ export const EditProperty = () => {
         formData.append('province', selectedProvince);
         formData.append('Categories', selectedCategories);
         formData.append('picture', values.picture);
-        console.log(formData);
+       
 
-        const url = `http://localhost:8000/api/property/edit-properties/${id}`;
+        const url = `/property/edit-properties/${id}`;
 
         try {
-          const response = await axios.patch(url, formData, {
+          const response = await api.patch(url, formData, {
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
@@ -850,7 +849,6 @@ export const EditProperty = () => {
               progress: undefined,
               theme: 'light',
               onClose: () => {
-                // Mencoba untuk mereload setelah notifikasi tertutup
                 setTimeout(() => {
                   window.location.reload();
                 }, 5000);
@@ -858,7 +856,6 @@ export const EditProperty = () => {
             });
           };
 
-          console.log('Response:', response.data);
           notif();
         } catch (error) {
           console.error('Error:', error.message);

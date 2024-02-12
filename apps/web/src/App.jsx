@@ -18,7 +18,6 @@ import { UserProfile } from './components/profile/userprofile';
 import Verify from './pages/authorizationandAuthentication/verify';
 import { DashboardTenant } from './pages/properties/DashboardTenant';
 import { ListPropertyTenant } from './pages/properties/RightBar/ListProperty';
-import { AddPropertiesTenant } from './pages/properties/AddProperties';
 import { PaymentPage } from './pages/bookingPages/paymentPage';
 import { TenantDashboard } from './pages/tenant/dashboardTenant';
 import TenantOnly from './components/requiredTenant';
@@ -32,17 +31,29 @@ import { ListRoomTenant } from './pages/properties/Roomlist/ListRoom';
 import EditRoomForm from './pages/properties/Roomlist/EditRoom';
 import { Report } from './pages/tenant/salesReport';
 import { RoomReport } from './pages/tenant/roomReport';
+import { api } from './helper/api';
+import { EditEmail } from './components/email/editemail';
+import Required from './components/required';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
-  { path: '/detail/:id', element: <DetailPage /> },
-  { path: '/booking', element: <BookingPage /> },
-  { path: '/booking/:id', element: <PaymentPage /> },
-  { path: '/booking-detail/:id', element: <PaymentDetails /> },
   { path: '/login', element: <Login /> },
   { path: '/register', element: <Register /> },
-  { path: '/tenant', element: <Tenant /> },
-
+  { path: '/reset-password/:email', element: <ModalUserResetPassword /> },
+  { path: '/resetpasswordform/:email', element: <ResetPasswordForm /> },
+  { path: '/user-profile', element: <UserProfile /> },
+  { path: '/verify/:id', element: <Verify /> },
+  { path: '/edit-email', element: <EditEmail /> },
+  {
+    element: <Required />,
+    children: [
+      { path: '/detail/:id', element: <DetailPage /> },
+      { path: '/booking', element: <BookingPage /> },
+      { path: '/booking/:id', element: <PaymentPage /> },
+      { path: '/booking-detail/:id', element: <PaymentDetails /> },
+      { path: '/tenant', element: <Tenant /> },
+    ],
+  },
   {
     element: <UserOnly />,
     children: [{ path: '/user/dashboard', element: <UserDashboard /> }],
@@ -54,18 +65,15 @@ const router = createBrowserRouter([
       { path: '/tenant/ratings', element: <TenantReviews /> },
       { path: '/tenant/sales-report', element: <Report /> },
       { path: '/tenant/room-report', element: <RoomReport /> },
+      { path: '/tenant-dashboard', element: <DashboardTenant /> },
+      { path: '/list-property', element: <ListPropertyTenant /> },
+      { path: '/add-properties', element: <AddHotelPage /> },
+      { path: '/edit-properties/:id', element: <EditProperty /> },
+      { path: '/list-room', element: <ListRoomTenant /> },
+      { path: '/add-room/:id', element: <AddRoomForm /> },
+      { path: '/edit-rooms/:id', element: <EditRoomForm /> },
     ],
   },
-  { path: '/reset-password/:email', element: <ModalUserResetPassword /> },
-  { path: '/resetpasswordform/:email', element: <ResetPasswordForm /> },
-  { path: '/user-profile', element: <UserProfile /> },
-  { path: '/verify/:id', element: <Verify /> },
-  { path: '/tenant-dashboard', element: <DashboardTenant /> },
-  { path: '/list-property', element: <ListPropertyTenant /> },
-  { path: '/add-properties', element: <AddHotelPage /> },
-  { path: '/edit-properties/:id', element: <EditProperty /> },
-  { path: '/list-room', element: <ListRoomTenant /> },
-  { path: '/add-room/:id', element: <AddRoomForm /> },
 ]);
 
 function App() {
@@ -79,16 +87,8 @@ function App() {
       },
     };
     try {
-      const response = await axios.get(
-        `http://localhost:8000/api/user/keep-login`,
-        config,
-        `http://localhost:8000/api/user/keep-login`,
-        config,
-      );
-      // console.log(response.data);
-      // console.log(response.data);
+      const response = await api.get(`/user/keep-login`, config);
       dispatch(setData(response.data));
-      localStorage.setItem('isTenant', response.data.isTenant);
       localStorage.setItem('isTenant', response.data.isTenant);
     } catch (err) {
       console.log(err);

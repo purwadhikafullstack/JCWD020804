@@ -3,7 +3,6 @@ import {
   getAllProperty,
   getPropertyById,
   getReviewProperty,
-  addLocation,
   addProperty,
   deleteProperty,
   editProperty,
@@ -27,15 +26,13 @@ propertyRouter.post(
   multerUpload().single('picture'),
   addProperty,
 );
-propertyRouter.post('/add-location', verifyToken, addLocation);
 
-propertyRouter.delete('/delete-property/:id', verifyToken, deleteProperty)
+propertyRouter.delete('/delete-property/:id', verifyToken, deleteProperty);
 propertyRouter.patch(
   '/edit-properties/:id',
   verifyToken,
   multerUpload().single('picture'),
   editProperty,
 );
-
 
 export { propertyRouter };

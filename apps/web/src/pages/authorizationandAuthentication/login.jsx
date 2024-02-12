@@ -13,12 +13,15 @@ import { Button } from '@material-tailwind/react';
 import { registerWithGoogle } from '../../../../api/src/firebase';
 import { SyncLoader } from 'react-spinners';
 import { ModalUserResetPassword } from './ModalUserResetPassword';
+import { api } from '../../helper/api';
 
 const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const handleModalOpen = () => setModalOpen(!modalOpen);
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object({
@@ -55,16 +58,14 @@ const Login = () => {
 
   async function handleSubmitLogin(values) {
     try {
-      const response = await axios.post(
-        `http://localhost:8000/api/user/login`,
-        { email: values.email, password: values.password },
-      );
+      const response = await api.post(`/user/login`, {
+        email: values.email,
+        password: values.password,
+      });
 
       setUser(response.data.result);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('isTenant', response.data.isTenant);
-      console.log(response.data);
-      console.log(user);
       if (!response.data.result.isVerified) {
         toast.success('You Must Verifikasi', {
           position: 'top-right',
@@ -85,13 +86,11 @@ const Login = () => {
       dispatch(setData(response.data.result));
 
       navigate('/');
-      // window.location.reload();
 
       notif();
     } catch (err) {
       console.error(err);
 
-      // Handle specific error message or show a general message
       const errorMessage =
         err.response?.data.error || 'An error occurred during login.';
 
@@ -103,13 +102,10 @@ const Login = () => {
       const userData = await registerWithGoogle();
       console.log(userData);
 
-      const response = await axios.post(
-        'http://localhost:8000/api/user/register-google',
-        { googleUserData: userData },
-      );
-      console.log(response);
+      const response = await api.post('/user/register-google', {
+        googleUserData: userData,
+      });
       localStorage.setItem('token', response.data.token);
-
       dispatch(setData(response.data.result));
       toast.success('Log In With Google Success', {
         position: 'top-right',
@@ -231,7 +227,7 @@ const Login = () => {
                   Remember Me
                 </label>
               </div>
-              <div className="flex justify-end" onClick={handleModalOpen}>
+              <div className="flex justify-end" onClick={toggleModal}>
                 <span className="w-full cursor-pointer text-end text-[14px] text-gray-600 hover:text-gray-700 hover:underline hover:decoration-1">
                   Reset Password?
                 </span>
@@ -304,7 +300,7 @@ const Login = () => {
       </div>
       <ModalUserResetPassword
         modalOpen={modalOpen}
-        handleModalOpen={handleModalOpen}
+        handleModalOpen={toggleModal}
       />
     </>
   );

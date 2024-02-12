@@ -3,9 +3,7 @@ import { Dialog, Rating } from '@material-tailwind/react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { api } from '../../helper/api';
 
 export function RatingWithCommentDialog({
   Open,
@@ -31,7 +29,7 @@ export function RatingWithCommentDialog({
     if (ratingGivenDialog) {
       setSelectedTransactionId(null);
       setSelectedPropertyId(null);
-      setRatingGivenCallback(); // Memanggil fungsi callback untuk memberitahu UserDashboard bahwa rating sudah diberikan
+      setRatingGivenCallback(); 
     }
   };
 
@@ -42,10 +40,8 @@ export function RatingWithCommentDialog({
     },
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
-      // Handle form submission logic here
       console.log('Form submitted:', values);
       handleGiveRating(values);
-      // Reset the form after submission
       resetForm();
       handleCloseDialog();
     },
@@ -58,9 +54,8 @@ export function RatingWithCommentDialog({
     try {
       values.TransactionId = TransactionId;
       values.PropertyId = PropertyId;
-      // console.log(values);
-      const response = await axios.post(
-        'http://localhost:8000/api/transaction/ratings', // Replace with your actual API endpoint for submitting ratings
+      const response = await api.post(
+        '/transaction/ratings', 
         values,
         {
           headers: {

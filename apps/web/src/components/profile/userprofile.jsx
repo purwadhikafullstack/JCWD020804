@@ -3,12 +3,10 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { EditProfile } from './editprofile';
 import loginImage from '../../assets/masnstay.jpg';
-import PropTypes from 'prop-types';
 import { Typography } from '@material-tailwind/react';
 
 export const UserProfile = () => {
   const user = useSelector((state) => state.user.value);
-  console.log(user);
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModalOpen = () => setModalOpen(!modalOpen);
@@ -31,7 +29,7 @@ export const UserProfile = () => {
         </Typography>
       </Link>
 
-      <img src={`http://localhost:8000/${user.picture}`} />
+      <img src={`${import.meta.env.VITE_IMG_URL}${user.picture}`} alt="User profile"/>
 
       <div className="p-6 text-center">
         <h4 className="block mb-2 font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
@@ -45,7 +43,7 @@ export const UserProfile = () => {
         </p>
 
         <p
-          className="block mt-4 text-center text-black hover:text-yellow-800"
+          className="block mt-4 text-center text-black hover:text-yellow-800 cursor-pointer"
           onClick={handleModalOpen}
         >
           <svg
@@ -56,6 +54,7 @@ export const UserProfile = () => {
           >
             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
           </svg>
+          Edit Profile
         </p>
       </div>
       <div>
@@ -75,9 +74,4 @@ export const UserProfile = () => {
       )}
     </div>
   );
-};
-
-UserProfile.propTypes = {
-  modalOpen: PropTypes.bool.isRequired,
-  handleModalOpen: PropTypes.func.isRequired,
 };

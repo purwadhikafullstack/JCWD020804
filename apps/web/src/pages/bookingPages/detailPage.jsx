@@ -1,4 +1,3 @@
-// src/components/TransactionForm.js
 import React, { useEffect, useState } from 'react';
 import { Button, Typography } from '@material-tailwind/react';
 import { DateRange } from 'react-date-range';
@@ -9,6 +8,7 @@ import axios from 'axios';
 import { Navbarpage } from '../../components/navbar';
 import { averageRating } from '../../helper/getRating';
 import { formatDate, formatMataUang } from '../../helper/formatFunction';
+import { api } from '../../helper/api';
 
 export const DetailPage = () => {
   const { id } = useParams();
@@ -37,28 +37,24 @@ export const DetailPage = () => {
           checkOutDate,
           selectedRoom,
           roomPrice: selectedRoom.price,
-          roomName: selectedRoom.name
         },
       });
     } else {
-      // Handle the case where no room is selected
       console.error('Please select a room before booking.');
     }
   };
 
-  // Updated handleRoomSelect to prevent selection of booked rooms
   const handleRoomSelect = (room) => {
-    // Check if the room has any transactions/bookings
     if (!room.Transactions || room.Transactions.length === 0) {
       setSelectedRoom(room);
-    } 
+    }
   };
-console.log(selectedRoom);
+
   const fetchApi = async () => {
     try {
-      
-      const response = await axios.get(
-        `http://localhost:8000/api/property/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}`,
+      console.log({ checkInDate, checkOutDate });
+      const response = await api.get(
+        `/property/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}`,
       );
       console.log(response.data);
       setPropertyDetails(response?.data.result);
@@ -75,16 +71,16 @@ console.log(selectedRoom);
     <>
       <Navbarpage />
       <div className="container mx-auto my-8 flex items-center justify-between">
-      
         <div className="w-1/2 pr-4">
-          
           <img
-            src={roomImage}
+            src={`${import.meta.env.VITE_IMG_URL}${propertyDetails?.picture}`}
             alt="Hotel Room"
             className="mb-4 w-full h-auto"
           />
+
           <div className="mb-4">
             <p>{propertyDetails?.description}</p>
+
             {averageRating(propertyDetails?.Reviews) != null && (
               <div className="flex items-center gap-1.5">
                 <svg
@@ -125,6 +121,9 @@ console.log(selectedRoom);
                     }`}
                   >
                     <p>{room.name}</p>
+                    <img
+                      src={`${import.meta.env.VITE_IMG_URL}${room.picture}`}
+                    />
                     <p>Price: {formatMataUang(room.price, 'IDR')}</p>
                     {room.Transactions && room.Transactions.length > 0 ? (
                       <p className="text-red-500">Kamar Telah Dibooking</p>

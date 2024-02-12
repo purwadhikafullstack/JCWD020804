@@ -6,13 +6,11 @@ export const createPDF = (filename, transaction) => {
 
   doc.pipe(fs.createWriteStream(filename));
 
-  // Header
   doc.fontSize(25).fillColor('blue').text('Konfirmasi Booking', 100, 50);
 
-  // Subheader
+ 
   doc.fontSize(18).fillColor('black').text('Detail Pemesanan:', 100, 100);
 
-  // Detail Pemesanan
   const detailsStartY = 130;
   doc.fontSize(12).fillColor('#333');
   doc.text(`Nama: ${transaction.User.name}`, 100, detailsStartY);
@@ -20,7 +18,7 @@ export const createPDF = (filename, transaction) => {
   doc.text(`Hotel: ${transaction.Room.Property.name}`, 100, detailsStartY + 40);
   doc.text(`Kamar Hotel: ${transaction.Room.name}`, 100, detailsStartY + 60);
 
-  // Garis pembatas
+  
   doc
     .moveTo(50, 250)
     .lineTo(550, 250)

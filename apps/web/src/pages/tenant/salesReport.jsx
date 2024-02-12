@@ -8,6 +8,7 @@ import { formatDate, formatMataUang } from '../../helper/formatFunction';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import { CircularPagination } from './paginationTenant';
+import { api } from '../../helper/api';
 
 export const Report = () => {
   const [transactions, setTransactions] = useState([]);
@@ -30,8 +31,8 @@ export const Report = () => {
       const queryParams = `?${startDate ? `startDate=${startDate}&` : ''}${
         endDate ? `endDate=${endDate}&` : ''
       }page=${page}`;
-      const response = await axios.get(
-        `http://localhost:8000/api/transaction/tenant/sales-report${queryParams}`,
+      const response = await api.get(
+        `/transaction/tenant/sales-report${queryParams}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,8 +40,8 @@ export const Report = () => {
         },
       );
       setTotalPages(response.data.totalPages);
-      setCurrentPage(response.data.currentPage); 
-      
+      setCurrentPage(response.data.currentPage);
+
       setTransactions(response?.data.transactions);
       setTotalRevenue(response?.data.totalRevenue);
     } catch (error) {

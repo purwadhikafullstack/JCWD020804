@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { registerWithGoogle } from '../../../../api/src/firebase';
 import { useDispatch } from 'react-redux';
 import { setData } from '../../redux/userSlice';
+import { api } from '../../helper/api';
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export const Register = () => {
 
   const handleSubmit = async (data) => {
     try {
-      await axios.post('http://localhost:8000/api/user/register', data);
+      await api.post('/user/register', data);
       console.log(data, 'ini data');
       navigate('/');
       notify();
@@ -76,8 +77,8 @@ export const Register = () => {
       const userData = await registerWithGoogle();
       console.log(userData);
 
-      const response = await axios.post(
-        'http://localhost:8000/api/user/register-google',
+      const response = await api.post(
+        '/user/register-google',
         { googleUserData: userData },
       );
       console.log(response.data);
@@ -260,15 +261,7 @@ export const Register = () => {
               'Register with Google'
             )}
           </Button>
-          <Button
-            onClick={handleGoogleRegister}
-            className="mt-6 bg-yellow-500 text-black"
-            fullWidth
-            variant="outlined"
-            loading={true}
-          >
-            Register with Google
-          </Button>
+          
 
           <ToastContainer />
           <Typography color="gray" className="mt-4 text-center font-normal">

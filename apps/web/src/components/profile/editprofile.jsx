@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { api } from '../../helper/api';
 
 const EditProfileSchema = Yup.object().shape({ 
   name: Yup.string(),
@@ -14,8 +15,8 @@ const EditProfileSchema = Yup.object().shape({
     'fileSize',
     'Photo size is too large (max 1 MB)',
     (value) => {
-      if (!value) return true; // Allow empty file (user might not want to change the photo)
-      return value.size <= 1 * 1024 * 1024; // 1 MB
+      if (!value) return true;
+      return value.size <= 1 * 1024 * 1024; 
     },
   ),
 });
@@ -30,19 +31,16 @@ export const EditProfile = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: user.name || '', // Set default value for name
-      username: user.username || '', // Set default value for username
+      name: user.name || '', 
+      username: user.username || '', 
       picture: null,
     },
-    EditProfileSchema,
+    validationSchema: EditProfileSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
         const token = localStorage.getItem('token');
         const authToken = token;
-        console.log('values:', values);
-
         if (!values.name && !values.username && !values.picture) {
-          // Tidak ada perubahan, bisa tampilkan pesan atau berikan notifikasi
           console.log('No changes submitted');
           return;
         }
@@ -50,13 +48,11 @@ export const EditProfile = () => {
         const formData = new FormData();
         formData.append('name', values.name);
         formData.append('username', values.username);
-
         formData.append('picture', values.picture);
-
-        const url = 'http://localhost:8000/api/user/edit-profile';
+        const url = '/user/edit-profile';
 
         try {
-          const response = await axios.patch(url, formData, {
+          const response = await api.patch(url, formData, {
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
@@ -73,7 +69,6 @@ export const EditProfile = () => {
               progress: undefined,
               theme: 'light',
               onClose: () => {
-                // Mencoba untuk mereload setelah notifikasi tertutup
                 setTimeout(() => {
                   window.location.reload();
                 }, 5000);
@@ -81,7 +76,6 @@ export const EditProfile = () => {
             });
           };
 
-          console.log('Response:', response.data);
           notif();
         } catch (error) {
           console.error('Error:', error.message);

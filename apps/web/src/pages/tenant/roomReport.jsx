@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { formatMataUang } from '../../helper/formatFunction';
+import { api } from '../../helper/api';
 
 export const RoomReport = () => {
   const [rooms, setRooms] = useState([]);
@@ -8,8 +9,8 @@ export const RoomReport = () => {
 
   const fetchRooms = async () => {
     try {
-      const response = await axios.get(
-        'http://localhost:8000/api/transaction/tenant/room-report',
+      const response = await api.get(
+        '/transaction/tenant/room-report',
         {
           headers: {
             Authorization: `Bearer ${token}`,

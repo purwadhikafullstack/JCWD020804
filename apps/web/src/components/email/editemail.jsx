@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { api } from '../../helper/api';
+import { Navbarpage } from '../navbar';
 const EditEmailSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email format')
@@ -31,20 +33,20 @@ export const EditEmail = () => {
           formData.append('email', values.email);
         }
 
-        const url = `http://localhost:8000/api/user/edit-email`;
+        const url = `/user/edit-email`;
 
-        const response = await axios.patch(url, values, {
+        const response = await api.patch(url, values, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         if (response.status === 200) {
-          console.log('Response:', response.data);
+         
           notif();
         } else {
           console.error('Error:', response.status, response.statusText);
-          // Atasi kesalahan sesuai dengan status code yang diterima
+          
         }
       } catch (error) {
         console.log('Error:', error);
@@ -65,7 +67,7 @@ export const EditEmail = () => {
         progress: undefined,
         theme: 'light',
         onClose: () => {
-          // navigate('/');
+          
           setTimeout(() => {}, 5000);
         },
       },
@@ -74,6 +76,7 @@ export const EditEmail = () => {
 
   return (
     <>
+    <Navbarpage/>
       <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <div>

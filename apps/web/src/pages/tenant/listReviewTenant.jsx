@@ -17,6 +17,8 @@ import {
   Input,
 } from '@material-tailwind/react';
 import axios from 'axios';
+import { api } from '../../helper/api';
+import { SidebarTenant } from '../properties/SidebarTenant';
 
 export const TenantReviews = () => {
   const token = localStorage.getItem('token');
@@ -56,22 +58,17 @@ export const TenantReviews = () => {
   const handleReplyRating = async (values, reviewId) => {
     try {
       const payload = {
-        ...values, 
-        reviewId: reviewId, 
+        ...values,
+        reviewId: reviewId,
       };
-      const response = await axios.patch(
-        'http://localhost:8000/api/transaction/ratings', 
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await api.patch('/transaction/ratings', payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
-      
+      });
+
       const updatedReview = response.data;
 
-      
       setProperties((prevProperties) => {
         return prevProperties.map((property) => {
           if (property.id === selectedProperty.id) {
@@ -95,14 +92,11 @@ export const TenantReviews = () => {
 
   const getDataProperty = async () => {
     try {
-      const response = await axios.get(
-        'http://localhost:8000/api/property/ratings',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await api.get('/property/ratings', {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
       setProperties(response.data.result);
     } catch (error) {
       console.log(error);
@@ -128,71 +122,87 @@ export const TenantReviews = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="w-72">
-        <Select label="Your Property" onChange={handleSelectChange}>
-          {properties.map((property) => (
-            <Option key={property.id} value={property}>
-              {property.name}
-            </Option>
-          ))}
-        </Select>
-      </div>
-      <h2 className="text-2xl font-bold mb-4">Review from user</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {selectedProperty.Reviews?.map((review) => (
-          <Card key={review.id}>
-            <CardBody>
-              <div className="flex gap-2">
-                <Rating value={review.rating} readonly />
-                <p>{review.rating}</p>
-              </div>
+    <div className="flex">
+      <SidebarTenant />
+      <div className="felx flex-col">
+        <div className="container mx-auto p-4">
+          <div className="w-72">
+            <Select label="Your Property" onChange={handleSelectChange}>
+              {properties.map((property) => (
+                <Option key={property.id} value={property}>
+                  {property.name}
+                </Option>
+              ))}
+            </Select>
+          </div>
+          <h2 className="text-2xl font-bold mb-4">Review from user</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {selectedProperty.Reviews?.map((review) => (
+              <Card key={review.id}>
+                <CardBody>
+                  <div className="flex gap-2">
+                    <Rating value={review.rating} readonly />
+                    <p>{review.rating}</p>
+                  </div>
 
-              <p className="text-gray-700 mt-2">{review.user_review}</p>
-              <p className="text-gray-500 mt-1">{review.User.name}</p>
-            </CardBody>
-            <CardFooter>
-              {review.tenant_reply ? (
-                <p>{review.tenant_reply}</p>
-              ) : (
-                <Button color="blue" onClick={() => handleReplyClick(review)}>
-                  Reply
+                  <p className="text-gray-700 mt-2">{review.user_review}</p>
+                  <p className="text-gray-500 mt-1">{review.User.name}</p>
+                </CardBody>
+                <CardFooter>
+                  {review.tenant_reply ? (
+                    <p>{review.tenant_reply}</p>
+                  ) : (
+                    <Button
+                      color="blue"
+                      onClick={() => handleReplyClick(review)}
+                    >
+                      Reply
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+          <Dialog size="lg" open={openDialog} handler={handleCloseDialog}>
+            <form onSubmit={formik.handleSubmit}>
+              <DialogHeader>Reply to Review</DialogHeader>
+              <DialogBody>
+                <Input
+                  type="text"
+                  name="replyContent"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.replyContent}
+                  color="lightBlue"
+                  size="regular"
+                  placeholder="Your reply"
+                />
+                {formik.touched.replyContent && formik.errors.replyContent ? (
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.replyContent}
+                  </div>
+                ) : null}
+              </DialogBody>
+              <DialogFooter>
+                <Button
+                  color="red"
+                  onClick={handleCloseDialog}
+                  variant="outlined"
+                >
+                  Cancel
                 </Button>
-              )}
-            </CardFooter>
-          </Card>
-        ))}
+                <Button
+                  color="green"
+                  type="submit"
+                  disabled={formik.isSubmitting}
+                >
+                  Send Reply
+                </Button>
+              </DialogFooter>
+            </form>
+          </Dialog>
+        </div>
       </div>
-      <Dialog size="lg" open={openDialog} handler={handleCloseDialog}>
-        <form onSubmit={formik.handleSubmit}>
-          <DialogHeader>Reply to Review</DialogHeader>
-          <DialogBody>
-            <Input
-              type="text"
-              name="replyContent"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.replyContent}
-              color="lightBlue"
-              size="regular"
-              placeholder="Your reply"
-            />
-            {formik.touched.replyContent && formik.errors.replyContent ? (
-              <div className="text-red-500 text-sm">
-                {formik.errors.replyContent}
-              </div>
-            ) : null}
-          </DialogBody>
-          <DialogFooter>
-            <Button color="red" onClick={handleCloseDialog} variant="outlined">
-              Cancel
-            </Button>
-            <Button color="green" type="submit" disabled={formik.isSubmitting}>
-              Send Reply
-            </Button>
-          </DialogFooter>
-        </form>
-      </Dialog>
     </div>
   );
 };
