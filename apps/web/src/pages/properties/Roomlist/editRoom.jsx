@@ -3,9 +3,13 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { api } from '../../../helper/api';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditRoomForm = () => {
+  const navigate = useNavigate();
   const { id } = useParams()
   const token = localStorage.getItem('token');
   const formik = useFormik({
@@ -23,8 +27,8 @@ const EditRoomForm = () => {
         'fileSize',
         'Photo size is too large (max 1 MB)',
         (value) => {
-          if (!value) return true; // Allow empty file (user might not want to change the photo)
-          return value.size <= 1 * 1024 * 1024; // 1 MB
+          if (!value) return true; 
+          return value.size <= 1 * 1024 * 1024; 
         },
       ),
     }),
@@ -37,8 +41,8 @@ const EditRoomForm = () => {
         data.append('price', values.Price);
         data.append('picture', values.picture);
 
-        const response = await axios.patch(
-          `http://localhost:8000/api/room/edit-room/${id}`,
+        const response = await api.patch(
+          `/room/edit-room/${id}`,
           data,
           {
             headers: {
@@ -47,7 +51,27 @@ const EditRoomForm = () => {
             },
           },
         );
-        console.log(response.data);
+        const notif = () => {
+          toast.success('Your room has been successfully updated.', {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            onClose: () => {
+              
+              setTimeout(() => {
+                navigate('/list-room');
+                
+              }, 5000);
+            },
+          });
+        };
+        
+        notif();
       } catch (error) {
         console.error('Error:', error);
       }

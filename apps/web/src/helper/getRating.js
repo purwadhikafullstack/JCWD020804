@@ -1,7 +1,6 @@
 function averageRating(review = []) {
-    // console.log(review);
     if (!review || review.length === 0) {
-      return null; // atau undefined, atau sesuai kebutuhan
+      return null; 
     }
     const totalRating  = review?.reduce((acc, review) => acc + review.rating, 0);
   const resRating = totalRating / review?.length;

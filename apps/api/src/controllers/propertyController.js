@@ -1,4 +1,3 @@
-
 import Property from '../models/property';
 import Review from '../models/review';
 import Room from '../models/room';
@@ -11,8 +10,7 @@ import { Sequelize } from 'sequelize';
 
 export const getPropertyById = async (req, res) => {
   try {
-    console.log(req.query);
-    const { checkIn, checkOut } = req.query; // Menerima tanggal dari query parameter
+    const { checkIn, checkOut } = req.query;
     const propertyId = req.params.id;
 
     const result = await Property.findOne({
@@ -23,7 +21,7 @@ export const getPropertyById = async (req, res) => {
           include: [
             {
               model: Transaction,
-              // Memfilter transaksi berdasarkan tanggal
+
               where: {
                 [Op.or]: [
                   {
@@ -38,7 +36,7 @@ export const getPropertyById = async (req, res) => {
                   },
                 ],
               },
-              required: false, // Penting! Agar kamar tetap ditampilkan meskipun tidak ada transaksi yang cocok
+              required: false,
             },
           ],
         },
@@ -54,7 +52,6 @@ export const getPropertyById = async (req, res) => {
     res.status(400).send({ message: error.message });
   }
 };
-
 
 export const getReviewProperty = async (req, res) => {
   try {
@@ -81,41 +78,43 @@ export const getReviewProperty = async (req, res) => {
 
 export const getAllProperty = async (req, res) => {
   try {
-    // Menerima query parameter untuk filter by category dan query
     const { category, query } = req.query;
 
-    // Menyiapkan opsi untuk query, termasuk filtering berdasarkan category jika ada
+    let whereCondition = {};
+    let categoryCondition = {};
+
+    if (query) {
+      whereCondition = {
+        ...whereCondition,
+        [Sequelize.Op.or]: [
+          Sequelize.where(
+            Sequelize.fn('LOWER', Sequelize.col('Property.name')),
+            'LIKE',
+            `%${query.toLowerCase()}%`,
+          ),
+        ],
+      };
+    }
+
+    if (category) {
+      categoryCondition = {
+        model: Property_category,
+        where: { categories: category },
+      };
+    } else {
+      categoryCondition = {
+        model: Property_category,
+      };
+    }
+
     const queryOptions = {
+      where: whereCondition,
       include: [
-        {
-          model: Location,
-        },
-        {
-          model: Review,
-        },
-        {
-          model: Property_category,
-          // Hanya tambahkan kondisi where jika ada query parameter category
-          ...(category && {
-            where: {
-              categories: category, // Pastikan 'categories' adalah nama kolom yang benar pada model Property_category
-            },
-          }),
-        },
+        { model: Location },
+        { model: Room },
+        { model: Review },
+        categoryCondition,
       ],
-      ...(query && {
-        where: {
-          // Menggunakan fungsi LOWER() untuk case-insensitive search pada MySQL
-          [Sequelize.Op.or]: [
-            Sequelize.where(
-              Sequelize.fn('LOWER', Sequelize.col('name')),
-              'LIKE',
-              `%${query.toLowerCase()}%`,
-            ),
-            // Tambahkan lebih banyak field dengan cara yang sama jika perlu
-          ],
-        },
-      }),
     };
 
     const result = await Property.findAll(queryOptions);
@@ -148,42 +147,6 @@ export const getAllPropertyTenant = async (req, res) => {
   }
 };
 
-//menambah location
-export const addLocation = async (req, res) => {
-  try {
-    const { city, province } = req.body;
-
-    const newLocation = await Location.create({ city, province });
-
-    return res.status(201).json(newLocation);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
-//menambah categorye
-export const addCategory = async (req, res) => {
-  try {
-    const { name } = req.body;
-
-    // Cek apakah kategori sudah ada
-    const existingCategory = await Property_category.findOne({
-      where: { name },
-    });
-    if (existingCategory) {
-      return res.status(400).json({ message: 'Category already exists' });
-    }
-
-    // Tambah kategori baru
-    const newCategory = await Property_category.create({ name });
-    return res.status(201).json(newCategory);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
 // Fungsi untuk menambah properti
 export const addProperty = async (req, res) => {
   try {
@@ -191,7 +154,7 @@ export const addProperty = async (req, res) => {
     console.log(req.body, 'ini body');
 
     const newLocation = await Location.create({ city, province });
-    console.log(newLocation);
+    
 
     let category = await Property_category.findOne({ where: { Categories } });
     if (!category) {

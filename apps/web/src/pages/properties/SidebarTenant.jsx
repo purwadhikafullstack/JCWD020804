@@ -9,10 +9,10 @@ import {
 } from '@material-tailwind/react';
 import {
   PresentationChartBarIcon,
-  ShoppingBagIcon,
   UserCircleIcon,
   Cog6ToothIcon,
-  InboxIcon,
+  HomeIcon,
+  StarIcon,
   PowerIcon,
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
@@ -20,6 +20,21 @@ import { Link } from 'react-router-dom';
 export const SidebarTenant = () => {
   return (
     <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
+      <div className="flex items-center gap-4">
+          <img
+            src="../src/assets/masnstay.jpg"
+            alt="Logo"
+            className="h-16 w-16 mr-2 "
+          />
+          <Link to="/">
+            <Typography
+              variant="h6"
+              className="cursor-pointer py-1.5 text-black"
+            >
+              MasnStay
+            </Typography>
+          </Link>
+        </div>
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray">
           Welcome to tenant
@@ -28,37 +43,17 @@ export const SidebarTenant = () => {
       <List>
         <ListItem>
           <ListItemPrefix>
-            <PresentationChartBarIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <Link to="/Date">Dashboard</Link>
-        </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <PresentationChartBarIcon className="h-5 w-5" />
+            <HomeIcon className="h-5 w-5" />
           </ListItemPrefix>
           <Link to="/list-property">Properties</Link>
         </ListItem>
         <ListItem>
           <ListItemPrefix>
-            <ShoppingBagIcon className="h-5 w-5" />
+            <HomeIcon className="h-5 w-5" />
           </ListItemPrefix>
           <Link to="/list-room">Rooms</Link>
         </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Inbox
-          <ListItemSuffix>
-            <Chip
-              value="14"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            />
-          </ListItemSuffix>
-        </ListItem>
+
         <ListItem>
           <ListItemPrefix>
             <UserCircleIcon className="h-5 w-5" />
@@ -69,9 +64,14 @@ export const SidebarTenant = () => {
           <ListItemPrefix>
             <Cog6ToothIcon className="h-5 w-5" />
           </ListItemPrefix>
-          <Link to='/tenant/sales-report'>Report</Link>
+          <Link to="/tenant/sales-report">Report</Link>
         </ListItem>
-        
+        <ListItem>
+          <ListItemPrefix>
+            <StarIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          <Link to="/tenant/ratings">Review</Link>
+        </ListItem>
       </List>
     </Card>
   );

@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Navbarpage } from '../../components/navbar';
-import axios from 'axios';
 import { useBookingDetails } from '../../components/booking/bookingHook';
 import { BookingCard } from '../../components/booking/bookingCard';
 import { formatMataUang } from '../../helper/formatFunction';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import 'react-toastify/dist/ReactToastify.css';
+import {api} from '../../helper/api';
+
 export const PaymentPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,20 +20,19 @@ export const PaymentPage = () => {
       selectedBank: '',
     },
     onSubmit: (values) => {
-      console.log('Form Values:', values);
+      handlePayment()
     },
   });
 
   const handlePayment = async () => {
     const token = localStorage.getItem('token');
     try {
-     
       if (!bookingDetails) {
         console.error('Booking details not available.');
         return;
       }
-      const response = await axios.patch(
-        `http://localhost:8000/api/booking/${id}`,
+      const response = await api.patch(
+        `/booking/${id}`,
         { payment_method: formik.values.paymentMethod },
         {
           headers: {
@@ -41,8 +41,8 @@ export const PaymentPage = () => {
         },
       );
       toast.success('complete the payment immediately!', {
-        position: "top-center",
-        autoClose: 5000, 
+        position: 'top-center',
+        autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -51,12 +51,13 @@ export const PaymentPage = () => {
       });
 
       if (formik.values.paymentMethod === 'bank transfer') {
+        localStorage.setItem('selectedBank', formik.values.selectedBank);
         setTimeout(() => {
-        navigate(`/booking-detail/${id}`);
-      }, 5000);
+          navigate(`/booking-detail/${id}`);
+        }, 5000);
       } else {
-        const paymentResponse = await axios.patch(
-          `http://localhost:8000/api/booking/${id}`,
+        const paymentResponse = await api.patch(
+          `/api/booking/${id}`,
           { status: 'pembayaran berhasil' },
           {
             headers: {
@@ -64,12 +65,10 @@ export const PaymentPage = () => {
             },
           },
         );
-
       }
-
     } catch (error) {
       toast.error('Error during payment: ' + error.message, {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -151,7 +150,9 @@ export const PaymentPage = () => {
             <p className="font-semibold mb-4">Price Details:</p>
             <div className="flex justify-between">
               <p className="mb-4">{bookingDetails?.Room.Property.name} </p>
-              <p className="mb-4">{formatMataUang(bookingDetails?.total_price, 'IDR')}</p>
+              <p className="mb-4">
+                {formatMataUang(bookingDetails?.total_price, 'IDR')}
+              </p>
             </div>
           </div>
           <button

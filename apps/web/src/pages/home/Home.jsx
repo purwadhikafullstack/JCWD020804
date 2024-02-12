@@ -3,7 +3,6 @@ import { Navbarpage } from '../../components/navbar';
 import { CarouselCustomArrows } from '../../components/carousel';
 import { SimpleFooter } from '../../components/footer';
 import { PropertyCard } from '../../components/card';
-import { HotelCard } from '../../components/propertyList/propertyCard';
 import { Button } from '@material-tailwind/react';
 
 export default function Home() {
@@ -19,7 +18,6 @@ export default function Home() {
         <div className="w-[90%] mx-auto py-[20px]">
           <Navbarpage searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         </div>
-        {/* Tambahkan button untuk setiap kategori */}
 
         <div className="w-[90%] h-[500px] mx-auto py-[20px]">
           <CarouselCustomArrows />
@@ -54,7 +52,6 @@ export default function Home() {
             All
           </Button>
         </div>
-        {/* Kirimkan selectedCategory sebagai prop ke PropertyCard */}
         <div className="w-[90%] mx-auto py-[20px]">
           <PropertyCard searchQuery={searchQuery} selectedCategory={selectedCategory} />
         </div>

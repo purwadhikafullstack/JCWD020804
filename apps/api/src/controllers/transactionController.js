@@ -179,6 +179,8 @@ export const approveTransactionById = async (req, res) => {
     const tempResult = tempCompile({
       name: transaction.User.name,
       Hotel: transaction.Room.Property.name,
+      CheckIn: transaction.checkIn,
+      Room: transaction.Room.name
     });
 
     // Konfigurasi email yang akan dikirim

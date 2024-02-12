@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { SyncLoader } from 'react-spinners';
 import loginImage from '../../assets/masnstay.jpg';
 import { Typography } from '@material-tailwind/react';
+import { api } from '../../helper/api';
 
 const ResetPasswordForm = () => {
   const params = useParams();
@@ -30,8 +31,8 @@ const ResetPasswordForm = () => {
         console.log(params, 'ini params');
         values.email = params.email;
         setLoading(true);
-        const response = await axios.patch(
-          'http://localhost:8000/api/user/update-password',
+        const response = await api.patch(
+          '/user/update-password',
           values,
         );
         console.log('Password reset success:', response.values);
@@ -75,7 +76,7 @@ const ResetPasswordForm = () => {
         </a>
 
         <Typography color="gray" className="mt-1 font-normal">
-          Nice to meet you! Enter your details to register.😁😮
+          Remember your new password.😁
         </Typography>
 
       <form onSubmit={formik.handleSubmit}>

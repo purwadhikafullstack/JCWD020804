@@ -4,6 +4,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { api } from '../../helper/api';
 
 const AddRoomForm = () => {
   const { id } = useParams()
@@ -30,8 +33,8 @@ const AddRoomForm = () => {
         data.append('price', values.Price);
         data.append('picture', values.picture);
 
-        const response = await axios.post(
-          `http://localhost:8000/api/room/add-room/${id}`,
+        const response = await api.post(
+          `/room/add-room/${id}`,
           data,
           {
             headers: {
@@ -40,7 +43,28 @@ const AddRoomForm = () => {
             },
           },
         );
-        console.log(response.data);
+
+        const notif = () => {
+          toast.success('Your rooms listing has been successfully added.', {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            onClose: () => {
+              // Mencoba untuk mereload setelah notifikasi tertutup
+              setTimeout(() => {
+                navigate('/list-room')
+              }, 5000);
+            },
+          });
+        };
+
+       
+        notif();
       } catch (error) {
         console.error('Error:', error);
       }

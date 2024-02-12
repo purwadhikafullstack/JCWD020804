@@ -29,7 +29,7 @@ export function ProfileMenu() {
           variant="circular"
           alt=""
           className="cursor-pointer"
-          src={`http://localhost:8000/${profilePicture}`}
+          src={`${import.meta.env.VITE_IMG_URL}${profilePicture}`}
         />
       </MenuHandler>
       <MenuList>
@@ -58,9 +58,11 @@ export function ProfileMenu() {
         )}
         {!user.isTenant && (
           <MenuItem className="flex items-center gap-2">
-            <Typography variant="small" className="font-medium">
-              List Your Order
-            </Typography>
+            <Link to="/user/dashboard">
+              <Typography variant="small" className="font-medium">
+                List Your Order
+              </Typography>
+            </Link>
           </MenuItem>
         )}
         <MenuItem className="flex items-center gap-2">

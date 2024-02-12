@@ -124,7 +124,6 @@ export const verify = async (req, res) => {
 export const becomeTenant = async (req, res) => {
   try {
     const { no_ktp } = req.body;
-    const userId = req.user.id;
 
     await User.update(
       {
@@ -139,11 +138,8 @@ export const becomeTenant = async (req, res) => {
       },
     );
 
-    console.log(userId);
     res.status(200).send({ message: 'success' });
   } catch (error) {
-    console.error('Error updating user data:', error);
-
     res.status(500).send('NO!');
   }
 };

@@ -5,7 +5,6 @@ import {
   Button,
   Input,
 } from '@material-tailwind/react';
-import { BellIcon, Cog6ToothIcon } from '@heroicons/react/24/solid';
 import { ProfileMenu } from './profileMenu';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -13,9 +12,8 @@ import React, { useEffect, useState } from 'react';
 
 export function Navbarpage({ searchQuery, setSearchQuery }) {
   const user = useSelector((state) => state.user.value);
-  
+
   const id = user.id;
-  const profilPicture = user.picture;
   const [userStatus, setUserStatus] = useState('User');
 
   const checkUser = () => {
@@ -43,14 +41,14 @@ export function Navbarpage({ searchQuery, setSearchQuery }) {
             alt="Logo"
             className="h-16 w-16 mr-2 "
           />
-          <Typography
-            as="a"
-            href="#"
-            variant="h6"
-            className="cursor-pointer py-1.5 text-black"
-          >
-            MasnStay
-          </Typography>
+          <Link to="/">
+            <Typography
+              variant="h6"
+              className="cursor-pointer py-1.5 text-black"
+            >
+              MasnStay
+            </Typography>
+          </Link>
         </div>
 
         <div className="search-container">
@@ -69,20 +67,7 @@ export function Navbarpage({ searchQuery, setSearchQuery }) {
         </div>
 
         <div className="flex gap-4 items-center">
-          <IconButton
-            variant="text"
-            color="yellow"
-            className="bg-yellow-500 text-black"
-          >
-            <Cog6ToothIcon className="h-4 w-4" />
-          </IconButton>
-          <IconButton
-            variant="text"
-            color="yellow"
-            className="bg-yellow-500 text-black"
-          >
-            <BellIcon className="h-4 w-4" />
-          </IconButton>
+          
 
           {!id ? (
             <>
@@ -96,11 +81,6 @@ export function Navbarpage({ searchQuery, setSearchQuery }) {
           ) : (
             <>
               <ProfileMenu
-                variant="circular"
-                size="sm"
-                alt="Profile"
-                className="border border-gray-900 p-0.5"
-                src={`http://localhost:8000/api/${profilPicture}`}
               />
               <Typography
                 as="a"
@@ -108,13 +88,12 @@ export function Navbarpage({ searchQuery, setSearchQuery }) {
                 variant="h6"
                 className="cursor-pointer py-1.5 text-black"
               >
-                {user.username}
                 <span
                   className={`text-xs ml-1 ${
                     user.isTenant ? 'text-yellow-700' : ''
                   }`}
                 >
-                  {userStatus}
+                  {user.name}
                 </span>
               </Typography>
             </>

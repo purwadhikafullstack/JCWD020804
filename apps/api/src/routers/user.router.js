@@ -15,13 +15,7 @@ import { verifyToken } from '../middleware/auth';
 const { multerUpload } = require('../middleware/multer');
 const userRouter = Router();
 
-// GET
-// sampleRouter.get('/', async (req, res) => {
-//   const result = await getSampleData();
-//   res.json(result);
-// });
 
-// POST
 userRouter.post('/register', createUser);
 
 userRouter.post('/login', async (req, res) => {
@@ -52,7 +46,7 @@ userRouter.patch(
 );
 
 userRouter.patch(
-  '/become-tenant/:id',
+  '/become-tenant/',
   verifyToken,
   multerUpload().single('foto_ktp'),
   becomeTenant,

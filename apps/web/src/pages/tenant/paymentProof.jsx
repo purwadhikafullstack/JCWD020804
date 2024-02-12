@@ -2,7 +2,6 @@ import React from 'react';
 import { Dialog, DialogHeader, DialogBody, DialogFooter, Card } from "@material-tailwind/react";
 
 export const PaymentProofDialog = ({ isOpen, onClose, imageUrl }) => {
-    
     return (
     <Dialog size="lg" open={isOpen} >
       <DialogHeader onClose={() => onClose()}>Payment Proof</DialogHeader>

@@ -3,12 +3,12 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import loginImage from '../../assets/masnstay.jpg';
+import { api } from '../../helper/api';
 
 function Verify() {
   const params = useParams();
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log(id);
 
   const notif = () => {
     toast.success(' User has been verified success', {
@@ -25,8 +25,8 @@ function Verify() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.patch(
-        `http://localhost:8000/api/user/verify/${id}`,
+      const response = await api.patch(
+        `/user/verify/${id}`,
         { isVerified: true },
         {
           headers: {

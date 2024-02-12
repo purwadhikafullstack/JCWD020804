@@ -68,7 +68,7 @@ const main = async () => {
 
     globalAPIErrorHandler(app);
     serveWebProjectBuildResult(app);
-    // Menyiapkan scheduler untuk pengingat booking
+
     setupReminderScheduler();
     scheduleSameDayReminder();
 

@@ -10,12 +10,13 @@ import axios from 'axios';
 import { formatMataUang } from '../../helper/formatFunction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { api } from '../../helper/api';
 
 function PaymentDetails() {
   const { id } = useParams();
   const { bookingDetails, fetchBookingDetails } = useBookingDetails(id);
   const navigate = useNavigate();
-
+  const selectedBank = localStorage.getItem('selectedBank');
   const storedStartTimeKey = `paymentStartTime_${id}`;
   const [startTime, setStartTime] = useState(() => {
     const storedStartTime = sessionStorage.getItem(storedStartTimeKey);
@@ -25,21 +26,18 @@ function PaymentDetails() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    // Inisialisasi startTime dengan waktu sekarang ditambah 1 jam
     const now = new Date();
     const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
     setStartTime(oneHourLater);
 
-    // Simpan startTime di sessionStorage saat komponen pertama kali dimuat atau ketika ID berubah
     sessionStorage.setItem(storedStartTimeKey, oneHourLater.toString());
   }, [id, storedStartTimeKey]);
 
   useEffect(() => {
-    // Update waktuLeft setiap detik
     const timer = setInterval(() => {
       const currentTime = new Date();
       const timeDiff = Math.floor((startTime - currentTime) / 1000);
-      setTimeLeft(Math.max(0, timeDiff)); // pastikan timeLeft tidak kurang dari 0
+      setTimeLeft(Math.max(0, timeDiff));
     }, 1000);
 
     return () => clearInterval(timer);
@@ -71,11 +69,10 @@ function PaymentDetails() {
       try {
         const formData = new FormData();
         formData.append('bukti_pembayaran', values.bukti_pembayaran);
-        formData.append('status', 'menunggu konfirmasi'); // Include status in formData
+        formData.append('status', 'menunggu konfirmasi');
 
-        // Use axios.patch to update the payment status and upload the file
-        const response = await axios.patch(
-          `http://localhost:8000/api/booking/upload-payment/${id}`,
+        const response = await api.patch(
+          `/booking/upload-payment/${id}`,
           formData,
           {
             headers: {
@@ -86,13 +83,15 @@ function PaymentDetails() {
         );
         toast.success('Payment successful!', {
           position: 'top-center',
-          autoClose: 5000, // Toast akan hilang setelah 5000ms atau 5 detik
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
         });
+        
+        localStorage.removeItem('selectedBank');
 
         setTimeout(() => {
           navigate('/user/dashboard');
@@ -113,8 +112,8 @@ function PaymentDetails() {
 
   const handleCancelBooking = async () => {
     try {
-      await axios.patch(
-        `http://localhost:8000/api/booking/${id}/cancel`,
+      await api.patch(
+        `/booking/${id}/cancel`,
         { status: 'transaksi dibatalkan' },
         {
           headers: {
@@ -150,7 +149,7 @@ function PaymentDetails() {
             {formatTimeLeft()}
           </Typography>
           <Typography className="text-lg mt-4 text-gray-700">
-            Bank: BNI
+            Bank: {selectedBank ? selectedBank.toUpperCase() : 'Not Selected'}
           </Typography>
           <Typography className="text-lg mt-2 text-gray-700">
             Account Number: 123456789

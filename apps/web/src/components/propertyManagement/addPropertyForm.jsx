@@ -1,4 +1,3 @@
-// AddHotelForm.js
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -6,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { api } from '../../helper/api';
 
 const AddHotelForm = ({ addHotel }) => {
   const token = localStorage.getItem('token');
@@ -13,7 +13,6 @@ const AddHotelForm = ({ addHotel }) => {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedCategories, setSelectedCategories] = useState('');
-  console.log(selectedCity, selectedProvince);
 
   const daerah = [
     {
@@ -757,7 +756,6 @@ const AddHotelForm = ({ addHotel }) => {
     const selectedProvinceValue = event.target.value;
     setSelectedProvince(selectedProvinceValue);
 
-    // Reset the selected city when the province changes
     setSelectedCity('');
   };
 
@@ -789,36 +787,28 @@ const AddHotelForm = ({ addHotel }) => {
         'fileSize',
         'Photo size is too large (max 1 MB)',
         (value) => {
-          if (!value) return true; // Allow empty file (user might not want to change the photo)
-          return value.size <= 1 * 1024 * 1024; // 1 MB
+          if (!value) return true;
+          return value.size <= 1 * 1024 * 1024;
         },
       ),
     }),
 
     onSubmit: async (values) => {
-      const data = new FormData()
+      const data = new FormData();
 
       try {
-        // values.city = selectedCity;
-        // values.province = selectedProvince;
-        // values.Categories = selectedCategories;
-        console.log(values.city, 'ini kota');
-        data.append('name', values.name)
-        data.append('description', values.description)
-        data.append('city',selectedCity)
-        data.append('province', selectedProvince)
-        data.append('Categories', selectedCategories)
-        data.append('picture', values.picture)
-        const response = await axios.post(
-          'http://localhost:8000/api/property/add-properties',
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        data.append('name', values.name);
+        data.append('description', values.description);
+        data.append('city', selectedCity);
+        data.append('province', selectedProvince);
+        data.append('Categories', selectedCategories);
+        data.append('picture', values.picture);
+        const response = await api.post('/property/add-properties', data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
-      
+        });
+
         const notif = () => {
           toast.success('Your property listing has been successfully added.', {
             position: 'top-right',
@@ -830,7 +820,6 @@ const AddHotelForm = ({ addHotel }) => {
             progress: undefined,
             theme: 'light',
             onClose: () => {
-              // Mencoba untuk mereload setelah notifikasi tertutup
               setTimeout(() => {
                 window.location.reload();
               }, 5000);
@@ -838,7 +827,6 @@ const AddHotelForm = ({ addHotel }) => {
           });
         };
 
-        
         navigate('/list-property');
         notif();
       } catch (error) {
@@ -1003,7 +991,7 @@ const AddHotelForm = ({ addHotel }) => {
             <option value="">Select Categories</option>
 
             <option value="Hotel">Hotel</option>
-            <option value="Apartement">Apartement</option>
+            <option value="Apartment">Apartment</option>
             <option value="Villa">Villa</option>
           </select>
 

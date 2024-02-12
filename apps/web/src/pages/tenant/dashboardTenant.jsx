@@ -5,6 +5,7 @@ import { PaymentProofDialog } from './paymentProof';
 import { SidebarTenant } from '../properties/SidebarTenant';
 import { CircularPagination } from './paginationTenant';
 import { formatDate } from '../../helper/formatFunction';
+import { api } from '../../helper/api';
 
 export const TenantDashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,34 +18,29 @@ export const TenantDashboard = () => {
   const [selectedTransactionId, setSelectedTransactionId] = useState(null);
   const [noDataMessage, setNoDataMessage] = useState(null);
   const openPaymentProofDialog = (id) => {
-    console.log('Opening Dialog for Transaction ID:', id);
     setSelectedTransactionId(id);
   };
 
   const closePaymentProofDialog = () => {
-    console.log('Closing Dialog');
     setSelectedTransactionId(null);
   };
 
   const getDataTransaction = async (page = 1, limit = 10) => {
     try {
-      const response = await axios.get(
-        'http://localhost:8000/api/transaction/tenant',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            statusFilter: statusFilter,
-            page: page,
-            limit: limit,
-          },
+      const response = await api.get('/transaction/tenant', {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+        params: {
+          statusFilter: statusFilter,
+          page: page,
+          limit: limit,
+        },
+      });
       const { totalPages, currentPage, items } = response.data;
 
-      setTotalPages(totalPages); 
-      setCurrentPage(currentPage); // Update current page
+      setTotalPages(totalPages);
+      setCurrentPage(currentPage);
 
       if (!items || items.length === 0) {
         setTransactions([]);
@@ -55,7 +51,7 @@ export const TenantDashboard = () => {
       }
     } catch (error) {
       console.log(error);
-      setTransactions([]); 
+      setTransactions([]);
       setNoDataMessage('Error fetching transactions.');
     }
   };
@@ -66,8 +62,8 @@ export const TenantDashboard = () => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.patch(
-        `http://localhost:8000/api/transaction/tenant/${id}/approve`,
+      await api.patch(
+        `/transaction/tenant/${id}/approve`,
         { status: 'pembayaran berhasil' },
         {
           headers: {
@@ -93,8 +89,8 @@ export const TenantDashboard = () => {
 
   const handleReject = async (id) => {
     try {
-      await axios.patch(
-        `http://localhost:8000/api/transaction/tenant/${id}/reject`,
+      await api.patch(
+        `/transaction/tenant/${id}/reject`,
         { status: 'menunggu pembayaran' },
         {
           headers: {
@@ -119,8 +115,8 @@ export const TenantDashboard = () => {
 
   const handleCancel = async (id) => {
     try {
-      await axios.patch(
-        `http://localhost:8000/api/transaction/tenant/${id}/cancel`,
+      await api.patch(
+        `/transaction/tenant/${id}/cancel`,
         { status: 'transaksi dibatalkan' },
         {
           headers: {
@@ -152,8 +148,6 @@ export const TenantDashboard = () => {
           <h1 className="text-3xl font-semibold mb-6 text-yellow-600">
             {user.name}
           </h1>
-
-          {/* Filter buttons */}
           <div className="flex my-4">
             <button
               className={`mr-4 px-4 py-2 ${
@@ -282,7 +276,7 @@ export const TenantDashboard = () => {
             onClose={closePaymentProofDialog}
             imageUrl={
               selectedTransactionId
-                ? `http://localhost:8000/${
+                ? `${import.meta.env.VITE_IMG_URL}${
                     transactions.find(
                       (transaction) => transaction.id === selectedTransactionId,
                     )?.bukti_pembayaran

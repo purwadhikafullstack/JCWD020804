@@ -8,14 +8,8 @@ export const DashboardTenant = ({ checkState }) => {
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-row justify-evenly items-center">
         <SidebarTenant />
-        <RightBarTenant stateRightBar={1} />
-        <Date stateInDashboard={0} />
-        {/* <TestProps propName={'tes'}></TestProps> */}
-        {/*
-        <ListPropertyTenant /> */}
-        {/* List Property Sini! */}
+        <RightBarTenant stateRightBar={0} />
       </div>
-      
     </div>
   );
 };

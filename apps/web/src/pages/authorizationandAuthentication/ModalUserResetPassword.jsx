@@ -6,22 +6,29 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { SyncLoader } from 'react-spinners';
 import { useState } from 'react';
+import { api } from '../../helper/api';
 
 export const ModalUserResetPassword = ({ modalOpen, handleModalOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (values) => {
-    console.log('values',values);
+    console.log('values', values);
     try {
       setIsLoading(true);
-      const response = await axios.patch(
-        `http://localhost:8000/api/user/reset-password`,
-        {...values, username: values.email, link:`http://localhost:5173/resetpasswordform/${values.email}`},
+      const response = await api.patch(
+        `/user/reset-password`,
+        {
+          ...values,
+          username: values.email,
+          link: `${import.meta.env.VITE_FE_URL}resetpasswordform/${
+            values.email
+          }`,
+        },
         {
           headers: {
-            'Authorization': 123
-        }
-        }
+            Authorization: 123,
+          },
+        },
       );
       console.log(response);
       setIsLoading(false);
@@ -111,7 +118,6 @@ export const ModalUserResetPassword = ({ modalOpen, handleModalOpen }) => {
           </div>
 
           <div className="mt-7 flex justify-center gap-3">
-
             <div className="flex justify-end gap-3">
               <button
                 onClick={handleModalOpen}

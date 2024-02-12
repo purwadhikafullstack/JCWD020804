@@ -1,10 +1,10 @@
 // Pada komponen BookingPage.js
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { formatDate, formatMataUang } from '../../helper/formatFunction';
 import { toast} from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css'; 
+import {api} from '../../helper/api';
 
 export const BookingPage = () => {
   const location = useLocation();
@@ -19,7 +19,7 @@ export const BookingPage = () => {
   const totalNights = calculateTotalNights(checkInDate, checkOutDate);
   const totalPrice = totalNights * roomPrice;
   const RoomId = selectedRoom.id;
- 
+ console.log(selectedRoom);
   const handleBooking = async () => {
     try {
       const data = {
@@ -30,8 +30,8 @@ export const BookingPage = () => {
         total_night: totalNights,
       };
       const token = localStorage.getItem('token');
-      const { data: bookingResponse } = await axios.post(
-        'http://localhost:8000/api/booking',
+      const { data: bookingResponse } = await api.post(
+        '/booking',
         data,
         {
           headers: {
@@ -41,7 +41,7 @@ export const BookingPage = () => {
       );
       toast.success('Booking successful!', {
         position: "top-center",
-        autoClose: 5000, // Toast akan hilang setelah 5000ms atau 5 detik
+        autoClose: 5000, 
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -72,7 +72,7 @@ export const BookingPage = () => {
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
         <div className="md:w-1/2">
           <img
-            src={selectedRoom.image}
+            src={`${import.meta.env.VITE_IMG_URL}${selectedRoom.picture}`}
             alt={selectedRoom.name}
             className="w-full h-auto mb-4"
           />

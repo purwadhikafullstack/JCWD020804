@@ -17,7 +17,7 @@ export default class Review extends Model {
 export const init = (sequelize) => {
   Review.init(
     {
-      rating: { type: DataTypes.INTEGER, allowNull: false },
+      rating: { type: DataTypes.INTEGER, allowNull: true },
       user_review: { type: DataTypes.STRING, allowNull: true },
       tenant_reply: { type: DataTypes.STRING, allowNull: true },
     },
