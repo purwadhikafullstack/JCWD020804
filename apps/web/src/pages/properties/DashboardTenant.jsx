@@ -1,7 +1,5 @@
-import { ListPropertyTenant } from './RightBar/ListProperty';
 import { RightBarTenant } from './RightBarTenant';
 import { SidebarTenant } from './SidebarTenant';
-import { TestProps } from './TestProps';
 
 export const DashboardTenant = ({ checkState }) => {
   return (

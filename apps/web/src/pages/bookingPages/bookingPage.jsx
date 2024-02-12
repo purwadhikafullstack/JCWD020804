@@ -1,4 +1,3 @@
-// Pada komponen BookingPage.js
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { formatDate, formatMataUang } from '../../helper/formatFunction';
