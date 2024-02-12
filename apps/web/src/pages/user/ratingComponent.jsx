@@ -29,7 +29,7 @@ export function RatingWithCommentDialog({
     if (ratingGivenDialog) {
       setSelectedTransactionId(null);
       setSelectedPropertyId(null);
-      setRatingGivenCallback(); 
+      setRatingGivenCallback();
     }
   };
 
@@ -40,7 +40,6 @@ export function RatingWithCommentDialog({
     },
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
-      console.log('Form submitted:', values);
       handleGiveRating(values);
       resetForm();
       handleCloseDialog();
@@ -50,24 +49,18 @@ export function RatingWithCommentDialog({
   const token = localStorage.getItem('token');
 
   const handleGiveRating = async (values) => {
-   
     try {
       values.TransactionId = TransactionId;
       values.PropertyId = PropertyId;
-      const response = await api.post(
-        '/transaction/ratings', 
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await api.post('/transaction/ratings', values, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
       setSelectedTransactionId(null);
       setSelectedPropertyId(null);
       setRatingGivenDialog(true);
       onSubmitRating();
-
     } catch (error) {
       console.error('Error submitting rating:', error);
     }
