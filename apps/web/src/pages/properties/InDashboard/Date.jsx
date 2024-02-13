@@ -5,7 +5,6 @@ const DateDashboard = () => {
   const initDatePicker = () => {
     const datepicker = flatpickr('#date-picker', {});
 
-    // styling the date picker
     const calendarContainer = datepicker.calendarContainer;
     const calendarMonthNav = datepicker.monthNav;
     const calendarNextMonthNav = datepicker.nextMonthNav;
@@ -25,7 +24,7 @@ const DateDashboard = () => {
 
   useEffect(() => {
     initDatePicker();
-  }, []); // Ensure it runs only once after the component mounts
+  }, []); 
 
   return (
     <>

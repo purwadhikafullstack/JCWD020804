@@ -1,14 +1,13 @@
-// AddRoomlForm.js
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { api } from '../../helper/api';
 
 const AddRoomForm = () => {
+  const navigate = useNavigate();
   const { id } = useParams()
   const token = localStorage.getItem('token');
   const formik = useFormik({
@@ -55,7 +54,6 @@ const AddRoomForm = () => {
             progress: undefined,
             theme: 'light',
             onClose: () => {
-              // Mencoba untuk mereload setelah notifikasi tertutup
               setTimeout(() => {
                 navigate('/list-room')
               }, 5000);

@@ -7,15 +7,11 @@ export default class Room extends Model {
    * The `models/index` file will call this method automatically.
    */
   static associate(models) {
-    // define association here
     Room.hasMany(models.Transaction);
-
-    // Definisi relasi Room ke Property
     Room.belongsTo(models.Property, {
-      foreignKey: 'PropertyId', // This is the foreign key in the Product table
+      foreignKey: 'PropertyId', 
       onDelete: 'CASCADE',
     });
-    // Definisi relasi Room ke Room_disable
     Room.hasOne(models.Room_disable);
     Room.hasOne(models.Price_increase);
   }

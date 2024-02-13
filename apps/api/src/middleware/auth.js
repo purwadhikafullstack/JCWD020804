@@ -10,7 +10,6 @@ export const verifyToken = (req, res, next) => {
         message: 'token empty',
       });
     }
-    // token = token.split(' ')[1];
 
     let verifiedUser = jwt.verify(token, 'LogIn');
 

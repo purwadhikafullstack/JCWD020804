@@ -7,7 +7,6 @@ export default class User extends Model {
    * The `models/index` file will call this method automatically.
    */
   static associate(models) {
-    // define association here
     User.hasMany(models.Transaction);
     User.hasMany(models.Property);
     User.hasMany(models.Review);

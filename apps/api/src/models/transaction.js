@@ -7,7 +7,6 @@ export default class Transaction extends Model {
    * The `models/index` file will call this method automatically.
    */
   static associate(models) {
-    // define association here
     Transaction.belongsTo(models.User);
     Transaction.belongsTo(models.Room);
     Transaction.hasOne(models.Review);

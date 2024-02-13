@@ -1,4 +1,3 @@
-// TenantReviews.js
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -16,7 +15,6 @@ import {
   DialogFooter,
   Input,
 } from '@material-tailwind/react';
-import axios from 'axios';
 import { api } from '../../helper/api';
 import { SidebarTenant } from '../properties/SidebarTenant';
 

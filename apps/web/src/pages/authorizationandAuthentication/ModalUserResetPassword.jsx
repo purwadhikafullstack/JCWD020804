@@ -12,7 +12,6 @@ export const ModalUserResetPassword = ({ modalOpen, handleModalOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (values) => {
-    console.log('values', values);
     try {
       setIsLoading(true);
       const response = await api.patch(
@@ -30,13 +29,12 @@ export const ModalUserResetPassword = ({ modalOpen, handleModalOpen }) => {
           },
         },
       );
-      console.log(response);
       setIsLoading(false);
       toast.success('send to your email!', {
         position: 'top-center',
       });
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       setIsLoading(false);
       toast.error(error.response.data.message, {
         position: 'top-center',

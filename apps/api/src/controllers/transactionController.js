@@ -12,7 +12,7 @@ import { Sequelize } from 'sequelize';
 
 export const getTransactionByTenant = async (req, res) => {
   try {
-    const { statusFilter, page = 1, limit = 10 } = req.query; // Menambahkan page dan limit dengan nilai default
+    const { statusFilter, page = 1, limit = 10 } = req.query; 
     let whereClause = {};
 
     if (statusFilter) {
@@ -36,7 +36,7 @@ export const getTransactionByTenant = async (req, res) => {
       }
     }
 
-    const offset = (page - 1) * limit; // Menghitung offset
+    const offset = (page - 1) * limit; 
 
     const { count, rows } = await Transaction.findAndCountAll({
       include: [
@@ -52,9 +52,9 @@ export const getTransactionByTenant = async (req, res) => {
         },
       ],
       where: whereClause,
-      limit: parseInt(limit), // Menambahkan limit
-      offset: offset, // Menambahkan offset
-      order: [['createdAt', 'DESC']], // Opsi untuk mengurutkan data
+      limit: parseInt(limit), 
+      offset: offset, 
+      order: [['createdAt', 'DESC']], 
     });
 
     res.status(200).send({
@@ -68,8 +68,6 @@ export const getTransactionByTenant = async (req, res) => {
     res.status(400).send({ error: 'gagal mendapatkan data' });
   }
 };
-
-//user dashboard
 
 export const getTransactionByUser = async (req, res) => {
   try {
@@ -105,9 +103,9 @@ export const getTransactionByUser = async (req, res) => {
 
       if (date) {
         const startDate = new Date(date);
-        startDate.setHours(0, 0, 0, 0); // Set jam ke awal hari
+        startDate.setHours(0, 0, 0, 0); 
         const endDate = new Date(date);
-        endDate.setHours(23, 59, 59, 999); // Set jam ke akhir hari
+        endDate.setHours(23, 59, 59, 999); 
 
         whereClause[Op.or].push({
           checkIn: {
@@ -134,7 +132,7 @@ export const getTransactionByUser = async (req, res) => {
           ],
         },
         {
-          model: Review, // Tambahkan relasi dengan model Review
+          model: Review, 
         },
       ],
     });
@@ -169,11 +167,9 @@ export const approveTransactionById = async (req, res) => {
         },
       ],
     });
-    // Membuat PDF
     const pdfFilename = 'BookingConfirmation.pdf';
     createPDF(pdfFilename, transaction);
 
-    // Ubah path file verifiedakun.html sesuai dengan struktur proyek Anda
     const data = fs.readFileSync('./web/bookingDetail.html', 'utf-8');
     const tempCompile = handlebars.compile(data);
     const tempResult = tempCompile({
@@ -183,7 +179,6 @@ export const approveTransactionById = async (req, res) => {
       Room: transaction.Room.name
     });
 
-    // Konfigurasi email yang akan dikirim
     await transporter.sendMail({
       from: 'masn40208@gmail.com',
       to: transaction.User.email,
@@ -218,7 +213,6 @@ export const rejectTransactionById = async (req, res) => {
   }
 };
 
-//cancel sisi tenant
 export const cancelTransactionById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -254,7 +248,6 @@ export const ratingUser = async (req, res) => {
 export const ratingReplyTenant = async (req, res) => {
   const { replyContent, reviewId } = req.body;
 
-  // Pastikan input yang diperlukan ada
   if (!replyContent || !reviewId) {
     return res
       .status(400)
@@ -262,24 +255,19 @@ export const ratingReplyTenant = async (req, res) => {
   }
 
   try {
-    // Cari review yang akan di-update menggunakan findOne
     const review = await Review.findOne({ where: { id: reviewId } });
 
-    // Pastikan review ditemukan sebelum mencoba update
     if (!review) {
       return res.status(404).send({ message: 'Review not found.' });
     }
 
-    // Update review dengan balasan tenant
     await Review.update(
       { tenant_reply: replyContent },
       { where: { id: reviewId } },
     );
 
-    // Setelah update, ambil review yang terupdate untuk dikirim sebagai respons
     const updatedReview = await Review.findOne({ where: { id: reviewId } });
 
-    // Kirim respons dengan review yang telah diupdate
     res.status(200).send(updatedReview);
   } catch (error) {
     console.error(error);
@@ -289,15 +277,13 @@ export const ratingReplyTenant = async (req, res) => {
   }
 };
 
-//sales report
 export const getSalesReport = async (req, res) => {
   try {
-    const { startDate, endDate, page = 1 } = req.query; // Menambahkan page dengan default value = 1 jika tidak disediakan
+    const { startDate, endDate, page = 1 } = req.query; 
 
-    const limit = 7; // Jumlah maksimal data per halaman
-    const offset = (page - 1) * limit; // Menghitung offset
+    const limit = 7; 
+    const offset = (page - 1) * limit; 
 
-    // Mengonversi query params menjadi kondisi WHERE yang sesuai untuk Sequelize
     const whereCondition = {};
     if (startDate && endDate) {
       whereCondition.checkIn = {
@@ -305,7 +291,6 @@ export const getSalesReport = async (req, res) => {
       };
     }
 
-    // Mencari transaksi dengan kondisi yang ditentukan dan pagination
     const { count, rows } = await Transaction.findAndCountAll({
       include: [
         {
@@ -328,10 +313,9 @@ export const getSalesReport = async (req, res) => {
       where: whereCondition,
       limit,
       offset,
-      distinct: true, // Penting untuk menghitung jumlah baris dengan benar ketika menggunakan 'include'
+      distinct: true,
     });
 
-    // Menghitung total pendapatan (tidak terpengaruh oleh pagination)
     const totalRevenue = await Transaction.sum('total_price', {
       where: whereCondition,
       include: [{
@@ -345,12 +329,11 @@ export const getSalesReport = async (req, res) => {
       }]
     });
 
-    // Mengirim respons dengan data transaksi, total pendapatan, dan info pagination
     res.status(200).json({
       transactions: rows,
       totalRevenue,
-      totalPages: Math.ceil(count / limit), // Menghitung total halaman
-      currentPage: parseInt(page), // Mengirimkan kembali halaman saat ini sebagai integer
+      totalPages: Math.ceil(count / limit), 
+      currentPage: parseInt(page), 
     });
   } catch (error) {
     console.error('Error fetching sales report:', error);
@@ -362,7 +345,7 @@ export const getSalesReport = async (req, res) => {
 
 export const getRoomReport = async (req, res) => {
   try {
-    const userId = req.user.id; // Asumsi ID user diambil dari sesi/authentikasi
+    const userId = req.user.id; 
     const rooms = await Room.findAll({
       include: [
         {
@@ -397,7 +380,7 @@ export const getRoomReport = async (req, res) => {
           model: Transaction,
           attributes: [],
           where: {
-            status: 'pembayaran berhasil', // Hanya menghitung transaksi yang berhasil
+            status: 'pembayaran berhasil', 
           },
         },
       ],

@@ -19,7 +19,7 @@ export const getAllData = async (req, res) => {
 export const getBookingById = async (req, res) => {
   try {
     const result = await Transaction.findOne({
-      where: { id: req.params.id, UserId: req.user.id }, // Menambahkan kriteria pencarian berdasarkan ID Property
+      where: { id: req.params.id, UserId: req.user.id }, 
       include: [
         {
           model: Room,
@@ -61,7 +61,6 @@ export const createPayment = async (req, res) => {
   try {
     const { payment_method } = req.body;
 
-    // Ensure that the transaction with the given ID exists and belongs to the corresponding user
     const transaction = await Transaction.findOne({
       where: { id: req.params.id, UserId: req.user.id },
     });
@@ -70,7 +69,6 @@ export const createPayment = async (req, res) => {
       return res.status(404).send({ message: 'Transaction not found' });
     }
 
-    // Determine whether the status should be updated based on the payment_method value
     let updatedStatus = transaction.status;
 
     if (payment_method === 'otomatis') {
@@ -79,13 +77,11 @@ export const createPayment = async (req, res) => {
       updatedStatus = 'menunggu pembayaran';
     }
 
-    // Update the transaction with payment information and status
     await transaction.update({
       payment_method,
       status: updatedStatus,
     });
 
-    // Set a timer for 1 hour to check and update the status if needed
     setTimeout(
       async () => {
         const updatedTransaction = await Transaction.findOne({
@@ -93,7 +89,6 @@ export const createPayment = async (req, res) => {
         });
 
         if (updatedTransaction) {
-          // Update status to 'transaksi dibatalkan' if it's still 'menunggu pembayaran'
           await Transaction.update(
             { status: 'transaksi dibatalkan' },
             { where: { id: transaction.id } },
@@ -104,7 +99,7 @@ export const createPayment = async (req, res) => {
         }
       },
       60 * 60 * 1000,
-    ); // 1 hour in milliseconds
+    ); 
 
     res.status(200).send({ message: 'Payment success' });
   } catch (error) {
@@ -129,7 +124,6 @@ export const UploadPayment = async (req, res) => {
   }
 };
 
-//cancel sisi user
 export const CancelBooking = async (req, res) => {
   try {
     const transaction = await Transaction.findOne({
@@ -171,13 +165,12 @@ export const sendBookingReminder = async (req, res) => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    // Format tanggal sesuai kebutuhan database Anda
     const formattedDate = tomorrow.toISOString().split('T')[0];
 
     const bookings = await Transaction.findAll({
       where: {
         checkIn: formattedDate,
-        isReminder: false // Hanya pilih bookings yang belum dikirim pengingatnya
+        isReminder: false 
       },
       include: [{
         model: User,
@@ -185,16 +178,13 @@ export const sendBookingReminder = async (req, res) => {
     });
 
     for (const booking of bookings) {
-      // Ubah path file reminderTemplate.html sesuai dengan struktur proyek Anda
       const data = fs.readFileSync('./web/emailReminder.html', 'utf-8');
       const templateCompile = handlebars.compile(data);
       const resultHTML = templateCompile({
         name: booking.User.name,
         checkInDate: formattedDate,
-        // Tambahkan detail lain jika diperlukan
       });
 
-      // Konfigurasi email yang akan dikirim
       await transporter.sendMail({
         from: 'masn40208@gmail.com',
         to: booking.User.email,
@@ -202,7 +192,7 @@ export const sendBookingReminder = async (req, res) => {
         html: resultHTML,
       });
 
-      // Update status isReminder menjadi true
+      
       await booking.update({ isReminder: true });
     }
     console.log('Reminders sent successfully');

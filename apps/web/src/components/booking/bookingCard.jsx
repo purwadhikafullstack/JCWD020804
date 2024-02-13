@@ -1,4 +1,3 @@
-// TransactionCard.js
 import React from 'react';
 import {
   Card,
