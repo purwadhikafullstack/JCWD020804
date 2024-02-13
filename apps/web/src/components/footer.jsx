@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from '../assets/masnstay.jpg';
 import { Typography } from '@material-tailwind/react';
 
 export function SimpleFooter() {
@@ -23,7 +24,7 @@ export function SimpleFooter() {
         </Typography>
         <div className="flex items-center gap-x-2">
           <img
-            src="../src/assets/masnstay.jpg"
+            src={logo}
             alt="Logo"
             className="h-16 w-16 mr-2"
           />
