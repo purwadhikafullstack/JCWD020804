@@ -52,11 +52,9 @@ export const DetailPage = () => {
 
   const fetchApi = async () => {
     try {
-      console.log({ checkInDate, checkOutDate });
       const response = await api.get(
         `/property/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}`,
       );
-      console.log(response.data);
       setPropertyDetails(response?.data.result);
     } catch (error) {
       console.log(error);

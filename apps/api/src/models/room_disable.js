@@ -7,7 +7,6 @@ export default class Room_disable extends Model {
    * The `models/index` file will call this method automatically.
    */
   static associate(models) {
-    // define association here
     Room_disable.belongsTo(models.Room)
   }
 }

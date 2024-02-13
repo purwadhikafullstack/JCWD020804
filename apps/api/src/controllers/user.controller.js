@@ -1,4 +1,3 @@
-// Import library yang dibutuhkan
 import fs from 'fs';
 import handlebars from 'handlebars';
 import User from '../models/user';
@@ -38,11 +37,11 @@ export const createUser = async (req, res) => {
       createdAt: newUser.createdAt,
       name: newUser.name,
       username: username,
-      link: `http://localhost:5173/verify/${newUser.id}`,
+      link: `${process.env.VITE_BE_URL}verify/${newUser.id}`,
     });
 
     await transporter.sendMail({
-      from: 'amanhidayat39@gmail.com',
+      from: 'masn40208@gmail.com',
       to: email,
       subject: 'Email Confirmation',
       html: tempResult,
@@ -147,7 +146,6 @@ export const becomeTenant = async (req, res) => {
 export const userRegisterWithGoogle = async (req, res) => {
   try {
     const { googleUserData } = req.body;
-    console.log(googleUserData);
 
     const findUser = await User.findOne({
       where: {
@@ -179,9 +177,8 @@ export const userRegisterWithGoogle = async (req, res) => {
     } else {
       let payload = { id: findUser.id };
       const token = jwt.sign(payload, 'LogIn', { expiresIn: `1h` });
-      console.log(token);
+      
 
-      console.log('Google account is already registered');
       return res.status(200).send({
         message: 'Success Signing in with Google Account',
         result: findUser,
@@ -196,11 +193,8 @@ export const userRegisterWithGoogle = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    console.log(`ini req body`, req.body);
     const { email, username, link } = req.body;
-    console.log(link, 'ini link loh');
-    console.log(username, 'ini username loh');
-    console.log(email, 'ini email loh');
+   
     const data = fs.readFileSync('./web/resetpassword.html', 'utf-8');
     const tempCompile = await handlebars.compile(data);
 
@@ -212,7 +206,7 @@ export const resetPassword = async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: 'amanhidayat39@gmail.com',
+      from: 'masn40208@gmail.com',
       to: email,
       subject: 'Email Confirmation',
       html: tempResult,
@@ -228,7 +222,6 @@ export const updateUserPassword = async (req, res) => {
     const { email, newPassword } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(newPassword, salt);
-    console.log('ini data body', req.body);
 
     await User.update(
       {
@@ -290,16 +283,17 @@ export const editEmail = async (req, res) => {
 
     const isVerified = email ? false : true;
 
-    await User.update({
-      email,
-      isVerified: isVerified,
-    },
-    
-    {
-      where: {
-        id: req.user.id,
+    await User.update(
+      {
+        email,
+        isVerified: isVerified,
       },
-    },
+
+      {
+        where: {
+          id: req.user.id,
+        },
+      },
     );
 
     const data = fs.readFileSync('./web/verifiedakun.html', 'utf-8');
@@ -307,11 +301,11 @@ export const editEmail = async (req, res) => {
     const tempResult = tempCompile({
       name: user.name,
       username: user.username,
-      link: `http://localhost:5173/verify/${user.id}`,
+      link: `${process.env.VITE_BE_URL}verify/${user.id}`,
     });
 
     await transporter.sendMail({
-      from: 'amanhidayat39@gmail.com',
+      from: 'masn40208@gmail.com',
       to: email,
       subject: 'Email Confirmation',
       html: tempResult,
@@ -323,4 +317,3 @@ export const editEmail = async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 };
-

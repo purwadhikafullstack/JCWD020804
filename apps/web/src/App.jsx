@@ -1,7 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import axios from 'axios';
 import Home from './pages/home/Home';
 import { DetailPage } from './pages/bookingPages/detailPage';
 import { BookingPage } from './pages/bookingPages/bookingPage';

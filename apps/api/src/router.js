@@ -21,6 +21,4 @@ router.use('/booking', bookingRouter)
 router.use('/transaction', transactionRouter)
 
 
-// add another router here ...
-
 export default router;

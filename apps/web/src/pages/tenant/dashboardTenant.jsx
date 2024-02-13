@@ -6,6 +6,8 @@ import { SidebarTenant } from '../properties/SidebarTenant';
 import { CircularPagination } from './paginationTenant';
 import { formatDate } from '../../helper/formatFunction';
 import { api } from '../../helper/api';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const TenantDashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,7 +73,6 @@ export const TenantDashboard = () => {
           },
         },
       );
-      console.log(`Approving transaction ${id}`);
 
       setTransactions((prevTransactions) => {
         return prevTransactions.map((transaction) =>
@@ -82,8 +83,19 @@ export const TenantDashboard = () => {
       });
 
       setProcessedTransactions((prevTransactions) => [...prevTransactions, id]);
+      toast.success('Transaction approved successfully!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { backgroundColor: '#4BB543', color: 'white' },
+      });
     } catch (error) {
       console.log(error);
+      toast.error('Failed to approve transaction.');
     }
   };
 
@@ -108,8 +120,19 @@ export const TenantDashboard = () => {
       });
 
       setProcessedTransactions((prevTransactions) => [...prevTransactions, id]);
+      toast.info('Transaction rejected.', {
+        position: 'bottom-left',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { backgroundColor: '#FFA500', color: 'white' },
+      });
     } catch (error) {
       console.log(error);
+      toast.error('Failed to reject transaction.');
     }
   };
 
@@ -124,7 +147,6 @@ export const TenantDashboard = () => {
           },
         },
       );
-      console.log(`canceling transaction ${id}`);
 
       setTransactions((prevTransactions) => {
         return prevTransactions.map((transaction) =>
@@ -135,8 +157,20 @@ export const TenantDashboard = () => {
       });
 
       setProcessedTransactions((prevTransactions) => [...prevTransactions, id]);
+
+      toast.info('Transaction cancelled.', {
+        position: 'bottom-left',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { backgroundColor: '#FFA500', color: 'white' },
+      });
     } catch (error) {
       console.log(error);
+      toast.error('Failed to cancel transaction.');
     }
   };
 

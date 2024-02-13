@@ -28,14 +28,12 @@ const ResetPasswordForm = () => {
     }),
     onSubmit: async (values) => {
       try {
-        console.log(params, 'ini params');
         values.email = params.email;
         setLoading(true);
         const response = await api.patch(
           '/user/update-password',
           values,
         );
-        console.log('Password reset success:', response.values);
         setLoading(false);
 
         toast.success("Password Reset Successful", {

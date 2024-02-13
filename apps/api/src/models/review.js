@@ -7,7 +7,6 @@ export default class Review extends Model {
    * The `models/index` file will call this method automatically.
    */
   static associate(models) {
-    // define association here
     Review.belongsTo(models.User);
     Review.belongsTo(models.Property);
     Review.belongsTo(models.Transaction);

@@ -7,7 +7,6 @@ import {
 } from '@material-tailwind/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import loginImage from '../../assets/masnstay.jpg';
@@ -36,7 +35,6 @@ export const Register = () => {
   const handleSubmit = async (data) => {
     try {
       await api.post('/user/register', data);
-      console.log(data, 'ini data');
       navigate('/');
       notify();
     } catch (err) {
@@ -66,7 +64,6 @@ export const Register = () => {
 
     validationSchema: RegisterSchema,
     onSubmit: (values, actions) => {
-      console.log(values, 'ini values');
       handleSubmit(values);
       actions.resetForm();
     },
@@ -75,13 +72,10 @@ export const Register = () => {
   const handleGoogleRegister = async () => {
     try {
       const userData = await registerWithGoogle();
-      console.log(userData);
 
-      const response = await api.post(
-        '/user/register-google',
-        { googleUserData: userData },
-      );
-      console.log(response.data);
+      const response = await api.post('/user/register-google', {
+        googleUserData: userData,
+      });
       localStorage.setItem('token', response.data.token);
 
       dispatch(setData(response.data.result));
@@ -116,7 +110,6 @@ export const Register = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      
       <Card
         color="transparent"
         shadow={false}
@@ -131,7 +124,7 @@ export const Register = () => {
         </a>
 
         <Typography color="gray" className="mt-1 font-normal">
-          Nice to meet you! Enter your details to register.😁😮
+          Register your account.😁
         </Typography>
         <form
           onSubmit={formik.handleSubmit}
@@ -261,7 +254,6 @@ export const Register = () => {
               'Register with Google'
             )}
           </Button>
-          
 
           <ToastContainer />
           <Typography color="gray" className="mt-4 text-center font-normal">

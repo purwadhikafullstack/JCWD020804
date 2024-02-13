@@ -18,7 +18,6 @@ export const BookingPage = () => {
   const totalNights = calculateTotalNights(checkInDate, checkOutDate);
   const totalPrice = totalNights * roomPrice;
   const RoomId = selectedRoom.id;
- console.log(selectedRoom);
   const handleBooking = async () => {
     try {
       const data = {

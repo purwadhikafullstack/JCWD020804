@@ -8,7 +8,6 @@ import { Op } from 'sequelize';
 import Room from '../models/room';
 import Property from '../models/property';
 
-// Fungsi untuk mengirim email pengingat
 const sendReminderEmail = async (booking, subject, templatePath) => {
   const data = fs.readFileSync(templatePath, 'utf-8');
   const templateCompile = handlebars.compile(data);
