@@ -27,7 +27,7 @@ import AddRoomForm from './components/propertyManagement/addPropertyRoomForm';
 import AddHotelPage from './pages/properties/AddPropertyPage';
 import { EditProperty } from './pages/properties/RightBar/EditProperty';
 import { ListRoomTenant } from './pages/properties/Roomlist/ListRoom';
-import EditRoomForm from './pages/properties/Roomlist/EditRoom';
+import EditRoomForm from './pages/properties/Roomlist/editRoom';
 import { Report } from './pages/tenant/salesReport';
 import { RoomReport } from './pages/tenant/roomReport';
 import { api } from './helper/api';
