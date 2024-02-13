@@ -1,15 +1,9 @@
-import {
-  Navbar,
-  Typography,
-  IconButton,
-  Button,
-  Input,
-} from '@material-tailwind/react';
+import { Navbar, Typography, Button, Input } from '@material-tailwind/react';
 import { ProfileMenu } from './profileMenu';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
-import logo from "../assets/masnstay.jpg"
+import logo from '../assets/masnstay.jpg';
 export function Navbarpage({ searchQuery, setSearchQuery }) {
   const user = useSelector((state) => state.user.value);
 
@@ -36,11 +30,7 @@ export function Navbarpage({ searchQuery, setSearchQuery }) {
     <Navbar variant="gradient" color="white" className="max-w-full">
       <div className="flex items-center justify-between gap-4 text-white w-full">
         <div className="flex items-center gap-4">
-          <img
-            src={logo}
-            alt="Logo"
-            className="h-16 w-16 mr-2 "
-          />
+          <img src={logo} alt="Logo" className="h-16 w-16 mr-2 " />
           <Link to="/">
             <Typography
               variant="h6"
@@ -67,8 +57,6 @@ export function Navbarpage({ searchQuery, setSearchQuery }) {
         </div>
 
         <div className="flex gap-4 items-center">
-          
-
           {!id ? (
             <>
               <Link to={'/login'}>
@@ -80,8 +68,7 @@ export function Navbarpage({ searchQuery, setSearchQuery }) {
             </>
           ) : (
             <>
-              <ProfileMenu
-              />
+              <ProfileMenu />
               <Typography
                 as="a"
                 href="#"

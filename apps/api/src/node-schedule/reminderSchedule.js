@@ -1,6 +1,5 @@
 import schedule from 'node-schedule';
 import { sendDailyReminder, sendSameDayReminder } from './reminderController';
-import moment from 'moment-timezone';
 
 export const setupReminderScheduler = () => {
   schedule.scheduleJob({ hour: 8, minute: 0, tz: 'Asia/Jakarta' }, () => {

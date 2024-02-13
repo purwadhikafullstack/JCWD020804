@@ -3,11 +3,8 @@ import handlebars from 'handlebars';
 import User from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
-import transporter from '../middleware/transporter';
+import { transporter } from '../middleware/transporter';
 import path from 'path';
-
-
 
 export const createUser = async (req, res) => {
   try {
@@ -33,7 +30,7 @@ export const createUser = async (req, res) => {
       isVerified: false,
     });
 
-    const data =  fs.readFileSync(
+    const data = fs.readFileSync(
       path.join(__dirname, '../../web/verifiedakun.html'),
       'utf-8',
     );
@@ -182,7 +179,6 @@ export const userRegisterWithGoogle = async (req, res) => {
     } else {
       let payload = { id: findUser.id };
       const token = jwt.sign(payload, 'LogIn', { expiresIn: `1h` });
-      
 
       return res.status(200).send({
         message: 'Success Signing in with Google Account',
@@ -199,7 +195,7 @@ export const userRegisterWithGoogle = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { email, username, link } = req.body;
-   
+
     const data = fs.readFileSync('./web/resetpassword.html', 'utf-8');
     const tempCompile = await handlebars.compile(data);
 
@@ -274,7 +270,7 @@ export const editProfile = async (req, res) => {
 export const editEmail = async (req, res) => {
   try {
     const { email } = req.body;
-    
+
     const user = await User.findOne({
       where: {
         id: req.user.id,
@@ -299,7 +295,7 @@ export const editEmail = async (req, res) => {
       },
     );
 
-    const data =  fs.readFileSync(
+    const data = fs.readFileSync(
       path.join(__dirname, '../../web/verifiedakun.html'),
       'utf-8',
     );
