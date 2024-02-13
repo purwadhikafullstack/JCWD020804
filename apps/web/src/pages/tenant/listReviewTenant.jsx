@@ -15,7 +15,6 @@ import {
   DialogFooter,
   Input,
 } from '@material-tailwind/react';
-import axios from 'axios';
 import { api } from '../../helper/api';
 import { SidebarTenant } from '../properties/SidebarTenant';
 

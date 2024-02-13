@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { PaymentProofDialog } from './paymentProof';
 import { SidebarTenant } from '../properties/SidebarTenant';

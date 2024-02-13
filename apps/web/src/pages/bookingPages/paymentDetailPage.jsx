@@ -6,7 +6,6 @@ import { Button, Input, Typography } from '@material-tailwind/react';
 import { BookingCard } from '../../components/booking/bookingCard';
 import { useBookingDetails } from '../../components/booking/bookingHook';
 import { Navbarpage } from '../../components/navbar';
-import axios from 'axios';
 import { formatMataUang } from '../../helper/formatFunction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
