@@ -7,9 +7,11 @@ import moment from 'moment-timezone';
 import { Op } from 'sequelize';
 import Room from '../models/room';
 import Property from '../models/property';
+import path from 'path';
 
 const sendReminderEmail = async (booking, subject, templatePath) => {
   const data = fs.readFileSync(templatePath, 'utf-8');
+  
   const templateCompile = handlebars.compile(data);
   const resultHTML = templateCompile({
     name: booking.User.name,
@@ -50,7 +52,7 @@ export const sendDailyReminder = async () => {
       await sendReminderEmail(
         booking,
         'Pengingat Check-In Hotel',
-        './web/emailDailyReminder.html',
+        path.join(__dirname, '../../web/emailDailyReminder.html'),
       );
       await booking.update({ isReminder: true });
     }
@@ -87,7 +89,7 @@ export const sendSameDayReminder = async () => {
       await sendReminderEmail(
         booking,
         'Pengingat Check-In Hotel Hari Ini',
-        './web/emailSameDayReminder.html',
+        path.join(__dirname,'../../web/emailSameDayReminder.html'),
       );
       await booking.update({ isReminder: true });
     }

@@ -100,7 +100,6 @@ const Login = () => {
   const handleGoogleRegister = async () => {
     try {
       const userData = await registerWithGoogle();
-      console.log(userData);
 
       const response = await api.post('/user/register-google', {
         googleUserData: userData,

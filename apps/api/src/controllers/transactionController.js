@@ -9,10 +9,11 @@ import transporter from '../middleware/transporter';
 import handlebars from 'handlebars';
 import { createPDF } from '../document/detailOrder';
 import { Sequelize } from 'sequelize';
+import path from 'path';
 
 export const getTransactionByTenant = async (req, res) => {
   try {
-    const { statusFilter, page = 1, limit = 10 } = req.query; 
+    const { statusFilter, page = 1, limit = 10 } = req.query;
     let whereClause = {};
 
     if (statusFilter) {
@@ -36,7 +37,7 @@ export const getTransactionByTenant = async (req, res) => {
       }
     }
 
-    const offset = (page - 1) * limit; 
+    const offset = (page - 1) * limit;
 
     const { count, rows } = await Transaction.findAndCountAll({
       include: [
@@ -52,9 +53,9 @@ export const getTransactionByTenant = async (req, res) => {
         },
       ],
       where: whereClause,
-      limit: parseInt(limit), 
-      offset: offset, 
-      order: [['createdAt', 'DESC']], 
+      limit: parseInt(limit),
+      offset: offset,
+      order: [['createdAt', 'DESC']],
     });
 
     res.status(200).send({
@@ -103,9 +104,9 @@ export const getTransactionByUser = async (req, res) => {
 
       if (date) {
         const startDate = new Date(date);
-        startDate.setHours(0, 0, 0, 0); 
+        startDate.setHours(0, 0, 0, 0);
         const endDate = new Date(date);
-        endDate.setHours(23, 59, 59, 999); 
+        endDate.setHours(23, 59, 59, 999);
 
         whereClause[Op.or].push({
           checkIn: {
@@ -132,7 +133,7 @@ export const getTransactionByUser = async (req, res) => {
           ],
         },
         {
-          model: Review, 
+          model: Review,
         },
       ],
     });
@@ -170,13 +171,16 @@ export const approveTransactionById = async (req, res) => {
     const pdfFilename = 'BookingConfirmation.pdf';
     createPDF(pdfFilename, transaction);
 
-    const data = fs.readFileSync('./web/bookingDetail.html', 'utf-8');
+    const data = fs.readFileSync(
+      path.join(__dirname, '../../web/bookingDetail.html'),
+      'utf-8',
+    );
     const tempCompile = handlebars.compile(data);
     const tempResult = tempCompile({
       name: transaction.User.name,
       Hotel: transaction.Room.Property.name,
       CheckIn: transaction.checkIn,
-      Room: transaction.Room.name
+      Room: transaction.Room.name,
     });
 
     await transporter.sendMail({
@@ -229,7 +233,7 @@ export const cancelTransactionById = async (req, res) => {
 
 export const ratingUser = async (req, res) => {
   const { rating, comment, TransactionId, PropertyId } = req.body;
-  console.log(req.body);
+  
   try {
     const result = await Review.create({
       rating,
@@ -279,10 +283,10 @@ export const ratingReplyTenant = async (req, res) => {
 
 export const getSalesReport = async (req, res) => {
   try {
-    const { startDate, endDate, page = 1 } = req.query; 
+    const { startDate, endDate, page = 1 } = req.query;
 
-    const limit = 7; 
-    const offset = (page - 1) * limit; 
+    const limit = 7;
+    const offset = (page - 1) * limit;
 
     const whereCondition = {};
     if (startDate && endDate) {
@@ -318,22 +322,26 @@ export const getSalesReport = async (req, res) => {
 
     const totalRevenue = await Transaction.sum('total_price', {
       where: whereCondition,
-      include: [{
-        model: Room,
-        include: [{
-          model: Property,
-          where: { userId: req.user.id },
+      include: [
+        {
+          model: Room,
+          include: [
+            {
+              model: Property,
+              where: { userId: req.user.id },
+              attributes: [],
+            },
+          ],
           attributes: [],
-        }],
-        attributes: [],
-      }]
+        },
+      ],
     });
 
     res.status(200).json({
       transactions: rows,
       totalRevenue,
-      totalPages: Math.ceil(count / limit), 
-      currentPage: parseInt(page), 
+      totalPages: Math.ceil(count / limit),
+      currentPage: parseInt(page),
     });
   } catch (error) {
     console.error('Error fetching sales report:', error);
@@ -341,11 +349,9 @@ export const getSalesReport = async (req, res) => {
   }
 };
 
-
-
 export const getRoomReport = async (req, res) => {
   try {
-    const userId = req.user.id; 
+    const userId = req.user.id;
     const rooms = await Room.findAll({
       include: [
         {
@@ -380,7 +386,7 @@ export const getRoomReport = async (req, res) => {
           model: Transaction,
           attributes: [],
           where: {
-            status: 'pembayaran berhasil', 
+            status: 'pembayaran berhasil',
           },
         },
       ],

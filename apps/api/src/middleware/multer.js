@@ -1,9 +1,10 @@
 const multer = require('multer');
+import path from 'path';
 
 export const multerUpload = () => {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, './public');
+      cb(null, path.join(__dirname, `../../public`));
     },
     filename: (req, file, cb) => {
       cb(
