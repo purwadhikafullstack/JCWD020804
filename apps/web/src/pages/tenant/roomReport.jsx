@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { formatMataUang } from '../../helper/formatFunction';
 import { api } from '../../helper/api';
 
@@ -9,14 +8,11 @@ export const RoomReport = () => {
 
   const fetchRooms = async () => {
     try {
-      const response = await api.get(
-        '/transaction/tenant/room-report',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await api.get('/transaction/tenant/room-report', {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
       setRooms(response.data);
     } catch (error) {
       console.error('Error fetching room report:', error);

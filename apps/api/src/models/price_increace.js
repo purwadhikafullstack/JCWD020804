@@ -7,7 +7,6 @@ export default class Price_increase extends Model {
    * The `models/index` file will call this method automatically.
    */
   static associate(models) {
-    // define association here
     Price_increase.belongsTo(models.Room)
   }
 }

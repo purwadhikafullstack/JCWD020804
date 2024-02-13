@@ -29,25 +29,9 @@ export const getAllRoomByProperty = async (req, res) => {
   }
 };
 
-export const getRoomByHotelId = async (req, res) => {
-  try {
-    const { id } = req.params;
-    console.log(id);
-
-    const result = await Room.findAll({
-      where: { PropertyId: id },
-    });
-    res.status(200).send(result);
-  } catch (error) {
-    console.error(error);
-    res.status(400).send({ error: 'Gagal mendapatkan data' });
-  }
-};
-
 export const addRoom = async (req, res) => {
   try {
     const { name, description, price } = req.body;
-    console.log(req.body, 'ini body');
 
     const result = await Room.create({
       name,
@@ -67,8 +51,6 @@ export const addRoom = async (req, res) => {
 export const deleteRoom = async (req, res) => {
     try {
       const roomId = req.params.id;
-  
-      console.log(`Menghapus kamar dengan ID: ${roomId}`);
   
       await Room.destroy({
         where: { id: roomId },

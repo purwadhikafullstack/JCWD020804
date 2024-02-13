@@ -7,7 +7,6 @@ export default class Property_category extends Model {
    * The `models/index` file will call this method automatically.
    */
   static associate(models) {
-    // define association here
     Property_category.hasOne(models.Property);
   }
 }

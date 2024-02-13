@@ -4,7 +4,6 @@ import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { Navbarpage } from '../../components/navbar';
 import { averageRating } from '../../helper/getRating';
 import { formatDate, formatMataUang } from '../../helper/formatFunction';
@@ -52,11 +51,9 @@ export const DetailPage = () => {
 
   const fetchApi = async () => {
     try {
-      console.log({ checkInDate, checkOutDate });
       const response = await api.get(
         `/property/${id}?checkIn=${checkInDate}&checkOut=${checkOutDate}`,
       );
-      console.log(response.data);
       setPropertyDetails(response?.data.result);
     } catch (error) {
       console.log(error);

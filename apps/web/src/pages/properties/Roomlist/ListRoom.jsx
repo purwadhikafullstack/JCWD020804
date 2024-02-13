@@ -80,7 +80,6 @@ export const ListRoomTenant = () => {
             <div className="w-72">
               <Select
                 label="Your Property"
-                // value={selectedProperty}
                 onChange={handleSelectChange}
               >
                 {properties.map((property) => (

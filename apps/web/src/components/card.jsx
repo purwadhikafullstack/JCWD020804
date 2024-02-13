@@ -12,7 +12,6 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { formatMataUang } from '../helper/formatFunction';
 import { averageRating } from '../helper/getRating';
 import { api } from '../helper/api';

@@ -127,7 +127,6 @@ export const getAllProperty = async (req, res) => {
 };
 
 export const getAllPropertyTenant = async (req, res) => {
-  console.log(req.user.id, 'ini user');
   try {
     const result = await Property.findAll({
       where: { UserId: req.user.id },
@@ -147,15 +146,12 @@ export const getAllPropertyTenant = async (req, res) => {
   }
 };
 
-// Fungsi untuk menambah properti
 export const addProperty = async (req, res) => {
   try {
     const { name, description, city, province, Categories, picture } = req.body;
-    console.log(req.body, 'ini body');
 
     const newLocation = await Location.create({ city, province });
     
-
     let category = await Property_category.findOne({ where: { Categories } });
     if (!category) {
       category = await Property_category.create({ Categories });
@@ -265,8 +261,6 @@ export const editProperty = async (req, res) => {
 export const deleteProperty = async (req, res) => {
   try {
     const propertyId = req.params.id;
-
-    console.log(`Menghapus properti dengan ID: ${propertyId}`);
 
     await Property.destroy({
       where: { id: propertyId },
