@@ -5,7 +5,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import transporter from '../middleware/transporter';
-const path = require('path');
+import path from 'path';
+
+
 
 export const createUser = async (req, res) => {
   try {
@@ -31,7 +33,10 @@ export const createUser = async (req, res) => {
       isVerified: false,
     });
 
-    const data = fs.readFileSync('./web/verifiedakun.html', 'utf-8');
+    const data =  fs.readFileSync(
+      path.join(__dirname, '../../web/verifiedakun.html'),
+      'utf-8',
+    );
     const tempCompile = handlebars.compile(data);
     const tempResult = tempCompile({
       createdAt: newUser.createdAt,
@@ -128,7 +133,7 @@ export const becomeTenant = async (req, res) => {
       {
         isTenant: true,
         no_ktp,
-        foto_ktp: req.file?.path,
+        foto_ktp: req.file?.filename,
       },
       {
         where: {
@@ -248,7 +253,7 @@ export const editProfile = async (req, res) => {
         name,
         username,
 
-        picture: req.file?.path,
+        picture: req.file?.filename,
         isVerified: isVerified,
       },
 
@@ -269,14 +274,12 @@ export const editProfile = async (req, res) => {
 export const editEmail = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(req.body);
+    
     const user = await User.findOne({
       where: {
         id: req.user.id,
       },
     });
-    console.log('test');
-    console.log(email);
     if (!user) {
       return res.status(404).send('User not found');
     }
@@ -296,7 +299,10 @@ export const editEmail = async (req, res) => {
       },
     );
 
-    const data = fs.readFileSync('./web/verifiedakun.html', 'utf-8');
+    const data =  fs.readFileSync(
+      path.join(__dirname, '../../web/verifiedakun.html'),
+      'utf-8',
+    );
     const tempCompile = handlebars.compile(data);
     const tempResult = tempCompile({
       name: user.name,

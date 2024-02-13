@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { api } from '../../helper/api';
@@ -803,12 +802,12 @@ const AddHotelForm = ({ addHotel }) => {
         data.append('province', selectedProvince);
         data.append('Categories', selectedCategories);
         data.append('picture', values.picture);
-        const response = await api.post('/property/add-properties', data, {
+
+        const response = await api.post('property/add-properties', data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
         const notif = () => {
           toast.success('Your property listing has been successfully added.', {
             position: 'top-right',

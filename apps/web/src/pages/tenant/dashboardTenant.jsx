@@ -247,13 +247,13 @@ export const TenantDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((transaction) => (
+                  {transactions?.map((transaction) => (
                     <tr key={transaction.id} className="bg-white">
                       <td className="border p-3">
                         {formatDate(transaction.checkIn, 'dd-mm-yyyy')}
                       </td>
-                      <td className="border p-3">{transaction.User.name}</td>
-                      <td className="border p-3">{transaction.Room.name}</td>
+                      <td className="border p-3">{transaction.User?.name}</td>
+                      <td className="border p-3">{transaction.Room?.name}</td>
                       <td className="border p-3">{transaction.status}</td>
                       <td
                         className={`border p-3 ${

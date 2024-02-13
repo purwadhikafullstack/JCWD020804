@@ -38,12 +38,7 @@ export const TenantReviews = () => {
     },
     validationSchema: replySchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
-      console.log(
-        'Replying to review:',
-        currentReview?.id,
-        'with content:',
-        values.replyContent,
-      );
+     
       handleReplyRating(values, currentReview?.id);
       setTimeout(() => {
         setSubmitting(false);

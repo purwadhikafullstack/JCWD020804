@@ -1,6 +1,7 @@
 import Property from '../models/property';
 import Room from '../models/room';
 
+
 export const getAllRoomByProperty = async (req, res) => {
   try {
     const { propertyName } = req.query;
@@ -36,7 +37,7 @@ export const addRoom = async (req, res) => {
     const result = await Room.create({
       name,
       description,
-      picture: req.file?.path,
+      picture: req.file?.filename,
       PropertyId: req.params.id,
       price,
     });
