@@ -9,7 +9,7 @@ import { ProfileMenu } from './profileMenu';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
-import logo from "../src/assets/masnstay.jpg"
+import logo from "../assets/masnstay.jpg"
 export function Navbarpage({ searchQuery, setSearchQuery }) {
   const user = useSelector((state) => state.user.value);
 
