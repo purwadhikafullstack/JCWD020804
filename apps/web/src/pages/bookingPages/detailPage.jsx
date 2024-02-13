@@ -139,7 +139,6 @@ export const DetailPage = () => {
             <DateRange
               editableDateInputs={true}
               onChange={(item) => {
-                console.log(item);
                 setDateRange([item.selection]);
                 setCheckInDate(item.selection.startDate);
                 setCheckOutDate(item.selection.endDate);

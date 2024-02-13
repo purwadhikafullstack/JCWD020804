@@ -1,17 +1,15 @@
 import Transaction from '../models/transaction';
 import User from '../models/user';
 import fs from 'fs';
-import transporter from '../middleware/transporter';
+import { transporter } from '../middleware/transporter';
 import handlebars from 'handlebars';
 import moment from 'moment-timezone';
-import { Op } from 'sequelize';
 import Room from '../models/room';
 import Property from '../models/property';
 import path from 'path';
 
 const sendReminderEmail = async (booking, subject, templatePath) => {
   const data = fs.readFileSync(templatePath, 'utf-8');
-  
   const templateCompile = handlebars.compile(data);
   const resultHTML = templateCompile({
     name: booking.User.name,
@@ -89,7 +87,7 @@ export const sendSameDayReminder = async () => {
       await sendReminderEmail(
         booking,
         'Pengingat Check-In Hotel Hari Ini',
-        path.join(__dirname,'../../web/emailSameDayReminder.html'),
+        path.join(__dirname, '../../web/emailSameDayReminder.html'),
       );
       await booking.update({ isReminder: true });
     }

@@ -1,10 +1,6 @@
 import Property from '../models/property';
 import Room from '../models/room';
 import Transaction from '../models/transaction';
-import User from '../models/user';
-import fs from 'fs';
-import transporter from '../middleware/transporter';
-import handlebars from 'handlebars';
 
 export const getAllData = async (req, res) => {
   try {
