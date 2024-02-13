@@ -21,7 +21,7 @@ userRouter.post('/register', createUser);
 userRouter.post('/login', async (req, res) => {
   const result = await login(req);
   res.status(!result.code ? 200 : result.code).send(result);
-  console.log('result', result);
+  
 });
 
 userRouter.patch('/verify/:id', verify);

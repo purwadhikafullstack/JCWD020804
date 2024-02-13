@@ -17,7 +17,6 @@ const AddHotelPage = () => {
       </h1>
 
       <AddHotelForm addHotel={addHotel} />
-      {/* Display list of hotels or other components as needed */}
     </div>
   );
 };

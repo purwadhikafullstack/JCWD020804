@@ -115,7 +115,7 @@ export const UploadPayment = async (req, res) => {
     });
     await payment.update({
       status: req.body.status || 'menunggu konfirmasi',
-      bukti_pembayaran: req.file?.path,
+      bukti_pembayaran: req.file?.filename,
     });
     res.status(200).send('success upload payment');
   } catch (error) {
@@ -136,67 +136,5 @@ export const CancelBooking = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).send({ message: 'Error cancel booking' });
-  }
-};
-
-export const getTomorrowBookings = async (req, res) => {
-  try {
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
-    const formattedDate = tomorrow.toISOString().split('T')[0];
-
-    const result = await Transaction.findAndCountAll({
-      where: {
-        checkIn: formattedDate,
-        isReminder: false
-      },
-    });
-    res.status(200).send({result});
-  } catch (error) {
-    console.log(error);
-    res.status(400).send({ message: 'data error' });
-  }
-};
-
-
-export const sendBookingReminder = async (req, res) => {
-  try {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    const formattedDate = tomorrow.toISOString().split('T')[0];
-
-    const bookings = await Transaction.findAll({
-      where: {
-        checkIn: formattedDate,
-        isReminder: false 
-      },
-      include: [{
-        model: User,
-      }]
-    });
-
-    for (const booking of bookings) {
-      const data = fs.readFileSync('./web/emailReminder.html', 'utf-8');
-      const templateCompile = handlebars.compile(data);
-      const resultHTML = templateCompile({
-        name: booking.User.name,
-        checkInDate: formattedDate,
-      });
-
-      await transporter.sendMail({
-        from: 'masn40208@gmail.com',
-        to: booking.User.email,
-        subject: 'Pengingat Check-In Hotel',
-        html: resultHTML,
-      });
-
-      
-      await booking.update({ isReminder: true });
-    }
-    console.log('Reminders sent successfully');
-  } catch (error) {
-    console.error('Error sending reminders:', error);
   }
 };

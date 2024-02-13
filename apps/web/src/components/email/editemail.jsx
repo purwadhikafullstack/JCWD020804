@@ -27,7 +27,6 @@ export const EditEmail = () => {
     onSubmit: async (values) => {
       try {
         const formData = new FormData();
-        console.log(values);
 
         if (values.email.trim() !== '') {
           formData.append('email', values.email);

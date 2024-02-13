@@ -14,7 +14,7 @@ export const verifyToken = (req, res, next) => {
     let verifiedUser = jwt.verify(token, 'LogIn');
 
     req.user = verifiedUser;
-    console.log(req.user);
+    
     next();
   } catch (error) {
     console.log(error);

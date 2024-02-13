@@ -33,7 +33,7 @@ const AddRoomForm = () => {
         data.append('picture', values.picture);
 
         const response = await api.post(
-          `/room/add-room/${id}`,
+          `room/add-room/${id}`,
           data,
           {
             headers: {

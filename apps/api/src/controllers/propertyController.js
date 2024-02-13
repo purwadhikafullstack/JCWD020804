@@ -148,7 +148,7 @@ export const getAllPropertyTenant = async (req, res) => {
 
 export const addProperty = async (req, res) => {
   try {
-    const { name, description, city, province, Categories, picture } = req.body;
+    const { name, description, city, province, Categories, } = req.body;
 
     const newLocation = await Location.create({ city, province });
     
@@ -160,7 +160,7 @@ export const addProperty = async (req, res) => {
     const property = await Property.create({
       name,
       description,
-      picture: req.file?.path,
+      picture: req.file?.filename,
       PropertyCategoryId: category.id,
       LocationId: newLocation.id,
       UserId: req.user.id,
@@ -173,56 +173,6 @@ export const addProperty = async (req, res) => {
   }
 };
 
-export const getProperty = async (req, res) => {
-  try {
-    const {
-      page = 1,
-      pageSize = 10,
-      sortBy = 'name',
-      sortOrder = 'asc',
-      propertyName,
-      category,
-    } = req.query;
-
-    const filterOptions = {
-      where: {
-        isRented: false,
-      },
-    };
-
-    if (propertyName) {
-      filterOptions.where.name = {
-        [Op.iLike]: `%${propertyName}%`,
-      };
-    }
-
-    if (category) {
-      filterOptions.where.category = {
-        [Op.iLike]: `%${category}%`,
-      };
-    }
-
-    const orderOptions = [[sortBy, sortOrder.toUpperCase()]];
-
-    const result = await Property.findAndCountAll({
-      ...filterOptions,
-      order: orderOptions,
-      limit: pageSize,
-      offset: (page - 1) * pageSize,
-    });
-
-    const totalPages = Math.ceil(result.count / pageSize);
-
-    res.status(200).send({
-      result: result.rows,
-      totalPages,
-      currentPage: page,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(400).send({ error: 'gagal mendapatkan data' });
-  }
-};
 
 export const editProperty = async (req, res) => {
   try {
@@ -239,7 +189,7 @@ export const editProperty = async (req, res) => {
       {
         name,
         description,
-        picture: req.file?.path,
+        picture: req.file?.filename,
         PropertyCategoryId: category.id,
         LocationId: newLocation.id,
       },
