@@ -109,9 +109,16 @@ export const UploadPayment = async (req, res) => {
     const payment = await Transaction.findOne({
       where: { id: req.params.id, UserId: req.user.id },
     });
+
+    let file = null;
+    if (req?.file) {
+      const fileName = req?.file?.filename;
+      const URL = process.env.IMAGE_URL;
+      file = `${URL}/${fileName}`;
+    }
     await payment.update({
       status: req.body.status || 'menunggu konfirmasi',
-      bukti_pembayaran: req.file?.filename,
+      bukti_pembayaran: file,
     });
     res.status(200).send('success upload payment');
   } catch (error) {

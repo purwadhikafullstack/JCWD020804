@@ -29,7 +29,7 @@ export const UserProfile = () => {
         </Typography>
       </Link>
 
-      <img src={`${import.meta.env.VITE_IMG_URL}${user.picture}`} alt="User profile"/>
+      <img src={user.picture} alt="User profile"/>
 
       <div className="p-6 text-center">
         <h4 className="block mb-2 font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">

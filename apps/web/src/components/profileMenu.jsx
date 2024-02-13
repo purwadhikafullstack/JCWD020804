@@ -29,7 +29,7 @@ export function ProfileMenu() {
           variant="circular"
           alt=""
           className="cursor-pointer"
-          src={`${import.meta.env.VITE_IMG_URL}${profilePicture}`}
+          src={profilePicture}
         />
       </MenuHandler>
       <MenuList>

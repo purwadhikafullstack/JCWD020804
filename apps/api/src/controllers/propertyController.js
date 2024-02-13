@@ -148,19 +148,24 @@ export const getAllPropertyTenant = async (req, res) => {
 
 export const addProperty = async (req, res) => {
   try {
-    const { name, description, city, province, Categories, } = req.body;
+    const { name, description, city, province, Categories } = req.body;
 
     const newLocation = await Location.create({ city, province });
-    
+
     let category = await Property_category.findOne({ where: { Categories } });
     if (!category) {
       category = await Property_category.create({ Categories });
     }
-
+    let file = null;
+    if (req?.file) {
+      const fileName = req?.file?.filename;
+      const URL = process.env.IMAGE_URL;
+      file = `${URL}/${fileName}`;
+    }
     const property = await Property.create({
       name,
       description,
-      picture: req.file?.filename,
+      picture: file,
       PropertyCategoryId: category.id,
       LocationId: newLocation.id,
       UserId: req.user.id,
@@ -173,7 +178,6 @@ export const addProperty = async (req, res) => {
   }
 };
 
-
 export const editProperty = async (req, res) => {
   try {
     const { name, description, city, province, Categories, picture } = req.body;
@@ -184,12 +188,17 @@ export const editProperty = async (req, res) => {
     if (!category) {
       category = await Property_category.create({ Categories });
     }
-
+    let file = null;
+    if (req?.file) {
+      const fileName = req?.file?.filename;
+      const URL = process.env.IMAGE_URL;
+      file = `${URL}/${fileName}`;
+    }
     await Property.update(
       {
         name,
         description,
-        picture: req.file?.filename,
+        picture: file,
         PropertyCategoryId: category.id,
         LocationId: newLocation.id,
       },

@@ -242,14 +242,20 @@ export const updateUserPassword = async (req, res) => {
 
 export const editProfile = async (req, res) => {
   try {
-    const { name, username, picture } = req.body;
+    const { name, username } = req.body;
     const isVerified = req.body.email ? false : true;
+    
+    let file = null;
+    if (req?.file) {
+      const fileName = req?.file?.filename;
+      const URL = process.env.IMAGE_URL;
+      file = `${URL}/${fileName}`;
+    }
     await User.update(
       {
         name,
         username,
-
-        picture: req.file?.filename,
+        picture: file,
         isVerified: isVerified,
       },
 
