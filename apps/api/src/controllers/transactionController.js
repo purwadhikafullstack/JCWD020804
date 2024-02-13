@@ -5,11 +5,11 @@ import User from '../models/user';
 import Review from '../models/review';
 import { Op } from 'sequelize';
 import fs from 'fs';
-import transporter from '../middleware/transporter';
 import handlebars from 'handlebars';
 import { createPDF } from '../document/detailOrder';
 import { Sequelize } from 'sequelize';
 import path from 'path';
+import { transporter } from '../middleware/transporter';
 
 export const getTransactionByTenant = async (req, res) => {
   try {

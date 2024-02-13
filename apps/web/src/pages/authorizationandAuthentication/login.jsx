@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import loginImage from '../../assets/masnstay.jpg';
@@ -53,6 +52,11 @@ const Login = () => {
       draggable: true,
       progress: undefined,
       theme: 'light',
+      onClose: () => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
+      },
     });
   };
 
@@ -86,7 +90,6 @@ const Login = () => {
       dispatch(setData(response.data.result));
 
       navigate('/');
-
       notif();
     } catch (err) {
       console.error(err);
@@ -97,6 +100,7 @@ const Login = () => {
       toast.error(`Log In Failed: ${errorMessage}`);
     }
   }
+
   const handleGoogleRegister = async () => {
     try {
       const userData = await registerWithGoogle();
@@ -117,6 +121,7 @@ const Login = () => {
         theme: 'light',
       });
       navigate('/');
+      window.location.reload();
     } catch (error) {
       console.log('Error from handle Google Register Front-end', error);
       toast.error('You Must Register With Google', {

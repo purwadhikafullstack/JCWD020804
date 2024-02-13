@@ -7,7 +7,7 @@ import {
 } from '@material-tailwind/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import loginImage from '../../assets/masnstay.jpg';
 import { useNavigate } from 'react-router-dom';
@@ -254,8 +254,6 @@ export const Register = () => {
               'Register with Google'
             )}
           </Button>
-
-          <ToastContainer />
           <Typography color="gray" className="mt-4 text-center font-normal">
             Already have an account?{' '}
             <a href="/login" className="font-medium text-gray-900">
