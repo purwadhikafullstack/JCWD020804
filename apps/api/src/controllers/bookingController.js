@@ -114,7 +114,7 @@ export const UploadPayment = async (req, res) => {
     if (req?.file) {
       const fileName = req?.file?.filename;
       const URL = process.env.VITE_IMAGE_URL;
-      file = `${URL}/${fileName}`;
+      file = `${URL}${fileName}`;
     }
     await payment.update({
       status: req.body.status || 'menunggu konfirmasi',

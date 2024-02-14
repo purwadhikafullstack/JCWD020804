@@ -70,6 +70,7 @@ const router = createBrowserRouter([
       { path: '/list-room', element: <ListRoomTenant /> },
       { path: '/add-room/:id', element: <AddRoomForm /> },
       { path: '/edit-rooms/:id', element: <EditRoomForm /> },
+      { path: '/tenant-dashboard', element: <DashboardTenant /> },
     ],
   },
 ]);
