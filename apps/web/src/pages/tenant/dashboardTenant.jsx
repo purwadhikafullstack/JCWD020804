@@ -74,7 +74,7 @@ export const TenantDashboard = () => {
       );
 
       setTransactions((prevTransactions) => {
-        return prevTransactions.map((transaction) =>
+        return prevTransactions?.map((transaction) =>
           transaction.id === id
             ? { ...transaction, status: 'pembayaran berhasil' }
             : transaction,
@@ -111,7 +111,7 @@ export const TenantDashboard = () => {
       );
 
       setTransactions((prevTransactions) => {
-        return prevTransactions.map((transaction) =>
+        return prevTransactions?.map((transaction) =>
           transaction.id === id
             ? { ...transaction, status: 'menunggu pembayaran' }
             : transaction,
@@ -148,7 +148,7 @@ export const TenantDashboard = () => {
       );
 
       setTransactions((prevTransactions) => {
-        return prevTransactions.map((transaction) =>
+        return prevTransactions?.map((transaction) =>
           transaction.id === id
             ? { ...transaction, status: 'transaksi dibatalkan' }
             : transaction,
@@ -179,7 +179,7 @@ export const TenantDashboard = () => {
       <div className="felx flex-col">
         <div className="container mx-auto my-8">
           <h1 className="text-3xl font-semibold mb-6 text-yellow-600">
-            {user.name}
+            {user?.name}
           </h1>
           <div className="flex my-4">
             <button
@@ -240,7 +240,7 @@ export const TenantDashboard = () => {
                     >
                       Payment Proof
                     </th>
-                    {transactions.some(
+                    {transactions?.some(
                       (transaction) =>
                         transaction.status === 'menunggu konfirmasi',
                     ) && <th className="border p-3">Action</th>}
@@ -254,13 +254,13 @@ export const TenantDashboard = () => {
                       </td>
                       <td className="border p-3">{transaction.User?.name}</td>
                       <td className="border p-3">{transaction.Room?.name}</td>
-                      <td className="border p-3">{transaction.status}</td>
+                      <td className="border p-3">{transaction?.status}</td>
                       <td
                         className={`border p-3 ${
                           statusFilter === 'cancel' ? 'hidden' : ''
                         }`}
                       >
-                        {transaction.bukti_pembayaran && (
+                        {transaction?.bukti_pembayaran && (
                           <button
                             className="text-blue-500 underline"
                             onClick={() =>
@@ -271,7 +271,7 @@ export const TenantDashboard = () => {
                           </button>
                         )}
                       </td>
-                      {transaction.status === 'menunggu konfirmasi' && (
+                      {transaction?.status === 'menunggu konfirmasi' && (
                         <td className="border p-3">
                           <button
                             onClick={() => handleApprove(transaction.id)}
@@ -288,7 +288,7 @@ export const TenantDashboard = () => {
                         </td>
                       )}
 
-                      {transaction.status === 'menunggu pembayaran' && (
+                      {transaction?.status === 'menunggu pembayaran' && (
                         <td className="border p-3">
                           <button
                             onClick={() => handleCancel(transaction.id)}

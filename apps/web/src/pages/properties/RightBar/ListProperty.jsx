@@ -157,7 +157,7 @@ export const ListPropertyTenant = () => {
               </tr>
             </thead>
             <tbody>
-              {properties.map((property) => (
+              {properties?.map((property) => (
                 <tr key={property.id}>
                   <td className={` bg-blue-gray-50/50`}>
                     <div className="flex items-center gap-3">

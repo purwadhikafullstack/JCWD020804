@@ -86,7 +86,7 @@ export const Report = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
+              {transactions?.map((transaction) => (
                 <tr key={transaction.id} className="border-b">
                   <td>{transaction.User.name}</td>
                   <td>{transaction.Room.name}</td>
