@@ -195,6 +195,7 @@ export const userRegisterWithGoogle = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { email, username, link } = req.body;
+
     const data = fs.readFileSync('./web/resetpassword.html', 'utf-8');
     const tempCompile = await handlebars.compile(data);
 
@@ -275,6 +276,7 @@ export const editProfile = async (req, res) => {
 export const editEmail = async (req, res) => {
   try {
     const { email } = req.body;
+
     const user = await User.findOne({
       where: {
         id: req.user.id,
@@ -298,6 +300,7 @@ export const editEmail = async (req, res) => {
         },
       },
     );
+
     const data = fs.readFileSync(
       path.join(__dirname, '../../web/verifiedakun.html'),
       'utf-8',

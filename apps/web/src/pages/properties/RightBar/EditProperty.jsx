@@ -16,7 +16,7 @@ const EditPropertySchema = Yup.object().shape({
     'fileSize',
     'Photo size is too large (max 1 MB)',
     (value) => {
-      if (!value) return true; 
+      if (!value) return true;
       return value.size <= 1 * 1024 * 1024; // 1 MB
     },
   ),
@@ -24,15 +24,14 @@ const EditPropertySchema = Yup.object().shape({
 
 export const EditProperty = () => {
   const token = localStorage.getItem('token');
- 
-  
+
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedCategories, setSelectedCategories] = useState('');
-    const { id } = useParams();
+  const { id } = useParams();
 
   const daerah = [
     {
@@ -795,8 +794,8 @@ export const EditProperty = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: '', 
-      description: '', 
+      name: '',
+      description: '',
       picture: null,
       city: '',
       province: '',
@@ -807,14 +806,13 @@ export const EditProperty = () => {
       try {
         const token = localStorage.getItem('token');
         const authToken = token;
-       
 
         if (
           !values.name &&
           !values.description &&
           !values.picture &&
           !values.category &&
-          !values.newLocation 
+          !values.newLocation
         ) {
           console.log('No changes submitted');
           return;
@@ -827,7 +825,6 @@ export const EditProperty = () => {
         formData.append('province', selectedProvince);
         formData.append('Categories', selectedCategories);
         formData.append('picture', values.picture);
-       
 
         const url = `/property/edit-properties/${id}`;
 
@@ -850,6 +847,7 @@ export const EditProperty = () => {
               theme: 'light',
               onClose: () => {
                 setTimeout(() => {
+                  navigate('/list-property');
                   window.location.reload();
                 }, 5000);
               },
@@ -1111,7 +1109,10 @@ export const EditProperty = () => {
                     <div className="text-center mt-4">
                       <p className="text-gray-700">
                         Cancel Edit Profile ?{' '}
-                        <Link to="/list-property" className="text-black underline">
+                        <Link
+                          to="/list-property"
+                          className="text-black underline"
+                        >
                           Home
                         </Link>
                       </p>
