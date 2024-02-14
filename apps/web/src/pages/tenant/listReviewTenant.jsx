@@ -63,11 +63,11 @@ export const TenantReviews = () => {
       const updatedReview = response.data;
 
       setProperties((prevProperties) => {
-        return prevProperties.map((property) => {
+        return prevProperties?.map((property) => {
           if (property.id === selectedProperty.id) {
             return {
               ...property,
-              Reviews: property.Reviews.map((review) => {
+              Reviews: property.Reviews?.map((review) => {
                 if (review.id === reviewId) {
                   return updatedReview;
                 }

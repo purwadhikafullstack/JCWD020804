@@ -103,7 +103,7 @@ export const DetailPage = () => {
             <div>
               <h2 className="text-xl font-bold mb-2">Available Rooms:</h2>
               <ul>
-                {propertyDetails.Rooms.map((room) => (
+                {propertyDetails.Rooms?.map((room) => (
                   <li
                     key={room.id}
                     onClick={() => handleRoomSelect(room)}

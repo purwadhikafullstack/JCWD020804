@@ -34,7 +34,7 @@ export const RoomReport = () => {
           </tr>
         </thead>
         <tbody>
-          {rooms.map((room) => (
+          {rooms?.map((room) => (
             <tr key={room.id} className="border-b">
               <td>{room.name}</td>
               <td>{room.total_stays}</td>

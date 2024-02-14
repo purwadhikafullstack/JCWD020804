@@ -65,7 +65,7 @@ export function PropertyCard({ selectedCategory, searchQuery }) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {properties.map((property) => (
+      {properties?.map((property) => (
         <Card
           key={property.id}
           className="w-full max-w-[26rem] shadow-lg flex flex-col"

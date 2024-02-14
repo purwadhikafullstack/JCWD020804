@@ -35,7 +35,7 @@ export function CarouselCustomArrows() {
   return (
     <div>
       <div className="rounded-xl overflow-hidden">
-        {properties.map((property, index) => (
+        {properties?.map((property, index) => (
           <img
             key={property.id}
             src={property.picture}
