@@ -64,6 +64,7 @@ const router = createBrowserRouter([
       { path: '/tenant/ratings', element: <TenantReviews /> },
       { path: '/tenant/sales-report', element: <Report /> },
       { path: '/tenant/room-report', element: <RoomReport /> },
+      { path: '/tenant-dashboard', element: <DashboardTenant /> },
       { path: '/list-property', element: <ListPropertyTenant /> },
       { path: '/add-properties', element: <AddHotelPage /> },
       { path: '/edit-properties/:id', element: <EditProperty /> },
