@@ -12,7 +12,7 @@ export const BookingCard = ({ bookingDetails }) => {
     <Card className="w-full max-w-[26rem] shadow-lg">
       <CardHeader floated={false} color="blue-gray">
         <img
-          src={`${import.meta.env.VITE_IMG_URL}${bookingDetails?.Room.picture}`}
+          src={bookingDetails?.Room.picture}
           alt="booking room"
         />
         <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />

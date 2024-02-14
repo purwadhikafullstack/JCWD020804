@@ -72,8 +72,8 @@ export function PropertyCard({ selectedCategory, searchQuery }) {
         >
           <CardHeader floated={false} color="blue-gray">
             <img
-              src={`${import.meta.env.VITE_IMG_URL}${property.picture}`}
-              alt="ui/ux review check"
+              src={property.picture}
+              alt="property picture"
               className="object-cover w-full h-48 rounded-t-lg"
             />
             <div className="absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60" />

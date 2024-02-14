@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import logo from '../assets/masnstay.jpg';
 import { Typography } from '@material-tailwind/react';
+import Logo from '../assets/masnstay.jpg';
 
 export function SimpleFooter() {
   const [footerHeight, setFooterHeight] = useState('20px');
@@ -23,19 +23,15 @@ export function SimpleFooter() {
           &copy; 2023 Masnstay
         </Typography>
         <div className="flex items-center gap-x-2">
-          <img
-            src={logo}
-            alt="Logo"
-            className="h-16 w-16 mr-2"
-          />
+          <img src={Logo} alt="Logo" className="h-16 w-16 mr-2" />
           <Typography color="blue-gray" className="text-sm">
             Masnstay
           </Typography>
         </div>
       </div>
-  
+
       <ul className="flex flex-wrap items-center gap-y-2 gap-x-4 md:flex-row md:justify-center">
-        <li className="md:w-1/2"> 
+        <li className="md:w-1/2">
           <Typography
             as="a"
             href="#"
@@ -46,8 +42,8 @@ export function SimpleFooter() {
           </Typography>
           <Typography>MasnStay is a hotel booking application.</Typography>
         </li>
-  
-        <li className="md:w-1/2"> 
+
+        <li className="md:w-1/2">
           <Typography
             as="a"
             href="#"
@@ -57,14 +53,14 @@ export function SimpleFooter() {
             Contact Us
           </Typography>
           <Typography>
-            Jl. Asia Afrika No.133-137, Kebon Pisang, Sumurbandung, Bandung City,
-            West Java
+            Jl. Asia Afrika No.133-137, Kebon Pisang, Sumurbandung, Bandung
+            City, West Java
           </Typography>
           <Typography>082219308866</Typography>
           <Typography>masn40208@gmail.com</Typography>
         </li>
       </ul>
-  
+
       <div className="flex gap-4 md:justify-end">
         <button
           onClick={() => handleFooterHeightChange('0px')}
@@ -75,5 +71,4 @@ export function SimpleFooter() {
       </div>
     </footer>
   );
-
 }

@@ -38,7 +38,7 @@ export function CarouselCustomArrows() {
         {properties.map((property, index) => (
           <img
             key={property.id}
-            src={`${import.meta.env.VITE_IMG_URL}${property.picture}`}
+            src={property.picture}
             alt={`image ${property.id}`}
             className={`h-96 w-full object-cover ${
               index === activeIndex ? 'block' : 'hidden'
