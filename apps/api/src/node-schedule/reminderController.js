@@ -10,7 +10,6 @@ import path from 'path';
 
 const sendReminderEmail = async (booking, subject, templatePath) => {
   const data = fs.readFileSync(templatePath, 'utf-8');
-
   const templateCompile = handlebars.compile(data);
   const resultHTML = templateCompile({
     name: booking.User.name,
