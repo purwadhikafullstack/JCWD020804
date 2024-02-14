@@ -37,7 +37,8 @@ export const addRoom = async (req, res) => {
     if (req?.file) {
       const fileName = req?.file?.filename;
       const URL = process.env.VITE_IMAGE_URL;
-      file = `${URL}/${fileName}`;
+
+      file = `${URL}${fileName}`;
     }
     const result = await Room.create({
       name,
