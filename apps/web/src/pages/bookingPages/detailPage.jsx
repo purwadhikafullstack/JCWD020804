@@ -70,7 +70,7 @@ export const DetailPage = () => {
       <div className="container mx-auto my-8 flex items-center justify-between">
         <div className="w-1/2 pr-4">
           <img
-            src={`${import.meta.env.VITE_IMG_URL}${propertyDetails?.picture}`}
+            src={propertyDetails?.picture}
             alt="Hotel Room"
             className="mb-4 w-full h-auto"
           />
@@ -119,7 +119,7 @@ export const DetailPage = () => {
                   >
                     <p>{room.name}</p>
                     <img
-                      src={`${import.meta.env.VITE_IMG_URL}${room.picture}`}
+                      src={room.picture}
                     />
                     <p>Price: {formatMataUang(room.price, 'IDR')}</p>
                     {room.Transactions && room.Transactions.length > 0 ? (

@@ -162,9 +162,9 @@ export const ListPropertyTenant = () => {
                   <td className={` bg-blue-gray-50/50`}>
                     <div className="flex items-center gap-3">
                       <Avatar
-                        src={`${import.meta.env.VITE_IMG_URL}${
+                        src={
                           property.picture
-                        }`}
+                        }
                         alt={property}
                         size="sm"
                       />

@@ -195,6 +195,7 @@ export const userRegisterWithGoogle = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { email, username, link } = req.body;
+
     const data = fs.readFileSync('./web/resetpassword.html', 'utf-8');
     const tempCompile = await handlebars.compile(data);
 
@@ -241,14 +242,20 @@ export const updateUserPassword = async (req, res) => {
 
 export const editProfile = async (req, res) => {
   try {
-    const { name, username, picture } = req.body;
+    const { name, username } = req.body;
     const isVerified = req.body.email ? false : true;
+    
+    let file = null;
+    if (req?.file) {
+      const fileName = req?.file?.filename;
+      const URL = process.env.VITE_IMAGE_URL;
+      file = `${URL}/${fileName}`;
+    }
     await User.update(
       {
         name,
         username,
-
-        picture: req.file?.filename,
+        picture: file,
         isVerified: isVerified,
       },
 
@@ -269,6 +276,7 @@ export const editProfile = async (req, res) => {
 export const editEmail = async (req, res) => {
   try {
     const { email } = req.body;
+
     const user = await User.findOne({
       where: {
         id: req.user.id,
@@ -292,6 +300,7 @@ export const editEmail = async (req, res) => {
         },
       },
     );
+
     const data = fs.readFileSync(
       path.join(__dirname, '../../web/verifiedakun.html'),
       'utf-8',

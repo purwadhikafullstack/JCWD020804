@@ -33,11 +33,16 @@ export const getAllRoomByProperty = async (req, res) => {
 export const addRoom = async (req, res) => {
   try {
     const { name, description, price } = req.body;
-
+    let file = null;
+    if (req?.file) {
+      const fileName = req?.file?.filename;
+      const URL = process.env.VITE_IMAGE_URL;
+      file = `${URL}/${fileName}`;
+    }
     const result = await Room.create({
       name,
       description,
-      picture: req.file?.filename,
+      picture: file,
       PropertyId: req.params.id,
       price,
     });

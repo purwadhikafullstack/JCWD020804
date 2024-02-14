@@ -78,10 +78,7 @@ export const ListRoomTenant = () => {
         <div className="p-5">
           <div className="flex flex-col gap-2 shrink-0 sm:flex-row">
             <div className="w-72">
-              <Select
-                label="Your Property"
-                onChange={handleSelectChange}
-              >
+              <Select label="Your Property" onChange={handleSelectChange}>
                 {properties.map((property) => (
                   <Option key={property.id} value={property}>
                     {property.name}
@@ -186,13 +183,7 @@ export const ListRoomTenant = () => {
                   <tr key={room.id}>
                     <td className={` bg-blue-gray-50/50`}>
                       <div className="flex items-center gap-3">
-                        <Avatar
-                          src={`${import.meta.env.VITE_IMG_URL}${
-                            room?.picture
-                          }`}
-                          alt={''}
-                          size="sm"
-                        />
+                        <Avatar src={room?.picture} alt={'picture room'} size="sm" />
                       </div>
                     </td>
                     <td className={` bg-blue-gray-50/50`}>

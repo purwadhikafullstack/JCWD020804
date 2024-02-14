@@ -309,11 +309,9 @@ export const TenantDashboard = () => {
             onClose={closePaymentProofDialog}
             imageUrl={
               selectedTransactionId
-                ? `${import.meta.env.VITE_IMG_URL}${
-                    transactions.find(
-                      (transaction) => transaction.id === selectedTransactionId,
-                    )?.bukti_pembayaran
-                  }`
+                ? transactions.find(
+                    (transaction) => transaction.id === selectedTransactionId,
+                  )?.bukti_pembayaran
                 : ''
             }
           />
