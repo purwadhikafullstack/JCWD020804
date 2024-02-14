@@ -159,7 +159,7 @@ export const addProperty = async (req, res) => {
     let file = null;
     if (req?.file) {
       const fileName = req?.file?.filename;
-      const URL = process.env.IMAGE_URL;
+      const URL = process.env.VITE_IMAGE_URL;
       file = `${URL}/${fileName}`;
     }
     const property = await Property.create({
@@ -191,7 +191,7 @@ export const editProperty = async (req, res) => {
     let file = null;
     if (req?.file) {
       const fileName = req?.file?.filename;
-      const URL = process.env.IMAGE_URL;
+      const URL = process.env.VITE_IMAGE_URL;
       file = `${URL}/${fileName}`;
     }
     await Property.update(
