@@ -984,7 +984,7 @@ export const EditProperty = () => {
                         className="mt-1 p-2 w-full border rounded-md"
                       >
                         <option value="">Select Province</option>
-                        {daerah.map((data) => (
+                        {daerah?.map((data) => (
                           <option key={data.nama} value={data.nama}>
                             {data.nama}
                           </option>
@@ -1014,7 +1014,7 @@ export const EditProperty = () => {
                         className="mt-1 p-2 w-full border rounded-md"
                       >
                         <option value="">Select City</option>
-                        {filteredCities.map((city) => (
+                        {filteredCities((city) => (
                           <option key={city} value={city}>
                             {city}
                           </option>

@@ -79,7 +79,7 @@ export const ListRoomTenant = () => {
           <div className="flex flex-col gap-2 shrink-0 sm:flex-row">
             <div className="w-72">
               <Select label="Your Property" onChange={handleSelectChange}>
-                {properties.map((property) => (
+                {properties?.map((property) => (
                   <Option key={property.id} value={property}>
                     {property.name}
                   </Option>
@@ -179,7 +179,7 @@ export const ListRoomTenant = () => {
                 </tr>
               </thead>
               <tbody>
-                {selectedProperty.Rooms?.map((room) => (
+                {selectedProperty?.Rooms?.map((room) => (
                   <tr key={room.id}>
                     <td className={` bg-blue-gray-50/50`}>
                       <div className="flex items-center gap-3">

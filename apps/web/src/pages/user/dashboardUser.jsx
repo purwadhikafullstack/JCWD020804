@@ -122,51 +122,57 @@ export const UserDashboard = () => {
           </Button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {transactions.map((transaction) => (
-            <Card key={transaction.id}>
-              <div className="p-4">
-                <Typography className="mb-2">
-                  {formatDate(new Date(transaction.checkIn))}
-                </Typography>
-                <Typography className="mb-2">
-                  Nama Property: {transaction.Room.Property?.name}
-                </Typography>
-                <Typography className="mb-2">
-                  Hosted by: {transaction.Room.Property?.User.name}
-                </Typography>
-                <Typography className="mb-2">{transaction.status}</Typography>
-                {transaction.status === 'menunggu pembayaran' && (
-                  <Button onClick={() => handleContinue(transaction.id)}>
-                    Continue
-                  </Button>
-                )}
-                {transaction.status === 'pembayaran berhasil' &&
-                  new Date(transaction.checkIn) < new Date() &&
-                  !transaction.Review?.rating && (
-                    <Button
-                      onClick={() =>
-                        handleToggleDialog(
-                          transaction.id,
-                          transaction.Room.Property.id,
-                        )
-                      }
-                    >
-                      Give Rating
+          {transactions?.length > 0 ? (
+            transactions?.map((transaction) => (
+              <Card key={transaction.id}>
+                <div className="p-4">
+                  <Typography className="mb-2">
+                    {formatDate(new Date(transaction.checkIn))}
+                  </Typography>
+                  <Typography className="mb-2">
+                    Nama Property: {transaction.Room?.Property?.name}
+                  </Typography>
+                  <Typography className="mb-2">
+                    Hosted by: {transaction.Room?.Property?.User?.name}
+                  </Typography>
+                  <Typography className="mb-2">{transaction.status}</Typography>
+                  {transaction.status === 'menunggu pembayaran' && (
+                    <Button onClick={() => handleContinue(transaction.id)}>
+                      Continue
                     </Button>
                   )}
-                {transaction.Review?.rating && (
-                  <>
-                    <Typography className="text-green-500">
-                      Review Given:
-                    </Typography>
-                    <Typography className="mb-2">
-                      Comment: {transaction.Review.user_review}
-                    </Typography>
-                  </>
-                )}
-              </div>
-            </Card>
-          ))}
+                  {transaction.status === 'pembayaran berhasil' &&
+                    new Date(transaction.checkIn) < new Date() &&
+                    !transaction.Review?.rating && (
+                      <Button
+                        onClick={() =>
+                          handleToggleDialog(
+                            transaction.id,
+                            transaction.Room.Property?.id,
+                          )
+                        }
+                      >
+                        Give Rating
+                      </Button>
+                    )}
+                  {transaction.Review?.rating && (
+                    <>
+                      <Typography className="text-green-500">
+                        Review Given:
+                      </Typography>
+                      <Typography className="mb-2">
+                        Comment: {transaction.Review?.user_review}
+                      </Typography>
+                    </>
+                  )}
+                </div>
+              </Card>
+            ))
+          ) : (
+            <div className="text-center col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4">
+              <Typography className="text-xl">tidak ada transaksi</Typography>
+            </div>
+          )}
         </div>
         <RatingWithCommentDialog
           Open={dialogOpen}
