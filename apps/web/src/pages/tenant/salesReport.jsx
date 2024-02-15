@@ -88,11 +88,11 @@ export const Report = () => {
             <tbody>
               {transactions?.map((transaction) => (
                 <tr key={transaction.id} className="border-b">
-                  <td>{transaction.User.name}</td>
-                  <td>{transaction.Room.name}</td>
-                  <td>{formatDate(new Date(transaction.checkIn))}</td>
-                  <td>{transaction.status}</td>
-                  <td>{formatMataUang(transaction.total_price, 'IDR')}</td>
+                  <td>{transaction?.User?.name}</td>
+                  <td>{transaction?.Room?.name}</td>
+                  <td>{formatDate(new Date(transaction?.checkIn))}</td>
+                  <td>{transaction?.status}</td>
+                  <td>{formatMataUang(transaction?.total_price, 'IDR')}</td>
                 </tr>
               ))}
             </tbody>

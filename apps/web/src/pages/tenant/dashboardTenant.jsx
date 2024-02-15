@@ -39,7 +39,7 @@ export const TenantDashboard = () => {
         },
       });
       const { totalPages, currentPage, items } = response.data;
-
+      console.log(response.data);
       setTotalPages(totalPages);
       setCurrentPage(currentPage);
 
