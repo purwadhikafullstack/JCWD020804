@@ -41,16 +41,16 @@ export const getTransactionByTenant = async (req, res) => {
 
     const { count, rows } = await Transaction.findAndCountAll({
       include: [
-        { model: User },
         {
           model: Room,
           include: [
             {
               model: Property,
-              where: { userId: req.user.id },
+              where: { UserId: req.user.id },
             },
           ],
         },
+        { model: User },
       ],
       where: whereClause,
       limit: parseInt(limit),
@@ -233,7 +233,7 @@ export const cancelTransactionById = async (req, res) => {
 
 export const ratingUser = async (req, res) => {
   const { rating, comment, TransactionId, PropertyId } = req.body;
-  
+
   try {
     const result = await Review.create({
       rating,
