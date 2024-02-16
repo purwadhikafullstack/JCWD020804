@@ -244,7 +244,7 @@ export const editProfile = async (req, res) => {
   try {
     const { name, username } = req.body;
     const isVerified = req.body.email ? false : true;
-
+    
     let file = null;
     if (req?.file) {
       const fileName = req?.file?.filename;
