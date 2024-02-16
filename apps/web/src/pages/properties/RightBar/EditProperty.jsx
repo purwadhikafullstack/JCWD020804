@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from 'react-router-dom';
@@ -1014,7 +1013,7 @@ export const EditProperty = () => {
                         className="mt-1 p-2 w-full border rounded-md"
                       >
                         <option value="">Select City</option>
-                        {filteredCities((city) => (
+                        {filteredCities?.map((city) => (
                           <option key={city} value={city}>
                             {city}
                           </option>
